@@ -6,5 +6,9 @@ bootJar {
     enabled = false
 }
 
+test {
+    useJUnitPlatform()
+}
+
 dependencies {
 }
