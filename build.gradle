@@ -7,23 +7,33 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
 	}
 }
 
 allprojects {
 	group = 'com.bread'
 	version = '0.0.1-SNAPSHOT'
+	apply plugin: 'com.github.kt3k.coveralls'
+	apply plugin: 'jacoco'
+	repositories {
+		jcenter()
+	}
 }
 
 subprojects {
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
 	apply plugin: 'java'
-
+	jacocoTestReport {
+		reports {
+			html.enabled = true
+			xml.enabled = true
+		}
+	}
 	repositories {
 		mavenCentral()
 	}
-
 	dependencies {
 		annotationProcessor 'org.projectlombok:lombok'
 		compileOnly 'org.projectlombok:lombok:1.18.12'
@@ -31,11 +41,27 @@ subprojects {
 			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 		}
 	}
-
 }
 
 project(':bread-auth-module') {
 	dependencies {
 		implementation project(':bread-common-module')
 	}
+}
+
+task jacocoRootReport(type: JacocoReport) {
+	description = 'Generates an aggregate report from all subprojects'
+	dependsOn = subprojects.test
+	sourceDirectories.setFrom(files(subprojects.sourceSets.main.allSource.srcDirs))
+	classDirectories.setFrom(files(subprojects.sourceSets.main.output))
+	executionData.setFrom(files(subprojects.jacocoTestReport.executionData))
+	reports {
+		html.enabled = true
+		xml.enabled = true
+	}
+}
+
+coveralls {
+	sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
+	jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
