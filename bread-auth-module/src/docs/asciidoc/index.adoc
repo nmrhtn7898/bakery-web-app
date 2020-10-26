@@ -1,0 +1,22 @@
+= API Guide
+api;
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-curl-request-title: Example request
+:operation-http-response-title: Example response
+
+[[resources]]
+= 리소스
+
+Auth Api는 인증 서비스를 제공한다.
+
+[[token-password-grant]]
+=== 엑세스 토근 발급 - Password 방식
+
+`POST` 요청을 및 'PASSWORD' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
+
+operation::token-password-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
