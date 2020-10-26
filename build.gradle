@@ -36,6 +36,6 @@ subprojects {
 
 project(':bread-auth-module') {
 	dependencies {
-		compile project(':bread-common-module')
+		implementation project(':bread-common-module')
 	}
 }
