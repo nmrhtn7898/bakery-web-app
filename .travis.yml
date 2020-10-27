@@ -39,15 +39,20 @@ deploy:
       branch: master
 
   - provider: codedeploy
-      access_key_id: $AWS_ACCESS_KEY
-      secret_access_key: $AWS_SECRET_KEY
-      bucket: bread-webservice-deploy
-      key: bread-webservice.zip
-      bundle_type: zip
-      application: bread-deploy-app
-      deployment_group: bread-deploy-group
-      region: ap-northeast-2
-      wait-until-deployed: true
-      on:
-        repo: nmrhtn7898/bread-project
-        branch: master
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: bread-webservice-deploy
+    key: bread-webservice.zip
+    bundle_type: zip
+    application: bread-deploy-app
+    deployment_group: bread-deploy-group
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      repo: nmrhtn7898/bread-project
+      branch: master
+
+notifications:
+  email:
+    recipients:
+      - nmrhtn7898@naver.com
