@@ -20,3 +20,10 @@ Auth Api는 인증 서비스를 제공한다.
 `POST` 요청을 및 'PASSWORD' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
 
 operation::token-password-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+
+[[token-refresh-token-grant]]
+=== 엑세스 토근 발급 - Refresh Token 방식
+
+`POST` 요청을 및 'REFRESH TOKEN' 방식을 사용하여 엑세스 토큰을 인증 없이 발급받을 수 있다.
+
+operation::token-refresh-token-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']

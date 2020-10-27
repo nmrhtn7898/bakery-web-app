@@ -1,5 +1,7 @@
 package com.bread.auth.config;
 
+import com.bread.auth.service.AccountService;
+import com.bread.auth.service.Oauth2ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -9,6 +11,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
+import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 
@@ -26,6 +29,8 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
 
+    private final Oauth2ClientService clientDetailsService;
+
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
@@ -36,14 +41,7 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
-                .inMemory()
-                .withClient("test")
-                .secret(passwordEncoder.encode("1234"))
-                .scopes("READ", "WRITE")
-                .authorizedGrantTypes("authorization_code", "refresh_token", "password")
-                .accessTokenValiditySeconds(60 * 30)
-                .refreshTokenValiditySeconds(60 * 60 * 24 * 7)
-                .redirectUris("/");
+                .withClientDetails(clientDetailsService);
     }
 
     @Override
