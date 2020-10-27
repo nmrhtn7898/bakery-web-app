@@ -127,7 +127,7 @@ public class AuthConfigTest {
     }
 
     @Test
-    @DisplayName("인증 서버 PASSWORD 방식 토큰 발급 성공")
+    @DisplayName("인증 서버 PASSWORD 방식 토큰 발급 성공 200")
     public void getToken_PasswordGrant_200() throws Exception {
         getTokenPasswordGrantResponse()
                 .andExpect(status().isOk())
@@ -166,7 +166,41 @@ public class AuthConfigTest {
     }
 
     @Test
-    @DisplayName("인증 서버 REFRESH TOKEN 방식 토큰 발급 성공")
+    @DisplayName("인증 서버 PASSWORD 방식 토큰 발급 사용자 정보 잘못된 경우 실패 400")
+    public void getToken_PasswordGrant_400() throws Exception {
+        mockMvc
+                .perform(
+                        post("/oauth/token")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .queryParam("username", "invalid user")
+                                .queryParam("password", "invalid password")
+                                .queryParam("grant_type", "password")
+                                .queryParam("scope", "read")
+                                .with(httpBasic("test", "1234"))
+                )
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("인증 서버 PASSWORD 방식 토큰 발급 클라이언트 정보 잘못된 경우 실패 401")
+    public void getToken_PasswordGrant_401() throws Exception {
+        mockMvc
+                .perform(
+                        post("/oauth/token")
+                                .accept(MediaType.APPLICATION_JSON)
+                                .queryParam("username", "user")
+                                .queryParam("password", "user")
+                                .queryParam("grant_type", "password")
+                                .queryParam("scope", "read")
+                                .with(httpBasic("invalid clientId", "invalid clientSecret"))
+                )
+                .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("인증 서버 REFRESH TOKEN 방식 토큰 발급 성공 200")
     public void getToken_RefreshTokenGrant_200() throws Exception {
         getTokenRefreshTokenGrantResponse()
                 .andExpect(status().isOk())
