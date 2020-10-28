@@ -5,12 +5,19 @@ import com.bread.auth.entity.AccountAuthority;
 import com.bread.auth.entity.Oauth2Client;
 import com.bread.auth.entity.Authority;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.sun.istack.Pool;
+import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
+import org.jasypt.salt.RandomSaltGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,6 +59,24 @@ public class AuthApplication {
         return new JPAQueryFactory(entityManager);
     }
 
+    @Profile(value = {"dev", "prod"})
+    @Bean
+    public StringEncryptor stringEncryptor(@Value("${encrypt.key}") String key,
+                                           @Value("${encrypt.alg}") String algorithm) {
+        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
+        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
+        config.setPassword(key);
+        config.setAlgorithm(algorithm);
+        config.setKeyObtentionIterations("1000");
+        config.setPoolSize("1");
+        config.setProviderName("SunJCE");
+        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
+        config.setStringOutputType("base64");
+        encryptor.setConfig(config);
+        return encryptor;
+    }
+
+    @Profile(value = {"default", "test"})
     @Component
     public static class InitRunner implements ApplicationRunner {
         @Autowired
