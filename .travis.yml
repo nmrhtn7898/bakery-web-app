@@ -19,38 +19,38 @@ script: "./gradlew clean build"
 after_success:
   - ./gradlew jacocoRootReport coveralls
 
-#before_deploy:
-#  - zip -r bread-webservice *
-#  - mkdir -p deploy
-#  - mv bread-webservice.zip deploy/bread-webservice.zip
-#
-#deploy:
-#  - provider: s3
-#    access_key_id: $AWS_ACCESS_KEY
-#    secret_access_key: $AWS_SECRET_KEY
-#    bucket: bread-webservice-deploy
-#    region: ap-northeast-2
-#    skip_cleanup: true
-#    acl: public_read
-#    wait-until-deployed: true
-#    local_dir: deploy
-#    on:
-#      repo: nmrhtn7898/bread-project
-#      branch: master
-#
-#  - provider: codedeploy
-#    access_key_id: $AWS_ACCESS_KEY
-#    secret_access_key: $AWS_SECRET_KEY
-#    bucket: bread-webservice-deploy
-#    key: bread-webservice.zip
-#    bundle_type: zip
-#    application: bread-deploy-app
-#    deployment_group: bread-deploy-group
-#    region: ap-northeast-2
-#    wait-until-deployed: true
-#    on:
-#      repo: nmrhtn7898/bread-project
-#      branch: master
+before_deploy:
+  - zip -r bread-web-app *
+  - mkdir -p deploy
+  - mv bread-web-app.zip deploy/bread-web-app.zip
+
+deploy:
+  - provider: s3
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: bread-app
+    region: ap-northeast-2
+    skip_cleanup: true
+    acl: public_read
+    wait-until-deployed: true
+    local_dir: deploy
+    on:
+      repo: nmrhtn7898/bread-project
+      branch: master
+
+  - provider: codedeploy
+    access_key_id: $AWS_ACCESS_KEY
+    secret_access_key: $AWS_SECRET_KEY
+    bucket: bread-app
+    key: bread-web-app.zip
+    bundle_type: zip
+    application: bread-deploy-app
+    deployment_group: bread-deploy-group
+    region: ap-northeast-2
+    wait-until-deployed: true
+    on:
+      repo: nmrhtn7898/bread-project
+      branch: master
 
 notifications:
   email:
