@@ -6,6 +6,7 @@ import com.bread.auth.entity.Oauth2Client;
 import com.bread.auth.entity.Authority;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sun.istack.Pool;
+import org.apache.catalina.connector.Connector;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -16,6 +17,8 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -57,6 +60,19 @@ public class AuthApplication {
     @Bean
     public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
         return new JPAQueryFactory(entityManager);
+    }
+
+    @Bean
+    public ServletWebServerFactory servletWebServerFactory(@Value("${ajp.protocol}") String protocol,
+                                                           @Value("${ajp.port}") int port) {
+        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
+        Connector connector = new Connector(protocol);
+        connector.setPort(port);
+        connector.setSecure(false);
+        connector.setAllowTrace(false);
+        connector.setScheme("http");
+        tomcat.addAdditionalTomcatConnectors(connector);
+        return tomcat;
     }
 
     @Profile(value = {"dev", "prod"})

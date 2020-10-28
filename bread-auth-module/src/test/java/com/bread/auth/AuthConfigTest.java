@@ -111,7 +111,6 @@ public class AuthConfigTest {
                 .andDo(print());
     }
 
-
     @Test
     @DisplayName("인증 서버 토큰 유효성 검증 클라이언트 정보 잘못된 경우 실패 401")
     public void checkToken_401() throws Exception {
