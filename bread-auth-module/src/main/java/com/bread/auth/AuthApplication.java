@@ -2,23 +2,18 @@ package com.bread.auth;
 
 import com.bread.auth.entity.Account;
 import com.bread.auth.entity.AccountAuthority;
-import com.bread.auth.entity.Oauth2Client;
 import com.bread.auth.entity.Authority;
+import com.bread.auth.entity.Oauth2Client;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.sun.istack.Pool;
-import org.apache.catalina.connector.Connector;
+import lombok.RequiredArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
-import org.jasypt.salt.RandomSaltGenerator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
-import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
@@ -79,13 +74,12 @@ public class AuthApplication {
         return encryptor;
     }
 
-    @Profile(value = {"default", "test"})
+    @Profile(value = {"default", "test", "dev"})
     @Component
+    @RequiredArgsConstructor
     public static class InitRunner implements ApplicationRunner {
-        @Autowired
-        private EntityManager entityManager;
-        @Autowired
-        private PasswordEncoder passwordEncoder;
+        private final EntityManager entityManager;
+        private final PasswordEncoder passwordEncoder;
 
         @Transactional
         @Override

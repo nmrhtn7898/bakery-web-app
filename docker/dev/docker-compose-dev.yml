@@ -14,8 +14,4 @@ services:
       - "9600"
     env_file:
       - ../../../docker.env
-    environment:
-      ENCRYPT_KEY: ${ENCRYPT_KEY}
-      ENCRYPT_ALG: ${ENCRYPT_ALG}
-      ACTIVE_PROFILE: "dev"
 
