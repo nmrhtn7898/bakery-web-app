@@ -14,4 +14,6 @@ services:
       - "9600"
     env_file:
       - ../../../docker.env
+    environment:
+      ACTIVE_PROFILE: "dev"
 
