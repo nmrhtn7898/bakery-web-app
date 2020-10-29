@@ -55,7 +55,6 @@ task copyFile {
 }
 
 task createDockerFile(type: Dockerfile) {
-    dependsOn(copyFile) // 해당 테스크를 수행하면 사전에 수행해야할 테스크 지정, copyFile하면 build task 전처리 하지만 build 한다고 copyFIle 하는 것은 아님
     destFile = file("${buildDir}/libs/Dockerfile")// 도커 파일 생성 경로
     from('openjdk:8-jdk-alpine')
     runCommand('apk update && apk upgrade && apk add netcat-openbsd && apk add curl')
