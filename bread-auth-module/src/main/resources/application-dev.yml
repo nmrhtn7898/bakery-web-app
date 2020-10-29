@@ -12,6 +12,7 @@ spring:
     password: ENC(s0TLJNiPYXqZNADpH30mWsn32X3WqAIo)
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    generate-ddl: true
     hibernate:
       ddl-auto: create
       use-new-id-generator-mappings: false

@@ -8,6 +8,7 @@ spring:
     password: 1234
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
+    generate-ddl: true
     hibernate:
       ddl-auto: create
       use-new-id-generator-mappings: false
