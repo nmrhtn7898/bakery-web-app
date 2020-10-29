@@ -55,6 +55,7 @@ task copyFile {
 }
 
 task createDockerFile(type: Dockerfile) {
+    dependsOn(copyFile) // copyFile task에 의존 해당 task 수행 후 수행
     destFile = file("${buildDir}/libs/Dockerfile")// 도커 파일 생성 경로
     from('openjdk:8-jdk-alpine')
     runCommand('apk update && apk upgrade && apk add netcat-openbsd && apk add curl')
@@ -65,10 +66,9 @@ task createDockerFile(type: Dockerfile) {
 }
 
 task createDockerImage(type: DockerBuildImage) {
-    dependsOn(createDockerFile) // createDockerFile task에 의존 해당 task 수행 후 수행
     dockerFile = file("${buildDir}/libs/Dockerfile") // 도커 파일 경로
     inputDir = file("${buildDir}/libs") // 도커 파일 -> 이미지 빌드 작업 경로 컨텍스트
     images.add("${project.name}:${project.version}") // 도커 이미지 이름
 }
 
-tasks.build.finalizedBy(copyFile)
+tasks.build.finalizedBy(createDockerFile) // build 후 createDockerFile task 수행
