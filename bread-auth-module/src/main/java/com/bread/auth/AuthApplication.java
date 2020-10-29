@@ -62,19 +62,6 @@ public class AuthApplication {
         return new JPAQueryFactory(entityManager);
     }
 
-    @Bean
-    public ServletWebServerFactory servletWebServerFactory(@Value("${ajp.protocol}") String protocol,
-                                                           @Value("${ajp.port}") int port) {
-        TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory();
-        Connector connector = new Connector(protocol);
-        connector.setPort(port);
-        connector.setSecure(false);
-        connector.setAllowTrace(false);
-        connector.setScheme("http");
-        tomcat.addAdditionalTomcatConnectors(connector);
-        return tomcat;
-    }
-
     @Profile(value = {"dev", "prod"})
     @Bean
     public StringEncryptor stringEncryptor(@Value("${encrypt.key}") String key,
