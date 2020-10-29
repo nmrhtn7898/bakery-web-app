@@ -19,7 +19,7 @@ import static javax.persistence.FetchType.LAZY;
 public class Account extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)

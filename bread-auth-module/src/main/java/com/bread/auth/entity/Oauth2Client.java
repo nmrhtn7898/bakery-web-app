@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class Oauth2Client extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "client_id", length = 256)

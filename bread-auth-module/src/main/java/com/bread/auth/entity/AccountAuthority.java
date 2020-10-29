@@ -17,7 +17,7 @@ import static javax.persistence.FetchType.LAZY;
 public class AccountAuthority extends BaseEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = LAZY, optional = false)
