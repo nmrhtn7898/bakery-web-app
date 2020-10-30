@@ -4,16 +4,19 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id", callSuper = false)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 @Table(name = "oauth_client_details")
 public class Oauth2Client extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(name = "client_id", length = 256)

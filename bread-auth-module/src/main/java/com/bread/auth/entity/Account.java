@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
 /**
  * 계정 엔티티
@@ -15,11 +17,11 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id", callSuper = false)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Account extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)

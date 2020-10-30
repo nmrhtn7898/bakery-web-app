@@ -3,6 +3,8 @@ services:
   proxy:
     container_name: "proxy-server"
     image: nginx:latest
+    depends_on:
+      - auth
     ports:
       - "80:80"
     volumes:

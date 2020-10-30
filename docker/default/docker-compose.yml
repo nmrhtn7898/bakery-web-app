@@ -10,9 +10,18 @@ services:
       MYSQL_DATABASE: "bread"
     volumes:
       - ./database:/var/lib/mysql
+  redis:
+    container_name: "redis-server"
+    image: redis:latest
+    expose:
+      - "6379"
+    volumes:
+      - ./redis:/data
   proxy:
     container_name: "proxy-server"
     image: nginx:latest
+    depends_on:
+      - auth
     ports:
       - "80:80"
     volumes:

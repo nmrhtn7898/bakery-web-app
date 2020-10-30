@@ -5,6 +5,8 @@ import lombok.*;
 import javax.persistence.*;
 
 import static javax.persistence.FetchType.LAZY;
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
 
 /**
  * 게정, 권한 엔티티 매핑 엔티티
@@ -13,11 +15,11 @@ import static javax.persistence.FetchType.LAZY;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id", callSuper = false)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class AccountAuthority extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = LAZY, optional = false)

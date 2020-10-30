@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import static javax.persistence.GenerationType.IDENTITY;
+import static lombok.AccessLevel.PROTECTED;
+
 /**
  * 권한 엔티티
  */
@@ -11,11 +14,11 @@ import javax.persistence.*;
 @Getter
 @Setter
 @EqualsAndHashCode(of = "id", callSuper = false)
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = PROTECTED)
 public class Authority extends BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
     @Column(unique = true, nullable = false)

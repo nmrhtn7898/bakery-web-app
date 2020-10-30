@@ -5,6 +5,7 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 docker/default/database/
+docker/default/redis/
 
 ### IntelliJ IDEA ###
 .idea

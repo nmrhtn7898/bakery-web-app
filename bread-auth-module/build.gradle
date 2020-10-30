@@ -10,6 +10,7 @@ ext {
 }
 
 dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -20,6 +21,9 @@ dependencies {
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testImplementation 'com.h2database:h2'
+    testImplementation ('it.ozimov:embedded-redis:0.7.3') {
+        exclude group: 'org.slf4j', module: 'slf4j-simple'
+    }
     runtimeOnly 'mysql:mysql-connector-java'
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
