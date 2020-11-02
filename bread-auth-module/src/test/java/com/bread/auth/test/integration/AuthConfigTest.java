@@ -1,4 +1,4 @@
-package com.bread.auth;
+package com.bread.auth.test.integration;
 
 import com.bread.auth.base.AbstractIntegrationTest;
 import org.junit.jupiter.api.DisplayName;

@@ -3,14 +3,12 @@ package com.bread.auth.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-
-import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @Configuration
 @RequiredArgsConstructor
@@ -28,18 +26,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors()
                 .disable();
         http
-                .csrf()
-                .disable();
-        http
                 .formLogin()
-                .disable();
+                .permitAll();
         http
-                .logout()
-                .disable();
+                .logout();
         http
-                .sessionManagement()
-                .sessionCreationPolicy(STATELESS);
-        http
+                .requestMatchers()
+                .regexMatchers("^(?!/api/).*$")
+                .and()
                 .authorizeRequests()
                 .anyRequest()
                 .authenticated();

@@ -33,5 +33,4 @@ public class EmbeddedRedisConfig {
         return new LettuceConnectionFactory("localhost", port);
     }
 
-
 }

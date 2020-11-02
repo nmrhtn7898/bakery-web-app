@@ -10,8 +10,10 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class Oauth2ClientService implements ClientDetailsService {
 
@@ -19,6 +21,7 @@ public class Oauth2ClientService implements ClientDetailsService {
 
     private final PasswordEncoder passwordEncoder;
 
+    @Transactional(readOnly = true)
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
         Oauth2Client client = oauth2ClientRepository
@@ -26,4 +29,10 @@ public class Oauth2ClientService implements ClientDetailsService {
                 .orElseThrow(() -> new NoSuchClientException(clientId));
         return new Oauth2ClientDetails(client);
     }
+
+    public Oauth2Client generateClient(Oauth2Client oauth2Client) {
+        oauth2Client.setClientSecret(passwordEncoder.encode(oauth2Client.getClientSecret()));
+        return oauth2ClientRepository.save(oauth2Client);
+    }
+
 }

@@ -22,7 +22,6 @@ import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
-import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
@@ -31,8 +30,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.io.File;
-import java.util.Arrays;
+
+import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
 @EnableJpaAuditing
 @EnableRedisRepositories
@@ -41,7 +40,7 @@ public class AuthApplication {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+        return createDelegatingPasswordEncoder();
     }
 
     @Bean
@@ -78,11 +77,11 @@ public class AuthApplication {
     @Profile(value = {"dev", "prod"})
     @Bean
     public StringEncryptor stringEncryptor(@Value("${encrypt.key}") String key,
-                                           @Value("${encrypt.alg}") String algorithm) {
+                                           @Value("${encrypt.alg}") String alg) {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
         SimpleStringPBEConfig config = new SimpleStringPBEConfig();
         config.setPassword(key);
-        config.setAlgorithm(algorithm);
+        config.setAlgorithm(alg);
         config.setKeyObtentionIterations("1000");
         config.setPoolSize("1");
         config.setProviderName("SunJCE");
@@ -91,21 +90,6 @@ public class AuthApplication {
         encryptor.setConfig(config);
         return encryptor;
     }
-
-/*    @Profile("default")
-    @Bean
-    public ApplicationRunner directoryInitRunner() {
-        return (args) -> {
-            File databaseDirectory = new File("../docker/default/database");
-            File redisDirectory = new File("../docker/default/redis");
-            if (!databaseDirectory.exists()) {
-                databaseDirectory.mkdir();
-            }
-            if (!redisDirectory.exists()) {
-                databaseDirectory.mkdir();
-            }
-        };
-    }*/
 
     @Profile(value = {"default", "test", "dev"})
     @ConditionalOnProperty(name = "spring.jpa.hibernate.ddl-auto", havingValue = "create")
@@ -140,7 +124,7 @@ public class AuthApplication {
                     .builder()
                     .clientId("test")
                     .clientSecret(passwordEncoder.encode("1234"))
-                    .authorizedGrantTypes("password,refresh_token")
+                    .authorizedGrantTypes("authorization_code,implicit,password,refresh_token")
                     .scope("read,write")
                     .authorities("user")
                     .resourceIds("auth")

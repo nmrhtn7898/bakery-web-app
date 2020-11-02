@@ -1,10 +1,14 @@
 package com.bread.auth.controller;
 
+import com.bread.auth.model.GenerateClientRequest;
 import com.bread.auth.repository.Oauth2ClientRepository;
 import com.bread.auth.service.Oauth2ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequiredArgsConstructor
@@ -25,8 +29,12 @@ public class Oauth2ClientController {
     }
 
     @PostMapping("/api/v1/clients")
-    public ResponseEntity generateUser() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity generateClient(@RequestBody @Valid GenerateClientRequest request, Errors errors) {
+        if (errors.hasErrors()) {
+            ResponseEntity.badRequest().body(null);
+        }
+        oauth2ClientService.generateClient(null);
+        return ResponseEntity.created(null).body(null);
     }
 
     @PutMapping("/api/v1/clients/{id}")
@@ -35,7 +43,7 @@ public class Oauth2ClientController {
     }
 
     @PatchMapping("/api/v1/clients/{id}")
-    public ResponseEntity patchUser(@PathVariable Long id) {
+    public ResponseEntity patchClient(@PathVariable Long id) {
         return ResponseEntity.ok().build();
     }
 

@@ -19,31 +19,31 @@ public class Oauth2Client extends BaseEntity {
     @GeneratedValue(strategy = IDENTITY)
     private Long id;
 
-    @Column(name = "client_id", length = 256)
+    @Column(name = "client_id", length = 256, nullable = false, unique = true)
     private String clientId;
 
-    @Column(name = "client_secret", length = 256)
+    @Column(name = "client_secret", length = 256, nullable = false)
     private String clientSecret;
 
-    @Column(name = "scope", length = 256)
+    @Column(name = "scope", length = 256, nullable = false)
     private String scope;
 
-    @Column(name = "resource_ids", length = 256)
+    @Column(name = "resource_ids", length = 256, nullable = false)
     private String resourceIds;
 
-    @Column(name = "authorized_grant_types", length = 256)
+    @Column(name = "authorized_grant_types", length = 256, nullable = false)
     private String authorizedGrantTypes;
 
-    @Column(name = "web_server_redirect_uri", length = 256)
+    @Column(name = "web_server_redirect_uri", length = 256, nullable = false)
     private String webServerRedirectUri;
 
-    @Column(name = "authorities", length = 256)
+    @Column(name = "authorities", length = 256, nullable = false)
     private String authorities;
 
-    @Column(name = "access_token_validity")
+    @Column(name = "access_token_validity", nullable = false)
     private Integer accessTokenValidity = 60 * 30;
 
-    @Column(name = "refresh_token_validity")
+    @Column(name = "refresh_token_validity", nullable = false)
     private Integer refreshTokenValidity = 60 * 60 * 24 * 7;
 
     @Column(name = "additional_information", length = 4096)

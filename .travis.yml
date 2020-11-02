@@ -19,11 +19,11 @@ script: "./gradlew clean build"
 after_success:
   - ./gradlew jacocoRootReport coveralls
 
-before_deploy:
-  - zip -r bread-web-app *
-  - mkdir -p deploy
-  - mv bread-web-app.zip deploy/bread-web-app.zip
-
+#before_deploy:
+#  - zip -r bread-web-app *
+#  - mkdir -p deploy
+#  - mv bread-web-app.zip deploy/bread-web-app.zip
+#
 #deploy:
 #  - provider: s3
 #    access_key_id: $AWS_ACCESS_KEY

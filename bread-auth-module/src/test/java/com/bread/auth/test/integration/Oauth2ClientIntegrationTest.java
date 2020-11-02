@@ -1,4 +1,4 @@
-package com.bread.auth;
+package com.bread.auth.test.integration;
 
 import org.springframework.test.context.ActiveProfiles;
 

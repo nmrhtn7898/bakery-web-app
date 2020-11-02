@@ -1,4 +1,4 @@
-package com.bread.auth;
+package com.bread.auth.test.repository;
 
 import com.bread.auth.base.AbstractDataJpaTest;
 import com.bread.auth.entity.Account;
@@ -20,10 +20,13 @@ public class AccountRepositoryTest extends AbstractDataJpaTest {
 
     @Test
     public void findByEmail_Success() {
+        // given
         String email = "user";
+        // when
         Account account = accountRepository
                 .findByEmail("user")
                 .orElseThrow(() -> new UsernameNotFoundException(email));
+        // then
         assertEquals(account.getEmail(), email);
         assertTrue(passwordEncoder.matches("user", account.getPassword()));
         assertEquals(account.getAuthorities().get(0).getAuthority().getName(), "user");
@@ -31,11 +34,15 @@ public class AccountRepositoryTest extends AbstractDataJpaTest {
 
     @Test
     public void findByEmail_Fail() {
+        // given
         String email = "invalid email";
-        assertThrows(UsernameNotFoundException.class, () ->
-                accountRepository
-                        .findByEmail(email)
-                        .orElseThrow(() -> new UsernameNotFoundException(email))
+        // when & then
+        assertThrows(
+                UsernameNotFoundException.class,
+                () ->
+                        accountRepository
+                                .findByEmail(email)
+                                .orElseThrow(() -> new UsernameNotFoundException(email))
         );
     }
 

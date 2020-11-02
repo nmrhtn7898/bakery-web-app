@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.MockMvcAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
@@ -22,7 +21,7 @@ import javax.persistence.Inheritance;
 @Import(value = {RestDocsConfig.class, EmbeddedRedisConfig.class})
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
-public class AbstractIntegrationTest {
+public abstract class AbstractIntegrationTest {
 
     @Autowired
     protected MockMvc mockMvc;
