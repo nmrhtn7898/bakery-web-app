@@ -29,6 +29,8 @@ services:
   auth:
     container_name: "auth-server"
     image: bread-auth-module:0.0.1-SNAPSHOT
+    depends_on:
+      - database
     expose:
       - "9600"
     environment:
