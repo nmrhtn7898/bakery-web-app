@@ -14,10 +14,15 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.cache.RedisCacheManagerBuilderCustomizer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.redis.cache.RedisCacheConfiguration;
+import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -30,13 +35,27 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
+import static java.time.Duration.ofMinutes;
+import static java.time.Duration.ofSeconds;
+import static java.time.temporal.ChronoUnit.SECONDS;
+import static org.springframework.data.redis.cache.RedisCacheConfiguration.defaultCacheConfig;
+import static org.springframework.data.redis.cache.RedisCacheManager.RedisCacheManagerBuilder.fromConnectionFactory;
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
 @EnableJpaAuditing
+@EnableCaching
 @EnableRedisRepositories
 @SpringBootApplication
 public class AuthApplication {
+
+    @Bean
+    public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
+        return new JPAQueryFactory(entityManager);
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -70,8 +89,12 @@ public class AuthApplication {
     }
 
     @Bean
-    public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
-        return new JPAQueryFactory(entityManager);
+    public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
+        return builder -> {
+            Map<String, RedisCacheConfiguration> configurationMap = new HashMap<>();
+            configurationMap.put("client", defaultCacheConfig().entryTtl(ofMinutes(10)));
+            builder.withInitialCacheConfigurations(configurationMap);
+        };
     }
 
     @Profile(value = {"dev", "prod"})
@@ -91,7 +114,7 @@ public class AuthApplication {
         return encryptor;
     }
 
-    @Profile(value = {"default", "test", "dev"})
+    @Profile(value = {"default", "dev"})
     @ConditionalOnProperty(name = "spring.jpa.hibernate.ddl-auto", havingValue = "create")
     @Component
     @RequiredArgsConstructor
@@ -124,11 +147,11 @@ public class AuthApplication {
                     .builder()
                     .clientId("test")
                     .clientSecret(passwordEncoder.encode("1234"))
-                    .authorizedGrantTypes("authorization_code,implicit,password,refresh_token")
+                    .authorizedGrantTypes("authorization_code,implicit,password,refresh_token,client_credentials")
                     .scope("read,write")
                     .authorities("user")
                     .resourceIds("auth")
-                    .webServerRedirectUri("http://localhost:9600")
+                    .webServerRedirectUri("http://auth.bread.com")
                     .build();
             entityManager.persist(client);
         }

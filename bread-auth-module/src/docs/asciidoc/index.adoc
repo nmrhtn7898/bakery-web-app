@@ -14,6 +14,13 @@ api;
 
 Auth Api는 인증 서비스를 제공한다.
 
+[[token-authorization-code-grant]]
+=== 엑세스 토큰 발급 - Authorization Code 방식
+
+`POST` 요청 및 'AUTHORIZATION CODE' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
+
+operation::token-authorization-code-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+
 [[token-password-grant]]
 === 엑세스 토큰 발급 - Password 방식
 
@@ -27,6 +34,13 @@ operation::token-password-grant[snippets='curl-request,http-request,request-head
 `POST` 요청 및 'REFRESH TOKEN' 방식을 사용하여 엑세스 토큰을 인증 없이 발급받을 수 있다.
 
 operation::token-refresh-token-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+
+[[token-client-credentials-grant]]
+=== 엑세스 토큰 발급 - Client Credentials 방식
+
+`POST` 요청 및 'CLIENT CREDENTIALS' 방식을 사용하여 엑세스 토큰을 인증 없이 발급받을 수 있다.
+
+operation::token-client-credentials-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
 
 [[check-token]]
 === 엑세스 토큰 확인

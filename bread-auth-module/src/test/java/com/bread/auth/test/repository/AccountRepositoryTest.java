@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import static java.util.stream.Collectors.toList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AccountRepositoryTest extends AbstractDataJpaTest {
@@ -20,16 +23,20 @@ public class AccountRepositoryTest extends AbstractDataJpaTest {
 
     @Test
     public void findByEmail_Success() {
-        // given
-        String email = "user";
         // when
         Account account = accountRepository
-                .findByEmail("user")
-                .orElseThrow(() -> new UsernameNotFoundException(email));
+                .findByEmail(testProperties.getUsers().getMaster().getUsername())
+                .orElseThrow(() -> new UsernameNotFoundException(testProperties.getUsers().getMaster().getUsername()));
         // then
-        assertEquals(account.getEmail(), email);
-        assertTrue(passwordEncoder.matches("user", account.getPassword()));
-        assertEquals(account.getAuthorities().get(0).getAuthority().getName(), "user");
+        assertEquals(account.getEmail(), testProperties.getUsers().getMaster().getUsername());
+        assertTrue(passwordEncoder.matches(testProperties.getUsers().getMaster().getPassword(), account.getPassword()));
+        assertThat(
+                account
+                        .getAuthorities()
+                        .stream().map(a -> a.getAuthority().getName())
+                        .collect(toList()),
+                is(testProperties.getUsers().getMaster().getAuthorities())
+        );
     }
 
     @Test

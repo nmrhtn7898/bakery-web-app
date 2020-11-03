@@ -21,20 +21,18 @@ public class Oauth2ClientRepositoryTest extends AbstractDataJpaTest {
 
     @Test
     public void findByClientId_Success() {
-        // given
-        String clientId = "test";
         // when
         Oauth2Client client = oauth2ClientRepository
-                .findByClientId(clientId)
-                .orElseThrow(() -> new NoSuchClientException(clientId));
+                .findByClientId(testProperties.getClients().getMaster().getClientId())
+                .orElseThrow(() -> new NoSuchClientException(testProperties.getClients().getMaster().getClientId()));
         // then
-        assertEquals(client.getClientId(), clientId);
-        assertTrue(passwordEncoder.matches("1234", client.getClientSecret()));
-        assertEquals(client.getAuthorizedGrantTypes(), "authorization_code,implicit,password,refresh_token");
-        assertEquals(client.getScope(), "read,write");
-        assertEquals(client.getAuthorities(), "user");
-        assertEquals(client.getResourceIds(), "auth");
-        assertEquals(client.getWebServerRedirectUri(), "http://localhost:9600");
+        assertEquals(client.getClientId(), testProperties.getClients().getMaster().getClientId());
+        assertTrue(passwordEncoder.matches(testProperties.getClients().getMaster().getClientSecret(), client.getClientSecret()));
+        assertEquals(client.getAuthorizedGrantTypes(), "authorization_code,implicit,password,refresh_token,client_credentials");
+        assertEquals(client.getScope(), testProperties.getClients().getMaster().getScopes());
+        assertEquals(client.getAuthorities(), testProperties.getClients().getMaster().getAuthorities());
+        assertEquals(client.getResourceIds(), testProperties.getClients().getMaster().getResourceIds());
+        assertEquals(client.getWebServerRedirectUri(), testProperties.getClients().getMaster().getRedirectUris());
     }
 
     @Test
@@ -52,7 +50,7 @@ public class Oauth2ClientRepositoryTest extends AbstractDataJpaTest {
     @Test
     public void save_Success() {
         // given
-        String clientId = "mock";
+        String clientId = "generate";
         String clientSecret = "secret";
         String resourceIds = "auth";
         String scopes = "read,write";
@@ -103,7 +101,7 @@ public class Oauth2ClientRepositoryTest extends AbstractDataJpaTest {
     @Test
     public void save_Fail_Unique() {
         // given
-        String clientId = "mock";
+        String clientId = "generate";
         Oauth2Client expect = Oauth2Client
                 .builder()
                 .clientId(clientId)

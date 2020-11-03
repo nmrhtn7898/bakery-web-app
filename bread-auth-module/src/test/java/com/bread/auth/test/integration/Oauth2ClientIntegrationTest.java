@@ -1,6 +1,6 @@
 package com.bread.auth.test.integration;
 
-import org.springframework.test.context.ActiveProfiles;
+import com.bread.auth.base.AbstractIntegrationTest;
 
-public class Oauth2ClientIntegrationTest {
+public class Oauth2ClientIntegrationTest extends AbstractIntegrationTest {
 }

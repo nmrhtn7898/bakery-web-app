@@ -29,3 +29,57 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+
+test:
+  users:
+    noAuthorities:
+      username: userId
+      password: userPassword
+      authorities:
+    master:
+      username: adminId
+      password: adminPassword
+      authorities:
+        - user
+        - admin
+  clients:
+    noScopes:
+      clientId: noScopesId
+      clientSecret: noScopesSecret
+      redirectUris: http://auth.bread.com
+      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
+      scopes:
+      authorities: user,admin
+      resourceIds: auth
+    noGrantTypes:
+      clientId: noGrantTypesId
+      clientSecret: noGrantTypesSecret
+      redirectUris: http://auth.bread.com
+      grantTypes:
+      scopes: read,write
+      authorities: user,admin
+      resourceIds: auth
+    noAuthorities:
+      clientId: noAuthoritiesId
+      clientSecret: noAuthoritiesSecret
+      redirectUris: http://auth.bread.com
+      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
+      scopes: read,write
+      authorities:
+      resourceIds: auth
+    noResourceIds:
+      clientId: noResourceIdsId
+      clientSecret: noResourceIdsSecret
+      redirectUris: http://auth.bread.com
+      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
+      scopes: read,write
+      authorities: user,admin
+      resourceIds:
+    master:
+      clientId: adminId
+      clientSecret: adminSecret
+      redirectUris: http://auth.bread.com
+      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
+      scopes: read,write
+      authorities: user,admin
+      resourceIds: auth
