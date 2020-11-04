@@ -14,4 +14,5 @@ test {
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
+    testImplementation 'com.jayway.jsonpath:json-path-assert:2.4.0'
 }
