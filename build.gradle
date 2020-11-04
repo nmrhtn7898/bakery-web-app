@@ -36,6 +36,8 @@ subprojects {
 	dependencies {
 		annotationProcessor 'org.projectlombok:lombok'
 		implementation 'org.projectlombok:lombok:1.18.12'
+		implementation 'org.springframework.boot:spring-boot-starter-validation'
+		implementation 'org.springframework.boot:spring-boot-starter-web'
 		testCompile 'org.mockito:mockito-junit-jupiter:3.6.0'
 		testImplementation('org.springframework.boot:spring-boot-starter-test') {
 			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'

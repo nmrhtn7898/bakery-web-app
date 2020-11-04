@@ -2,6 +2,7 @@ package com.bread.auth.controller;
 
 import com.bread.auth.repository.AccountRepository;
 import com.bread.auth.service.AccountService;
+import com.bread.common.ErrorSerializer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,7 @@
 package com.bread.auth.test.integration;
 
 import com.bread.auth.base.AbstractIntegrationTest;
+import com.bread.auth.config.DataConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -17,8 +18,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AuthConfigTest extends AbstractIntegrationTest {
 
@@ -78,8 +78,9 @@ public class AuthConfigTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("인증 서버 토큰 유효성 검증 토큰 잘못된 경우 실패 400")
+    @DisplayName("인증 서버 토큰 유효성 검증 잘못된 토큰/만료된 토큰 실패 400")
     public void checkToken_400() throws Exception {
+        // Invalid Token
         mockMvc
                 .perform(
                         post("/oauth/check_token")
@@ -89,11 +90,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                 )
                 .andExpect(status().isBadRequest())
                 .andDo(print());
-    }
-
-    @Test
-    @DisplayName("인증 서버 토큰 유효성 검증 토큰 만료된 경우 실패 400")
-    public void checkToken_Expired_400() throws Exception {
+        // Expired Token
         mockMvc
                 .perform(
                         post("/oauth/check_token")
@@ -185,29 +182,35 @@ public class AuthConfigTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("인증 서버 AUTHORIZATION CODE 방식 토큰 발급 부정확한 코드 값으로 실패하는 경우 400")
+    @DisplayName("인증 서버 AUTHORIZATION CODE 방식 토큰 발급 부정확한 코드/Redirect Uri 값으로 실패하는 경우 400")
     public void getTokenAuthorizationCodeGrant_400() throws Exception {
+        // Invalid Code
         mockMvc
                 .perform(
                         post("/oauth/token")
                                 .with(httpBasic(testProperties.getClients().getMaster().getClientId(), testProperties.getClients().getMaster().getClientSecret()))
                                 .param("code", "invalid code")
                                 .param("grant_type", "authorization_code")
-                                .param("redirect_uri", testProperties.getClients().getMaster().getRedirectUris())
+                                .param("redirect_uri", testProperties.getClients().getMaster().getRedirectUris().split(",")[0])
                 )
                 .andExpect(status().isBadRequest())
                 .andDo(print());
-    }
-
-    @Test
-    @DisplayName("인증 서버 AUTHORIZATION CODE 방식 토큰 발급 권한 없어서 실패하는 경우 401")
-    public void getTokenAuthorizationCodeGrant_402() throws Exception {
+        // Invalid Redirect Uri
         getAuthorizeResponse(
                 "code",
                 testProperties.getUsers().getMaster().getUsername(),
-                testProperties.getClients().getNoGrantTypes().getClientId(),
-                testProperties.getClients().getNoGrantTypes().getRedirectUris().split(",")[0],
-                testProperties.getClients().getNoGrantTypes().getScopes().replace(",", " ")
+                testProperties.getClients().getNoScopes().getClientId(),
+                "invalid redirect uri",
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
+        getAuthorizeResponse(
+                "code",
+                testProperties.getUsers().getMaster().getUsername(),
+                testProperties.getClients().getNoScopes().getClientId(),
+                testProperties.getClients().getMaster().getRedirectUris().split(",")[0],
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
         )
                 .andDo(result -> {
                     String redirectedUrl = result
@@ -217,19 +220,42 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                     mockMvc
                             .perform(
                                     post("/oauth/token")
-                                            .with(httpBasic(testProperties.getClients().getNoGrantTypes().getClientId(), testProperties.getClients().getNoGrantTypes().getClientSecret()))
+                                            .with(httpBasic(testProperties.getClients().getMaster().getClientId(), testProperties.getClients().getMaster().getClientSecret()))
                                             .param("code", code)
                                             .param("grant_type", "authorization_code")
-                                            .param("redirect_uri", testProperties.getClients().getNoGrantTypes().getRedirectUris().split(",")[0])
+                                            .param("redirect_uri", "invalid redirect url")
                             )
-//                            .andExpect(status().isUnauthorized()) 수정 필요 grant_type 없는 경우 baseclientDetails 에서 auth_code, refresh 디폴트로 넣어줌
-                            .andDo(print());
+                            .andDo(print())
+                            .andExpect(status().isBadRequest());
                 });
+    }
+
+    @Test
+    @DisplayName("인증 서버 AUTHORIZATION CODE 방식 토큰 발급 부정확한 Scope 값으로 실패하는 경우 303")
+    public void getTokenAuthorizationCodeGrant_303() throws Exception {
+        getAuthorizeResponse(
+                "code",
+                testProperties.getUsers().getMaster().getUsername(),
+                testProperties.getClients().getNoScopes().getClientId(),
+                testProperties.getClients().getNoScopes().getRedirectUris().split(",")[0],
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
+        )
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
     }
 
     @Test
     @DisplayName("인증 서버 AUTHORIZATION CODE 방식 토큰 발급 부정확한 클라이언트 정보로 실패하는 경우 401")
     public void getTokenAuthorizationCodeGrant_401() throws Exception {
+        getAuthorizeResponse(
+                "code",
+                testProperties.getUsers().getMaster().getUsername(),
+                "invalid client id",
+                testProperties.getClients().getMaster().getRedirectUris().split(",")[0],
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
+        )
+                .andDo(print())
+                .andExpect(status().isUnauthorized());
         getAuthorizeResponse(
                 "code",
                 testProperties.getUsers().getMaster().getUsername(),
@@ -266,7 +292,6 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                 testProperties.getClients().getMaster().getRedirectUris().split(",")[0],
                 testProperties.getClients().getMaster().getScopes().replace(",", " ")
         )
-                .andExpect(status().is3xxRedirection())
                 .andDo(print())
                 .andDo(result2 -> {
                     String redirectedUrl = result2.getResponse().getRedirectedUrl();
@@ -288,6 +313,34 @@ public class AuthConfigTest extends AbstractIntegrationTest {
         )
                 .andDo(print())
                 .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    @DisplayName("인증 서버 Implicit 방식 토큰 발급 부정확한 Scope 값으로 실패하는 경우 303")
+    public void getToken_ImplicitGrant_303() throws Exception {
+        getAuthorizeResponse(
+                "token",
+                testProperties.getUsers().getMaster().getUsername(),
+                testProperties.getClients().getNoScopes().getClientId(),
+                testProperties.getClients().getNoScopes().getRedirectUris().split(",")[0],
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
+        )
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
+    }
+
+    @Test
+    @DisplayName("인증 서버 Implicit 방식 토큰 발급 부정확한 Redirect Uri 정보로 실패하는 경우 400")
+    public void getToken_ImplicitGrant_400() throws Exception {
+        getAuthorizeResponse(
+                "token",
+                testProperties.getUsers().getMaster().getUsername(),
+                testProperties.getClients().getMaster().getClientId(),
+                "invalid redirect uri",
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
+        )
+                .andDo(print())
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -336,13 +389,24 @@ public class AuthConfigTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("인증 서버 PASSWORD 방식 토큰 발급 사용자 정보 잘못된 경우 실패 400")
+    @DisplayName("인증 서버 PASSWORD 방식 토큰 발급 잘못된 유저 정보/Scope 값으로 실패 400")
     public void getToken_PasswordGrant_400() throws Exception {
+        // Invalid User
         getTokenPasswordGrantResponse(
                 "invalid user",
                 "invalid password",
                 testProperties.getClients().getMaster().getClientId(),
                 testProperties.getClients().getMaster().getClientSecret(),
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
+        )
+                .andExpect(status().isBadRequest())
+                .andDo(print());
+        // Invalid Scope
+        getTokenPasswordGrantResponse(
+                testProperties.getUsers().getMaster().getUsername(),
+                testProperties.getUsers().getMaster().getPassword(),
+                testProperties.getClients().getNoScopes().getClientId(),
+                testProperties.getClients().getNoScopes().getClientSecret(),
                 testProperties.getClients().getMaster().getScopes().replace(",", " ")
         )
                 .andExpect(status().isBadRequest())
@@ -414,7 +478,8 @@ public class AuthConfigTest extends AbstractIntegrationTest {
 
     @Test
     @DisplayName("인증 서버 REFRESH TOKEN 방식 토큰 발급 재발급 토큰 기한 만료된 경우 실패 400")
-    public void getToken_RefreshTokenGrant_Expired_400() throws Exception {
+    public void getToken_RefreshTokenGrant_400() throws Exception {
+        // Expired Refresh Token
         getTokenRefreshTokenGrantResponse(
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOlsiYXV0aCJdLCJ1c2VyX25hbWUiOiJ1c2VyIiwic2NvcGUiOlsicmVhZCJdLCJhdGkiOiIyNTNhNmMxMC0wYTM3LTQyODktODRiNy01OGI3MjVjNWUyNzUiLCJleHAiOjE1MDQ2MjEwOTcsImF1dGhvcml0aWVzIjpbInVzZXIiXSwianRpIjoiZWVhZTIyYTAtNWJmZS00ODA2LTg0MGMtODU2NTAzYTNlNjBhIiwiY2xpZW50X2lkIjoidGVzdCJ9.VlIahUnYKyMdXVkcL9uhcw7QxWzJdGm8n5y5zbqpyAs",
                 testProperties.getClients().getMaster().getScopes().replace(",", " "),
@@ -426,8 +491,9 @@ public class AuthConfigTest extends AbstractIntegrationTest {
     }
 
     @Test
-    @DisplayName("인증 서버 REFRESH TOKEN 방식 토큰 발급 재발급 토큰 정보 잘못된 경우 실패 400")
+    @DisplayName("인증 서버 REFRESH TOKEN 방식 토큰 발급 잘못된 재발급 토큰/클라이언트 정보 값으로 실패 401")
     public void getToken_RefreshTokenGrant_Invalid_401() throws Exception {
+        // Invalid Refresh Token
         getTokenRefreshTokenGrantResponse(
                 "invalid refresh token",
                 testProperties.getClients().getMaster().getScopes().replace(",", " "),
@@ -436,11 +502,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
         )
                 .andExpect(status().isUnauthorized())
                 .andDo(print());
-    }
-
-    @Test
-    @DisplayName("인증 서버 REFRESH TOKEN 방식 토큰 발급 클라이언트 정보 잘못된 경우 실패 401")
-    public void getToken_RefreshTokenGrant_401() throws Exception {
+        // Invalid Client Id, Secret
         getTokenRefreshTokenGrantResponse(
                 getRefreshToken(
                         testProperties.getUsers().getMaster().getUsername(),
@@ -460,7 +522,11 @@ public class AuthConfigTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("인증 서버 Client Credentials 방식 토큰 발급 성공 200")
     public void getToken_ClientCredentialsGrant_200() throws Exception {
-        getClientCredentialsGrantResponse(testProperties.getClients().getMaster().getClientId(), testProperties.getClients().getMaster().getClientSecret())
+        getClientCredentialsGrantResponse(
+                testProperties.getClients().getMaster().getClientId(),
+                testProperties.getClients().getMaster().getClientSecret(),
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
+        )
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("access_token").exists())
                 .andExpect(jsonPath("token_type").value("bearer"))
@@ -495,8 +561,24 @@ public class AuthConfigTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("인증 서버 Client Credentials 방식 부정확한 클라이언트 정보로 실패하는 경우 401")
     public void getToken_ClientCredentialsGrant_401() throws Exception {
-        getClientCredentialsGrantResponse("invalid id", "invalid secret")
+        getClientCredentialsGrantResponse(
+                "invalid client id",
+                "invalid client secret",
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
+        )
                 .andExpect(status().isUnauthorized())
+                .andDo(print());
+    }
+
+    @Test
+    @DisplayName("인증 서버 Client Credentials 방식 부정확한 클라이언트 Scope 값으로 실패하는 경우 400")
+    public void getToken_ClientCredentialsGrant_400() throws Exception {
+        getClientCredentialsGrantResponse(
+                testProperties.getClients().getNoScopes().getClientId(),
+                testProperties.getClients().getNoScopes().getClientSecret(),
+                testProperties.getClients().getMaster().getScopes().replace(",", " ")
+        )
+                .andExpect(status().isBadRequest())
                 .andDo(print());
     }
 

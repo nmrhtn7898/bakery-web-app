@@ -10,7 +10,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.http.HttpStatus;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
@@ -22,6 +21,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 
 import javax.persistence.Inheritance;
 
+import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -61,7 +61,7 @@ public abstract class AbstractIntegrationTest {
                                 .param("scope", scopes)
                 );
         MvcResult mvcResult = resultActions.andReturn();
-        if (mvcResult.getResponse().getStatus() != HttpStatus.OK.value()) {
+        if (mvcResult.getResponse().getStatus() != OK.value()) {
             return resultActions;
         }
         MockHttpSession session = (MockHttpSession) mvcResult
@@ -109,13 +109,15 @@ public abstract class AbstractIntegrationTest {
                 );
     }
 
-    protected ResultActions getClientCredentialsGrantResponse(String clientId, String clientSecret) throws Exception {
+    protected ResultActions getClientCredentialsGrantResponse(String clientId, String clientSecret,
+                                                              String scopes) throws Exception {
         return mockMvc
                 .perform(
                         post("/oauth/token")
                                 .with(httpBasic(clientId, clientSecret))
                                 .accept(APPLICATION_JSON)
                                 .param("grant_type", "client_credentials")
+                                .param("scope", scopes)
 
                 );
     }

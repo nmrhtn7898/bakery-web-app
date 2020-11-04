@@ -4,6 +4,9 @@ import com.bread.auth.entity.Account;
 import com.bread.auth.entity.AccountAuthority;
 import com.bread.auth.entity.Authority;
 import com.bread.auth.entity.Oauth2Client;
+import com.bread.common.ErrorSerializer;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
@@ -33,6 +36,7 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Errors;
 
 import javax.persistence.EntityManager;
 import java.time.Duration;
@@ -65,6 +69,15 @@ public class AuthApplication {
     @Bean
     public TokenStore tokenStore() {
         return new JwtTokenStore(jwtAccessTokenConverter());
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = new ObjectMapper();
+        SimpleModule simpleModule = new SimpleModule();
+        simpleModule.addSerializer(Errors.class, new ErrorSerializer());
+        objectMapper.registerModule(simpleModule);
+        return objectMapper;
     }
 
     @Bean

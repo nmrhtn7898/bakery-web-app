@@ -48,14 +48,14 @@ test:
       clientSecret: noScopesSecret
       redirectUris: http://auth.bread.com
       grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
-      scopes:
+      scopes: noScopes
       authorities: user,admin
       resourceIds: auth
     noGrantTypes:
       clientId: noGrantTypesId
       clientSecret: noGrantTypesSecret
       redirectUris: http://auth.bread.com
-      grantTypes:
+      grantTypes: nograntTypes
       scopes: read,write
       authorities: user,admin
       resourceIds: auth
