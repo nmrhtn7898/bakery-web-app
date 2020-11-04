@@ -1,2 +1,3 @@
 rootProject.name = 'bread-modules'
-include 'bread-auth-module', 'bread-common-module'
+include 'bread-auth-module', 'bread-api-module', 'bread-common-module'
+
