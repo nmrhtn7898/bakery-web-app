@@ -1,4 +1,58 @@
+plugins {
+    id "org.asciidoctor.convert" version "1.5.9.2"
+    id 'com.bmuschko.docker-spring-boot-application' version '6.6.0'
+}
+
 version = '0.0.1'
+
+ext {
+    snippetsDir = file("${buildDir}/generated-snippets")
+}
+
+test {
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+}
+
+asciidoctor {
+    dependsOn(test)
+    inputs.dir snippetsDir
+}
+
+bootJar {
+    dependsOn(asciidoctor)
+    from("${asciidoctor.outputDir}/html5") {
+        into 'static/docs'
+    }
+}
+
+task copyFile {
+    doLast {
+        copy {
+            from 'src/main/resources/run.sh'
+            into "${buildDir}/libs"
+        }
+    }
+}
+
+task createDockerFile(type: com.bmuschko.gradle.docker.tasks.image.Dockerfile) {
+    dependsOn(copyFile) // copyFile task에 의존 해당 task 수행 후 수행
+    destFile = file("${buildDir}/libs/Dockerfile")// 도커 파일 생성 경로
+    from('openjdk:8-jdk-alpine')
+    runCommand('apk update && apk upgrade && apk add netcat-openbsd && apk add curl')
+    addFile("${project.name}-${project.version}.jar", 'app.jar')
+    addFile("run.sh", "run.sh")
+    runCommand("chmod +x run.sh")
+    entryPoint("./run.sh")
+}
+
+task createDockerImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
+    dockerFile = file("${buildDir}/libs/Dockerfile") // 도커 파일 경로
+    inputDir = file("${buildDir}/libs") // 도커 파일 -> 이미지 빌드 작업 경로 컨텍스트
+    images.add("${project.name}:${project.version}") // 도커 이미지 이름
+}
+
+tasks.build.finalizedBy(createDockerFile) // build 후 createDockerFile task 수행
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
@@ -9,4 +63,5 @@ dependencies {
         exclude group: 'org.slf4j', module: 'slf4j-simple'
     }
     runtimeOnly 'mysql:mysql-connector-java'
+    asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }

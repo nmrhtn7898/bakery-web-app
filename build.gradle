@@ -1,134 +1,78 @@
 buildscript {
-	ext {
-		springBootVersion = '2.3.4.RELEASE'
-	}
-	repositories {
-		mavenCentral()
-		maven {
-			url "https://plugins.gradle.org/m2/"
-		}
-	}
-	dependencies {
-		classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
-		classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
-		classpath "com.bmuschko:gradle-docker-plugin:6.6.1"
-		classpath "org.asciidoctor:asciidoctor-gradle-jvm:2.4.0"
-	}
+    ext {
+        springBootVersion = '2.3.4.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}"
+        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.3'
+    }
 }
 
 allprojects {
-	group = 'com.bread'
-	apply plugin: 'com.github.kt3k.coveralls'
-	apply plugin: 'jacoco'
-	repositories {
-		jcenter()
-	}
+    group = 'com.bread'
+    apply plugin: 'com.github.kt3k.coveralls'
+    apply plugin: 'jacoco'
+    repositories {
+        jcenter()
+    }
 }
 
 subprojects {
-	version = '0.0.1'
-	apply plugin: 'org.springframework.boot'
-	apply plugin: 'io.spring.dependency-management'
-	apply plugin: 'java'
-	def isNotCommonModule = name != 'bread-common-module'
-	if (isNotCommonModule) {
-		apply plugin: 'org.asciidoctor.convert'
-		apply plugin: 'com.bmuschko.docker-spring-boot-application'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'java'
+    jacocoTestReport {
+        reports {
+            html.enabled = true
+            xml.enabled = true
+        }
+    }
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        annotationProcessor 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+        compileOnly 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
+        implementation 'org.springframework.boot:spring-boot-starter-validation'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        testCompile 'org.mockito:mockito-junit-jupiter:3.6.0'
+        testImplementation('org.springframework.boot:spring-boot-starter-test') {
+            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+        }
+    }
+}
 
-		ext {
-			snippetsDir = file("${buildDir}/generated-snippets")
-		}
-
-		test {
-			outputs.dir snippetsDir
-			useJUnitPlatform()
-		}
-
-		asciidoctor {
-			dependsOn(test)
-			inputs.dir snippetsDir
-		}
-
-		bootJar {
-			dependsOn(asciidoctor)
-			from("${asciidoctor.outputDir}/html5") {
-				into 'static/docs'
-			}
-		}
-
-		task copyFile {
-			doLast {
-				copy {
-					from 'src/main/resources/run.sh'
-					into "${buildDir}/libs"
-				}
-			}
-		}
-
-		task createDockerFile(type: com.bmuschko.gradle.docker.tasks.image.Dockerfile) {
-			dependsOn(copyFile) // copyFile task에 의존 해당 task 수행 후 수행
-			destFile = file("${buildDir}/libs/Dockerfile")// 도커 파일 생성 경로
-			from('openjdk:8-jdk-alpine')
-			runCommand('apk update && apk upgrade && apk add netcat-openbsd && apk add curl')
-			addFile("${project.name}-${project.version}.jar", 'app.jar')
-			addFile("run.sh", "run.sh")
-			runCommand("chmod +x run.sh")
-			entryPoint("./run.sh")
-		}
-
-		task createDockerImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
-			dockerFile = file("${buildDir}/libs/Dockerfile") // 도커 파일 경로
-			inputDir = file("${buildDir}/libs") // 도커 파일 -> 이미지 빌드 작업 경로 컨텍스트
-			images.add("${project.name}:${project.version}") // 도커 이미지 이름
-		}
-
-		tasks.build.finalizedBy(createDockerFile) // build 후 createDockerFile task 수행
-	}
-	jacocoTestReport {
-		reports {
-			html.enabled = true
-			xml.enabled = true
-		}
-	}
-	repositories {
-		mavenCentral()
-	}
-	dependencies {
-		if (isNotCommonModule) {
-			implementation project(':bread-common-module')
-			implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-			implementation 'com.querydsl:querydsl-jpa'
-			implementation 'org.springframework.boot:spring-boot-starter-hateoas'
-			implementation 'org.springframework.boot:spring-boot-configuration-processor'
-			testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-			testImplementation 'com.h2database:h2'
-		}
-		annotationProcessor 'org.projectlombok:lombok'
-		testAnnotationProcessor 'org.projectlombok:lombok'
-		compileOnly 'org.projectlombok:lombok'
-		testCompileOnly 'org.projectlombok:lombok'
-		implementation 'org.springframework.boot:spring-boot-starter-validation'
-		implementation 'org.springframework.boot:spring-boot-starter-web'
-		testCompile 'org.mockito:mockito-junit-jupiter:3.6.0'
-		testImplementation('org.springframework.boot:spring-boot-starter-test') {
-			exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-		}
-	}
+[':bread-auth-module', ':bread-api-module'].each { moduleName ->
+    project(moduleName) {
+        dependencies {
+            implementation project(':bread-common-module')
+            implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+            implementation 'com.querydsl:querydsl-jpa'
+            implementation 'org.springframework.boot:spring-boot-starter-hateoas'
+            implementation 'org.springframework.boot:spring-boot-configuration-processor'
+            testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+            testImplementation 'com.h2database:h2'
+        }
+    }
 }
 
 task jacocoRootReport(type: JacocoReport) {
-	description = 'Generates an aggregate report from all subprojects'
-	dependsOn = subprojects.test
-	sourceDirectories.setFrom(files(subprojects.sourceSets.main.allSource.srcDirs))
-	classDirectories.setFrom(files(subprojects.sourceSets.main.output))
-	executionData.setFrom(files(subprojects.jacocoTestReport.executionData))
-	reports {
-		html.enabled = true
-		xml.enabled = true
-	}
+    description = 'Generates an aggregate report from all subprojects'
+    sourceDirectories.setFrom(files(subprojects.sourceSets.main.allSource.srcDirs))
+    classDirectories.setFrom(files(subprojects.sourceSets.main.output))
+    executionData.setFrom(files(subprojects.jacocoTestReport.executionData))
+    reports {
+        html.enabled = true
+        xml.enabled = true
+    }
 }
 
 coveralls {
-	sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
-	jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
+    sourceDirs = subprojects.sourceSets.main.allSource.srcDirs.flatten()
+    jacocoReportPath = "${buildDir}/reports/jacoco/jacocoRootReport/jacocoRootReport.xml"
 }
