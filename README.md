@@ -6,4 +6,5 @@
 docker-compose 명령어 실행
 - docker-compose -f docker/default/docker-compose.yml up -d
 - 컨테이너 실행 후, 애플리케이션 실행 및 디버깅
+- asciidoctor encoding 관련 에러 발생 시 => 환경 변수 설정 GRADLE_OPTS=-Dfile.encoding=UTF-8
 
