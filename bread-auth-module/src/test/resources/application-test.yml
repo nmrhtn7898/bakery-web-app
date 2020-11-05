@@ -43,6 +43,17 @@ test:
         - user
         - admin
   clients:
+    noSecret:
+      clientId: noSecretId
+      clientSecret:
+      redirectUris: http://auth.bread.com
+      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
+      scopes: read,write
+      authorities: user,admin
+      resourceIds: auth
+      codeChallenge: YmRmMTkyODk4YjJhYmM4MWQyOGNlZWYxMWJmODExMTYyMWZjY2ZhMGNjMGJjZTZlMjAwMGZlMzdmODc0MjcwZQ==
+      codeVerifier: 4cc9b165-1230-4607-873b-3a78afcf60c5
+      codeChallengeMethod: S256
     noScopes:
       clientId: noScopesId
       clientSecret: noScopesSecret

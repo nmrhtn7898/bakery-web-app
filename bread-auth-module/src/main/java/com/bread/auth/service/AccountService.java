@@ -1,14 +1,9 @@
 package com.bread.auth.service;
 
 import com.bread.auth.entity.Account;
-import com.bread.auth.model.AccountAdapter;
+import com.bread.auth.config.AccountAdapter;
 import com.bread.auth.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

@@ -26,11 +26,11 @@ allprojects {
 }
 
 subprojects {
-	def projectVersion = project.version
-	def isNotCommonModule = name != 'bread-common-module'
+	version = '0.0.1'
 	apply plugin: 'org.springframework.boot'
 	apply plugin: 'io.spring.dependency-management'
 	apply plugin: 'java'
+	def isNotCommonModule = name != 'bread-common-module'
 	if (isNotCommonModule) {
 		apply plugin: 'org.asciidoctor.convert'
 		apply plugin: 'com.bmuschko.docker-spring-boot-application'
@@ -70,7 +70,7 @@ subprojects {
 			destFile = file("${buildDir}/libs/Dockerfile")// 도커 파일 생성 경로
 			from('openjdk:8-jdk-alpine')
 			runCommand('apk update && apk upgrade && apk add netcat-openbsd && apk add curl')
-			addFile("${project.name}-${projectVersion}.jar", 'app.jar')
+			addFile("${project.name}-${project.version}.jar", 'app.jar')
 			addFile("run.sh", "run.sh")
 			runCommand("chmod +x run.sh")
 			entryPoint("./run.sh")
@@ -79,7 +79,7 @@ subprojects {
 		task createDockerImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildImage) {
 			dockerFile = file("${buildDir}/libs/Dockerfile") // 도커 파일 경로
 			inputDir = file("${buildDir}/libs") // 도커 파일 -> 이미지 빌드 작업 경로 컨텍스트
-			images.add("${project.name}:${projectVersion}") // 도커 이미지 이름
+			images.add("${project.name}:${project.version}") // 도커 이미지 이름
 		}
 
 		tasks.build.finalizedBy(createDockerFile) // build 후 createDockerFile task 수행

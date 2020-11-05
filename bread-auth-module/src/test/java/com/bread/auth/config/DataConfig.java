@@ -52,6 +52,7 @@ public class DataConfig {
         @Setter
         public static class Clients {
             private Client master;
+            private Client noSecret;
             private Client noScopes;
             private Client noGrantTypes;
             private Client noAuthorities;
@@ -68,6 +69,9 @@ public class DataConfig {
             private String scopes;
             private String authorities;
             private String resourceIds;
+            private String codeChallenge;
+            private String codeChallengeMethod;
+            private String codeVerifier;
         }
 
     }
@@ -168,11 +172,22 @@ public class DataConfig {
                     .resourceIds(testProperties.getClients().getNoScopes().getResourceIds())
                     .webServerRedirectUri(testProperties.getClients().getNoScopes().getRedirectUris())
                     .build();
+            Oauth2Client noSecretClient = Oauth2Client
+                    .builder()
+                    .clientId(testProperties.getClients().getNoSecret().getClientId())
+                    .clientSecret(passwordEncoder.encode(testProperties.getClients().getNoSecret().getClientSecret()))
+                    .authorizedGrantTypes(testProperties.getClients().getNoSecret().getGrantTypes())
+                    .scope(testProperties.getClients().getNoSecret().getScopes())
+                    .authorities(testProperties.getClients().getNoSecret().getAuthorities())
+                    .resourceIds(testProperties.getClients().getNoSecret().getResourceIds())
+                    .webServerRedirectUri(testProperties.getClients().getNoSecret().getRedirectUris())
+                    .build();
             entityManager.persist(masterClient);
             entityManager.persist(noAuthoritiesClient);
             entityManager.persist(noGrantTypesClient);
             entityManager.persist(noScopesClient);
             entityManager.persist(noResourceIdsClient);
+            entityManager.persist(noSecretClient);
         }
     }
 

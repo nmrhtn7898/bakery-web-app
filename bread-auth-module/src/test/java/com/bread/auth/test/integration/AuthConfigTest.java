@@ -126,6 +126,66 @@ public class AuthConfigTest extends AbstractIntegrationTest {
     }
 
     @Test
+    @DisplayName("인증 서버 AUTHORIZATION CODE WITH PKCE 방식 토큰 발급 성공 200")
+    public void getToken_AuthorizationCodeGrantWithPkce_200() throws Exception {
+        getAuthorizeResponse(
+                "code",
+                testProperties.getUsers().getMaster().getUsername(),
+                testProperties.getClients().getNoSecret().getClientId(),
+                testProperties.getClients().getNoSecret().getRedirectUris().split(",")[0],
+                testProperties.getClients().getNoSecret().getScopes().replace(",", " "),
+                testProperties.getClients().getNoSecret().getCodeChallenge(),
+                testProperties.getClients().getNoSecret().getCodeChallengeMethod()
+        )
+                .andDo(result -> {
+                    String redirectedUrl = result
+                            .getResponse()
+                            .getRedirectedUrl();
+                    String code = redirectedUrl.substring(redirectedUrl.indexOf("=") + 1);
+                    mockMvc
+                            .perform(
+                                    post("/oauth/token")
+                                            .with(httpBasic(testProperties.getClients().getNoSecret().getClientId(), testProperties.getClients().getNoSecret().getClientSecret()))
+                                            .param("code", code)
+                                            .param("grant_type", "authorization_code")
+                                            .param("redirect_uri", testProperties.getClients().getNoSecret().getRedirectUris().split(",")[0])
+                                    .param("code_verifier", testProperties.getClients().getNoSecret().getCodeVerifier())
+                            )
+                            .andExpect(status().isOk())
+                            .andExpect(jsonPath("access_token").exists())
+                            .andExpect(jsonPath("token_type").value("bearer"))
+                            .andExpect(jsonPath("refresh_token").exists())
+                            .andExpect(jsonPath("expires_in").exists())
+                            .andExpect(jsonPath("scope").exists())
+                            .andExpect(jsonPath("jti").exists())
+                            .andDo(print())
+                            .andDo(document(
+                                    "token-authorization-code-with-pkce-grant",
+                                    requestHeaders(
+                                            headerWithName(AUTHORIZATION).description("클라이언트 ID/SECRET 인코딩 값")
+                                    ),
+                                    requestParameters(
+                                            parameterWithName("code").description("토큰을 발급받을 수 있는 코드 값"),
+                                            parameterWithName("grant_type").description("인증 토큰 발급 방식"),
+                                            parameterWithName("redirect_uri").description("리다이렉트 경로"),
+                                            parameterWithName("code_verifier").description("PKCE 코드 검증 값")
+                                    ),
+                                    responseHeaders(
+                                            headerWithName(CONTENT_TYPE).description("응답 본문 타입")
+                                    ),
+                                    responseFields(
+                                            fieldWithPath("access_token").description("인증 토큰"),
+                                            fieldWithPath("refresh_token").description("재발급 토큰"),
+                                            fieldWithPath("token_type").description("토큰 타입"),
+                                            fieldWithPath("expires_in").description("토큰 유효 시간, 초 단위"),
+                                            fieldWithPath("scope").description("토큰의 접근 범위"),
+                                            fieldWithPath("jti").description("토큰의 고유 식별자")
+                                    )
+                            ));
+                });
+    }
+
+    @Test
     @DisplayName("인증 서버 AUTHORIZATION CODE 방식 토큰 발급 성공 200")
     public void getToken_AuthorizationCodeGrant_200() throws Exception {
         getAuthorizeResponse(

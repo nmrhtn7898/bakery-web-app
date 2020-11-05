@@ -9,6 +9,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 
 @Configuration
 @RequiredArgsConstructor
@@ -23,16 +24,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors()
-                .disable();
-        http
                 .formLogin()
                 .permitAll();
         http
-                .logout();
-        http
                 .requestMatchers()
-                .regexMatchers("^(?!/api/).*$")
+                .mvcMatchers("/login", "/oauth/authorize")
                 .and()
                 .authorizeRequests()
                 .anyRequest()

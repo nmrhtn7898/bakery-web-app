@@ -26,6 +26,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.util.StringUtils.hasText;
 
 @Disabled
 @SpringBootTest
@@ -51,15 +52,26 @@ public abstract class AbstractIntegrationTest {
     protected ResultActions getAuthorizeResponse(String responseType, String username,
                                                  String clientId, String redirectUri,
                                                  String scopes) throws Exception {
-        ResultActions resultActions = mockMvc
-                .perform(
-                        get("/oauth/authorize")
-                                .with(user(userDetailsService.loadUserByUsername(username)))
-                                .param("client_id", clientId)
-                                .param("response_type", responseType)
-                                .param("redirect_uri", redirectUri)
-                                .param("scope", scopes)
-                );
+        return getAuthorizeResponse(responseType, username, clientId, redirectUri, scopes, null, null);
+    }
+
+    protected ResultActions getAuthorizeResponse(String responseType, String username,
+                                                 String clientId, String redirectUri,
+                                                 String scopes, String codeChallenge,
+                                                 String codeChallengeMethod) throws Exception {
+        MockHttpServletRequestBuilder authorizeRequestBuilder = get("/oauth/authorize")
+                .with(user(userDetailsService.loadUserByUsername(username)))
+                .param("client_id", clientId)
+                .param("response_type", responseType)
+                .param("redirect_uri", redirectUri)
+                .param("scope", scopes);
+        if (hasText(codeChallenge)) {
+            authorizeRequestBuilder.param("code_challenge", codeChallenge);
+        }
+        if (hasText(codeChallengeMethod)) {
+            authorizeRequestBuilder.param("code_challenge_method", codeChallengeMethod);
+        }
+        ResultActions resultActions = mockMvc.perform(authorizeRequestBuilder);
         MvcResult mvcResult = resultActions.andReturn();
         if (mvcResult.getResponse().getStatus() != OK.value()) {
             return resultActions;

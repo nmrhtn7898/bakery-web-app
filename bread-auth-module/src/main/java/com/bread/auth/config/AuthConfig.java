@@ -31,6 +31,9 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
 
     private final Oauth2ClientService clientDetailsService;
 
+    private final PkceAuthorizationCodeService pkceAuthorizationCodeService;
+
+
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
@@ -45,8 +48,24 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
     }
 
     @Override
-    public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+    public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
+        PkceAuthorizationCodeTokenGranter tokenGranter = new PkceAuthorizationCodeTokenGranter(
+                endpoints.getTokenServices(),
+                pkceAuthorizationCodeService,
+                clientDetailsService,
+                endpoints.getOAuth2RequestFactory()
+        );
+        CustomCompositeTokenGranter compositeTokenGranter = new CustomCompositeTokenGranter(
+                clientDetailsService,
+                endpoints.getAuthorizationCodeServices(),
+                endpoints.getTokenServices(),
+                endpoints.getOAuth2RequestFactory(),
+                authenticationManager
+        );
+        compositeTokenGranter.addGranter(tokenGranter);
         endpoints
+                .authorizationCodeServices(pkceAuthorizationCodeService)
+                .tokenGranter(compositeTokenGranter)
                 .userDetailsService(userDetailsService)
                 .authenticationManager(authenticationManager)
                 .accessTokenConverter(accessTokenConverter)

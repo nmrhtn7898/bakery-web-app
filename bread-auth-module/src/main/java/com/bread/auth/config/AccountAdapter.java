@@ -1,4 +1,4 @@
-package com.bread.auth.model;
+package com.bread.auth.config;
 
 import com.bread.auth.entity.Account;
 import lombok.Getter;
