@@ -17,12 +17,16 @@ cache:
 before_install:
   - chmod +x gradlew
 
-jobs:
-  include:
-    - name: integration-test
-    script: "./gradlew clean build"
-    after_success:
-      - ./gradlew jacocoRootReport coveralls
+script: "./gradlew clean build"
+after_success:
+  - ./gradlew jacocoRootReport coveralls
+
+#jobs:
+#  include:
+#    - stage: integration-test
+#    script: "./gradlew clean build"
+#    after_success:
+#      - ./gradlew jacocoRootReport coveralls
 
 #before_deploy:
 #  - zip -r bread-web-app *
