@@ -38,6 +38,7 @@ jobs:
         - zip -r $MODULE_NAME *
         - mkdir -p deploy
         - mv $MODULE_NAME.zip deploy/$MODULE_NAME.zip
+        - cd ..
       deploy:
         - provider: s3
           access_key_id: $AWS_ACCESS_KEY
@@ -52,19 +53,19 @@ jobs:
           on:
             repo: nmrhtn7898/bread-project
             branch: master
-#        - provider: codedeploy
-#          access_key_id: $AWS_ACCESS_KEY
-#          secret_access_key: $AWS_SECRET_KEY
-#          bucket: bread-app
-#          key: $MODULE_NAME.zip
-#          bundle_type: zip
-#          application: bread-deploy-app
-#          deployment_group: bread-deploy-group
-#          region: ap-northeast-2
-#          wait-until-deployed: true
-#          on:
-#            repo: nmrhtn7898/bread-project
-#            branch: master
+        - provider: codedeploy
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: bread-app
+          key: $MODULE_NAME.zip
+          bundle_type: zip
+          application: bread-deploy-app
+          deployment_group: bread-deploy-group
+          region: ap-northeast-2
+          wait-until-deployed: true
+          on:
+            repo: nmrhtn7898/bread-project
+            branch: master
 
 #    - name: "bread-api-module deploy"
 #      script: bash docker/travis-docker.sh
