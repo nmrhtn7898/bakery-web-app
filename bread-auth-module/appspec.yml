@@ -1,7 +1,7 @@
 version: 0.0
 os: linux
 files:
-  - source:  /$MODULE_NAME/
+  - source:  /bread-auth-module/
     destination: /home/ec2-user/deploy/
 hooks:
   AfterInstall: # 배포가 끝나면 아래 명령어를 실행
