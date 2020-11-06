@@ -34,7 +34,8 @@ jobs:
       script: bash docker/travis-docker.sh
       env: MODULE_NAME=bread-auth-module MODULE_VERSION=0.0.1 DOCKER_USERNAME=nmrhtn7898
       before_deploy:
-        - zip -r $MODULE_NAME $MODULE_NAME/*
+        - cd $MODULE_NAME
+        - zip -r $MODULE_NAME *
         - mkdir -p deploy
         - mv $MODULE_NAME.zip deploy/$MODULE_NAME.zip
       deploy:
@@ -69,7 +70,8 @@ jobs:
       script: bash docker/travis-docker.sh
       env: MODULE_NAME=bread-api-module MODULE_VERSION=0.0.1 DOCKER_USERNAME=nmrhtn7898
       before_deploy:
-        - zip -r $MODULE_NAME $MODULE_NAME/*
+        - cd $MODULE_NAME
+        - zip -r $MODULE_NAME *
         - mkdir -p deploy
         - mv $MODULE_NAME.zip deploy/$MODULE_NAME.zip
       deploy:
