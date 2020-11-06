@@ -1,8 +1,8 @@
 version: 0.0
 os: linux
 files:
-  - source:  /$MODULE_NAME/
-    destination: /home/ec2-user/deploy/$MODULE_NAME/
+  - source:  /
+    destination: /home/ec2-user/deploy/
 hooks:
   AfterInstall: # 배포가 끝나면 아래 명령어를 실행
     - location: src/docker/execute-deploy.sh
