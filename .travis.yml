@@ -47,7 +47,7 @@ jobs:
           acl: public_read
           wait-until-deployed: true
           local_dir: deploy
-          upload-dir: /$MODULE_NAME
+          upload-dir: $MODULE_NAME
           on:
             repo: nmrhtn7898/bread-project
             branch: master
@@ -82,7 +82,7 @@ jobs:
           acl: public_read
           wait-until-deployed: true
           local_dir: deploy
-          upload-dir: /$MODULE_NAME
+          upload-dir: $MODULE_NAME
           on:
             repo: nmrhtn7898/bread-project
             branch: master
