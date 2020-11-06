@@ -19,7 +19,7 @@ before_install:
 
 jobs:
   include:
-    - stage: integration-test
+    - name: integration-test
     script: "./gradlew clean build"
     after_success:
       - ./gradlew jacocoRootReport coveralls
