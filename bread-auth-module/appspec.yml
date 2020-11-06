@@ -2,8 +2,8 @@ version: 0.0
 os: linux
 files:
   - source:  /
-    destination: /home/ec2-user/deploy/$MODULE_NAME
-#hooks:
-#  AfterInstall: # 배포가 끝나면 아래 명령어를 실행
-#    - location: src/docker/execute-deploy.sh
-#      timeout: 180
+    destination: /home/ec2-user/deploy/bread-auth-module
+hooks:
+  AfterInstall: # 배포가 끝나면 아래 명령어를 실행
+    - location: src/docker/execute-deploy.sh
+      timeout: 180
