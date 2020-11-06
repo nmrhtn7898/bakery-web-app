@@ -25,10 +25,10 @@ stages:
 jobs:
   include:
     - stage: dev
-#      name: "integration test"
-#      script: ./gradlew clean build
-#      after_success:
-#        - ./gradlew jacocoRootReport coveralls
+      name: "integration test"
+      script: ./gradlew clean build
+      after_success:
+        - ./gradlew jacocoRootReport coveralls
 
     - name: "bread-auth-module deploy"
       script: bash docker/travis-docker.sh
@@ -49,6 +49,7 @@ jobs:
           acl: public_read
           wait-until-deployed: true
           local_dir: $MODULE_NAME/deploy
+          upload-dir: deploy
           on:
             repo: nmrhtn7898/bread-project
             branch: master
@@ -56,7 +57,7 @@ jobs:
           access_key_id: $AWS_ACCESS_KEY
           secret_access_key: $AWS_SECRET_KEY
           bucket: bread-app
-          key: $MODULE_NAME.zip
+          key: deploy/$MODULE_NAME.zip
           bundle_type: zip
           application: bread-deploy-app
           deployment_group: bread-deploy-group
@@ -85,6 +86,7 @@ jobs:
           acl: public_read
           wait-until-deployed: true
           local_dir: $MODULE_NAME/deploy
+          upload-dir: deploy
           on:
             repo: nmrhtn7898/bread-project
             branch: master
@@ -92,7 +94,7 @@ jobs:
           access_key_id: $AWS_ACCESS_KEY
           secret_access_key: $AWS_SECRET_KEY
           bucket: bread-app
-          key: $MODULE_NAME.zip
+          key: deploy/$MODULE_NAME.zip
           bundle_type: zip
           application: bread-deploy-app
           deployment_group: bread-deploy-group
