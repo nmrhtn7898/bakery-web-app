@@ -2,10 +2,6 @@ language: java
 jdk:
   - openjdk8
 
-env:
-  - BREAD_AUTH_MODULE_VERSION=0.0.1
-  - BREAD_API_MODULE_VERSION=0.0.1
-
 branches:
   only:
     - master
@@ -15,58 +11,62 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
 
-services:
-  - docker
-
 before_install:
   - chmod +x gradlew
 
-script: "./gradlew clean build"
+jobs:
+  include:
+    - stage: dev
+    name: integration-test
+    script: "./gradlew clean build"
+    after_success:
+      - ./gradlew jacocoRootReport coveralls
 
-after_success:
-  - ./gradlew jacocoRootReport coveralls
 
-before_deploy:
-  - zip -r bread-web-app *
-  - mkdir -p deploy
-  - mv bread-web-app.zip deploy/bread-web-app.zip
+#services:
+#  - docker
 
-deploy:
-  - provider: script
-    script: bash travis-docker.sh
-    skip_cleanup: true
-    on:
-      repo: nmrhtn7898/bread-project
-      branch: master
-
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: bread-app
-    region: ap-northeast-2
-    skip_cleanup: true
-    acl: public_read
-    wait-until-deployed: true
-    local_dir: deploy
-    on:
-      repo: nmrhtn7898/bread-project
-      branch: master
-
-  - provider: codedeploy
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: bread-app
-    key: bread-web-app.zip
-    bundle_type: zip
-    application: bread-deploy-app
-    deployment_group: bread-deploy-group
-    region: ap-northeast-2
-    wait-until-deployed: true
-    on:
-      repo: nmrhtn7898/bread-project
-      branch: master
-
-notifications:
-  email:
-    recipients:
-      - nmrhtn7898@naver.com
+#before_deploy:
+#  - zip -r bread-web-app *
+#  - mkdir -p deploy
+#  - mv bread-web-app.zip deploy/bread-web-app.zip
+#
+#deploy:
+#  - provider: script
+#    script: bash travis-docker.sh
+#    skip_cleanup: true
+#    on:
+#      repo: nmrhtn7898/bread-project
+#      branch: master
+#
+#  - provider: s3
+#    access_key_id: $AWS_ACCESS_KEY
+#    secret_access_key: $AWS_SECRET_KEY
+#    bucket: bread-app
+#    region: ap-northeast-2
+#    skip_cleanup: true
+#    acl: public_read
+#    wait-until-deployed: true
+#    local_dir: deploy
+#    on:
+#      repo: nmrhtn7898/bread-project
+#      branch: master
+#
+#  - provider: codedeploy
+#    access_key_id: $AWS_ACCESS_KEY
+#    secret_access_key: $AWS_SECRET_KEY
+#    bucket: bread-app
+#    key: bread-web-app.zip
+#    bundle_type: zip
+#    application: bread-deploy-app
+#    deployment_group: bread-deploy-group
+#    region: ap-northeast-2
+#    wait-until-deployed: true
+#    on:
+#      repo: nmrhtn7898/bread-project
+#      branch: master
+#
+#notifications:
+#  email:
+#    recipients:
+#      - nmrhtn7898@naver.com

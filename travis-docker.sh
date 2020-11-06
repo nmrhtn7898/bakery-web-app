@@ -1,5 +1,6 @@
 ./gradlew createDockerImage
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-docker tag $DOCKER_USERNAME/bread-auth-module:$BREAD_AUTH_MODULE_VERSION $DOCKER_USERNAME/bread-auth-module
-docker push $DOCKER_USERNAME/bread-auth-module:$BREAD_AUTH_MODULE_VERSION
-docker push $DOCKER_USERNAME/bread-auth-module
+./gradlew :$MODEUL_NAME:clean build
+docker tag $DOCKER_USERNAME/$:$MODULE_VERSION $DOCKER_USERNAME/MODULE_NAME
+docker push $DOCKER_USERNAME/MODULE_NAME:$MODULE_VERSION
+docker push $DOCKER_USERNAME/MODULE_NAME:$MODULE_VERSION
