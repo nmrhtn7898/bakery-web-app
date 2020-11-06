@@ -29,7 +29,7 @@ bootJar {
 task copyFile {
     doLast {
         copy {
-            from 'src/docker/run.sh'
+            from 'src/main/docker/run.sh'
             into "${buildDir}/libs"
         }
     }
