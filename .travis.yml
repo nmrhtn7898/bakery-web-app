@@ -33,59 +33,72 @@ jobs:
     - name: "bread-auth-module deploy"
       script: bash docker/travis-docker.sh
       env: MODULE_NAME=bread-auth-module MODULE_VERSION=0.0.1 DOCKER_USERNAME=nmrhtn7898
+      before_deploy:
+        - zip -r $MODULE_NAME *
+        - mkdir -p deploy
+        - mv $MODULE_NAME.zip deploy/$MODULE_NAME.zip
+        deploy:
+          - provider: s3
+            access_key_id: $AWS_ACCESS_KEY
+            secret_access_key: $AWS_SECRET_KEY
+            bucket: bread-app
+            region: ap-northeast-2
+            skip_cleanup: true
+            acl: public_read
+            wait-until-deployed: true
+            local_dir: deploy
+            on:
+              repo: nmrhtn7898/bread-project
+              branch: master
+          - provider: codedeploy
+            access_key_id: $AWS_ACCESS_KEY
+            secret_access_key: $AWS_SECRET_KEY
+            bucket: bread-app
+            key: $MODULE_NAME.zip
+            bundle_type: zip
+            application: bread-deploy-app
+            deployment_group: bread-deploy-group
+            region: ap-northeast-2
+            wait-until-deployed: true
+            on:
+              repo: nmrhtn7898/bread-project
+              branch: master
 
     - name: "bread-api-module deploy"
       script: bash docker/travis-docker.sh
       env: MODULE_NAME=bread-api-module MODULE_VERSION=0.0.1 DOCKER_USERNAME=nmrhtn7898
+      before_deploy:
+        - zip -r $MODULE_NAME *
+        - mkdir -p deploy
+        - mv $MODULE_NAME.zip deploy/$MODULE_NAME.zip
+      deploy:
+        - provider: s3
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: bread-app
+          region: ap-northeast-2
+          skip_cleanup: true
+          acl: public_read
+          wait-until-deployed: true
+          local_dir: deploy
+          on:
+            repo: nmrhtn7898/bread-project
+            branch: master
+        - provider: codedeploy
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: bread-app
+          key: $MODULE_NAME.zip
+          bundle_type: zip
+          application: bread-deploy-app
+          deployment_group: bread-deploy-group
+          region: ap-northeast-2
+          wait-until-deployed: true
+          on:
+            repo: nmrhtn7898/bread-project
+            branch: master
 
-#jobs:
-#  include:
-#    - stage: integration-test
-#    script: "./gradlew clean build"
-#    after_success:
-#      - ./gradlew jacocoRootReport coveralls
-
-#before_deploy:
-#  - zip -r bread-web-app *
-#  - mkdir -p deploy
-#  - mv bread-web-app.zip deploy/bread-web-app.zip
-#
-#deploy:
-#  - provider: script
-#    script: bash travis-docker.sh
-#    skip_cleanup: true
-#    on:
-#      repo: nmrhtn7898/bread-project
-#      branch: master
-#
-#  - provider: s3
-#    access_key_id: $AWS_ACCESS_KEY
-#    secret_access_key: $AWS_SECRET_KEY
-#    bucket: bread-app
-#    region: ap-northeast-2
-#    skip_cleanup: true
-#    acl: public_read
-#    wait-until-deployed: true
-#    local_dir: deploy
-#    on:
-#      repo: nmrhtn7898/bread-project
-#      branch: master
-#
-#  - provider: codedeploy
-#    access_key_id: $AWS_ACCESS_KEY
-#    secret_access_key: $AWS_SECRET_KEY
-#    bucket: bread-app
-#    key: bread-web-app.zip
-#    bundle_type: zip
-#    application: bread-deploy-app
-#    deployment_group: bread-deploy-group
-#    region: ap-northeast-2
-#    wait-until-deployed: true
-#    on:
-#      repo: nmrhtn7898/bread-project
-#      branch: master
-#
-#notifications:
-#  email:
-#    recipients:
-#      - nmrhtn7898@naver.com
+notifications:
+  email:
+    recipients:
+      - nmrhtn7898@naver.com
