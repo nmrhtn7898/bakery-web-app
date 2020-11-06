@@ -49,7 +49,6 @@ jobs:
           acl: public_read
           wait-until-deployed: true
           local_dir: $MODULE_NAME/deploy
-          upload-dir: $MODULE_NAME
           on:
             repo: nmrhtn7898/bread-project
             branch: master
@@ -57,7 +56,7 @@ jobs:
           access_key_id: $AWS_ACCESS_KEY
           secret_access_key: $AWS_SECRET_KEY
           bucket: bread-app
-          key: $MODULE_NAME/$MODULE_NAME.zip
+          key: $MODULE_NAME.zip
           bundle_type: zip
           application: bread-deploy-app
           deployment_group: bread-deploy-group
