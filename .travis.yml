@@ -98,7 +98,7 @@ jobs:
             repo: nmrhtn7898/bread-project
             branch: master
 
-notifications:
-  email:
-    recipients:
-      - nmrhtn7898@naver.com
+#notifications:
+#  email:
+#    recipients:
+#      - nmrhtn7898@naver.com
