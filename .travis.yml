@@ -47,7 +47,7 @@ jobs:
           skip_cleanup: true
           acl: public_read
           wait-until-deployed: true
-          local_dir: $MODULE_NAME/deploy
+          local_dir: deploy
           upload-dir: $MODULE_NAME
           on:
             repo: nmrhtn7898/bread-project
@@ -83,7 +83,7 @@ jobs:
           skip_cleanup: true
           acl: public_read
           wait-until-deployed: true
-          local_dir: $MODULE_NAME/deploy
+          local_dir: deploy
           upload-dir: $MODULE_NAME
           on:
             repo: nmrhtn7898/bread-project
