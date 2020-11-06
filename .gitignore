@@ -4,8 +4,9 @@ build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
-docker/default/database/
-docker/default/redis/
+docker/proxy
+docker/database
+docker/redis
 
 ### IntelliJ IDEA ###
 .idea

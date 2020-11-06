@@ -47,7 +47,6 @@ import static org.springframework.security.crypto.factory.PasswordEncoderFactori
 
 @EnableJpaAuditing
 @EnableCaching
-@EnableRedisRepositories
 @SpringBootApplication
 public class AuthApplication {
 
