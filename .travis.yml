@@ -23,7 +23,7 @@ stages:
 jobs:
   include:
     - stage: dev
-    - name: "integration test"
+      name: "integration test"
       script: ./gradlew clean build
       after_success:
         - ./gradlew jacocoRootReport coveralls
