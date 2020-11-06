@@ -34,15 +34,15 @@ jobs:
       script: bash docker/travis-docker.sh
       env:
         global:
-          $MODULE_NAME=bread-auth-module
-          $MODULE_VERSION=0.0.1
+          MODULE_NAME=bread-auth-module
+          MODULE_VERSION=0.0.1
 
     - name: "bread-api-module deploy"
       script: bash docker/travis-docker.sh
       env:
         global:
-          $MODULE_NAME=bread-api-module
-          $MODULE_VERSION=0.0.1
+          MODULE_NAME=bread-api-module
+          MODULE_VERSION=0.0.1
 
 #jobs:
 #  include:
