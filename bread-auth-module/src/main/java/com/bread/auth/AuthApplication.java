@@ -154,7 +154,7 @@ public class AuthApplication {
                     .builder()
                     .clientId("test")
 //                    .clientSecret("{noop}")
-                    .clientSecret("1234")
+                    .clientSecret(passwordEncoder.encode("1234"))
                     .authorizedGrantTypes("authorization_code,implicit,password,refresh_token,client_credentials")
                     .scope("read,write")
                     .authorities("user")
