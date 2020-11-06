@@ -153,7 +153,8 @@ public class AuthApplication {
             Oauth2Client client = Oauth2Client
                     .builder()
                     .clientId("test")
-                    .clientSecret("{noop}")
+//                    .clientSecret("{noop}")
+                    .clientSecret("1234")
                     .authorizedGrantTypes("authorization_code,implicit,password,refresh_token,client_credentials")
                     .scope("read,write")
                     .authorities("user")
