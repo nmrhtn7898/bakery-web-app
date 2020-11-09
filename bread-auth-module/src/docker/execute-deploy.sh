@@ -1,3 +1,2 @@
 #!/bin/bash
-cd $HOME/deploy/deploy-sh
-./bread-auth-module-deploy.sh > deploy.out &
+$HOME/deploy/deploy-sh/bread-auth-module-deploy.sh > bread-auth-module.out &
