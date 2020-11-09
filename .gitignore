@@ -1,3 +1,4 @@
+### Common ###
 HELP.md
 .gradle
 build/
@@ -14,3 +15,25 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
