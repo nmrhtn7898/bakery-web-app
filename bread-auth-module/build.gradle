@@ -57,6 +57,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.3'
     implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.6.RELEASE'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     testImplementation 'org.springframework.security:spring-security-test'
     testImplementation ('it.ozimov:embedded-redis:0.7.3') {
         exclude group: 'org.slf4j', module: 'slf4j-simple'

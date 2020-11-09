@@ -1,5 +1,9 @@
 server:
   port: 9600
+  servlet:
+    session:
+      cookie:
+        domain: .bread.com
 
 spring:
   datasource:

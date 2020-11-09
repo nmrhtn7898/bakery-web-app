@@ -10,10 +10,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    private final UserDetailsService userDetailsService;
 
     @Bean
     @Override
@@ -25,12 +28,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .formLogin()
-                .permitAll();
+                .loginPage("/login")
+                .successHandler((request, response, authentication) -> {
+                    String redirect_uri = request.getParameter("redirect_uri");
+                    response.sendRedirect(redirect_uri);
+                });
+        http
+                .rememberMe()
+                .rememberMeParameter("remember-me")
+                .rememberMeCookieName("remember-me")
+                .userDetailsService(userDetailsService);
         http
                 .requestMatchers()
                 .mvcMatchers("/login", "/oauth/authorize")
                 .and()
                 .authorizeRequests()
+                .mvcMatchers("/login").permitAll()
                 .anyRequest()
                 .authenticated();
     }
