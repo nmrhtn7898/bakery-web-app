@@ -65,6 +65,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                                 ),
                                 responseFields(
                                         fieldWithPath("aud").description("토큰 발행자"),
+                                        fieldWithPath("user_id").description("사용자 식별키"),
                                         fieldWithPath("user_name").description("사용자 아이디"),
                                         fieldWithPath("scope").description("토큰의 접근 범위"),
                                         fieldWithPath("active").description("토큰 유효 여부"),

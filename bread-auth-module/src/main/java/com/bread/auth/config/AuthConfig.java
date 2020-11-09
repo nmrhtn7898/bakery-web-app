@@ -1,7 +1,13 @@
 package com.bread.auth.config;
 
+import com.bread.auth.config.custom.CustomCompositeTokenGranter;
+import com.bread.auth.config.custom.CustomJwtTokenConverter;
+import com.bread.auth.config.custom.PkceAuthorizationCodeService;
+import com.bread.auth.config.custom.PkceAuthorizationCodeTokenGranter;
 import com.bread.auth.service.Oauth2ClientService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,8 +17,8 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.A
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
-import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 @EnableAuthorizationServer
@@ -23,15 +29,18 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
 
     private final AuthenticationManager authenticationManager;
 
-    private final TokenStore tokenStore;
-
-    private final AccessTokenConverter accessTokenConverter;
-
     private final UserDetailsService userDetailsService;
 
     private final Oauth2ClientService clientDetailsService;
 
+    private final CustomJwtTokenConverter customJwtTokenConverter;
+
     private final PkceAuthorizationCodeService pkceAuthorizationCodeService;
+
+    @Bean
+    public TokenStore tokenStore() {
+        return new JwtTokenStore(customJwtTokenConverter);
+    }
 
 
     @Override
@@ -68,8 +77,8 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
                 .tokenGranter(compositeTokenGranter)
                 .userDetailsService(userDetailsService)
                 .authenticationManager(authenticationManager)
-                .accessTokenConverter(accessTokenConverter)
-                .tokenStore(tokenStore);
+                .accessTokenConverter(customJwtTokenConverter)
+                .tokenStore(tokenStore());
     }
 
 }

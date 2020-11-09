@@ -27,8 +27,10 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.redis.RedisSystemException;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisServer;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
@@ -38,6 +40,8 @@ import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenCo
 import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.SocketUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 
 import javax.persistence.EntityManager;
@@ -48,88 +52,16 @@ import static java.time.Duration.ofMinutes;
 import static java.time.Duration.ofSeconds;
 import static org.springframework.data.redis.cache.RedisCacheConfiguration.defaultCacheConfig;
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
+import static org.springframework.util.SocketUtils.findAvailableTcpPort;
+import static org.springframework.util.StringUtils.hasText;
 
-@EnableJpaAuditing
 @EnableCaching
 @SpringBootApplication
 public class AuthApplication {
 
     @Bean
-    public JPAQueryFactory jpaQueryFactory(EntityManager entityManager) {
-        return new JPAQueryFactory(entityManager);
-    }
-
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return createDelegatingPasswordEncoder();
-    }
-
-    @Bean
-    public TokenStore tokenStore() {
-        return new JwtTokenStore(jwtAccessTokenConverter());
-    }
-
-    @Bean
-    public WebServerFactoryCustomizer<TomcatServletWebServerFactory> webServerFactoryCustomizer() {
-        return factory -> factory.addContextCustomizers(context ->
-                context.setCookieProcessor(new LegacyCookieProcessor())
-        );
-    }
-
-    @Bean
-    public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = new ObjectMapper();
-        SimpleModule simpleModule = new SimpleModule();
-        simpleModule.addSerializer(Errors.class, new ErrorsSerializer());
-        objectMapper.registerModule(simpleModule);
-        return objectMapper;
-    }
-
-    @Bean
-    public JwtAccessTokenConverter jwtAccessTokenConverter() {
-        JwtAccessTokenConverter jwtAccessTokenConverter = new JwtAccessTokenConverter();
-        jwtAccessTokenConverter.setSigningKey("temp_secret");
-        return jwtAccessTokenConverter;
-    }
-
-    @Bean
-    @Profile("!test")
-    public RedisConnectionFactory redisConnectionFactory(@Value("${spring.redis.host}") String host,
-                                                         @Value("${spring.redis.port}") int port) {
-        return new LettuceConnectionFactory(host, port);
-    }
-
-    @Bean
-    public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-        return redisTemplate;
-    }
-
-    @Bean
-    public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
-        return builder -> {
-            Map<String, RedisCacheConfiguration> configurationMap = new HashMap<>();
-            configurationMap.put("client", defaultCacheConfig().entryTtl(ofMinutes(10)));
-            builder.withInitialCacheConfigurations(configurationMap);
-        };
-    }
-
-    @Profile(value = {"dev", "prod"})
-    @Bean
-    public StringEncryptor stringEncryptor(@Value("${encrypt.key}") String key,
-                                           @Value("${encrypt.alg}") String alg) {
-        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
-        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        config.setPassword(key);
-        config.setAlgorithm(alg);
-        config.setKeyObtentionIterations("1000");
-        config.setPoolSize("1");
-        config.setProviderName("SunJCE");
-        config.setSaltGeneratorClassName("org.jasypt.salt.RandomSaltGenerator");
-        config.setStringOutputType("base64");
-        encryptor.setConfig(config);
-        return encryptor;
     }
 
     @Profile(value = {"default", "dev"})
@@ -137,7 +69,9 @@ public class AuthApplication {
     @Component
     @RequiredArgsConstructor
     public static class DataInitRunner implements ApplicationRunner {
+
         private final EntityManager entityManager;
+
         private final PasswordEncoder passwordEncoder;
 
         @Transactional
@@ -170,7 +104,8 @@ public class AuthApplication {
                     .scope("read,write")
                     .authorities("user")
                     .resourceIds("auth")
-                    .webServerRedirectUri("http://auth.bread.com")
+                    .webServerRedirectUri("http://localhost:9600")
+                    .autoApprove("true")
                     .build();
             entityManager.persist(client);
         }

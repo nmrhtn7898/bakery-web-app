@@ -1,4 +1,4 @@
-package com.bread.auth.config;
+package com.bread.auth.config.custom;
 
 import org.bouncycastle.util.encoders.Hex;
 

@@ -1,4 +1,4 @@
-package com.bread.auth.config;
+package com.bread.auth.config.custom;
 
 import com.bread.auth.service.Oauth2ClientService;
 import lombok.RequiredArgsConstructor;

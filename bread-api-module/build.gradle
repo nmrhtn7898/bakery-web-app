@@ -54,6 +54,7 @@ task createDockerImage(type: com.bmuschko.gradle.docker.tasks.image.DockerBuildI
 }
 
 dependencies {
+    implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.6.RELEASE'
     runtimeOnly 'mysql:mysql-connector-java'
     asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }

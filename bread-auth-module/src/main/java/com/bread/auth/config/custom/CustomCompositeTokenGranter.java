@@ -1,4 +1,4 @@
-package com.bread.auth.config;
+package com.bread.auth.config.custom;
 
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;

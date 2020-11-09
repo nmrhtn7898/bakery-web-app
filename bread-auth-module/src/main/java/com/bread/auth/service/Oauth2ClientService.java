@@ -13,6 +13,8 @@ import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.util.Arrays.asList;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -40,6 +42,9 @@ public class Oauth2ClientService implements ClientDetailsService {
         clientDetails.setClientSecret(client.getClientSecret());
         clientDetails.setAccessTokenValiditySeconds(client.getAccessTokenValidity());
         clientDetails.setRefreshTokenValiditySeconds(client.getRefreshTokenValidity());
+        if (client.getAutoApprove() != null) {
+            clientDetails.setAutoApproveScopes(asList(client.getAutoApprove().split(",")));
+        }
         return clientDetails;
     }
 

@@ -5,7 +5,7 @@ import lombok.Getter;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
-import java.util.stream.Collectors;
+import static java.util.stream.Collectors.toList;
 
 @Getter
 public class AccountAdapter extends User {
@@ -20,7 +20,7 @@ public class AccountAdapter extends User {
                         .getAuthorities()
                         .stream()
                         .map(accountRole -> new SimpleGrantedAuthority(accountRole.getAuthority().getName()))
-                        .collect(Collectors.toList())
+                        .collect(toList())
         );
         this.account = account;
     }

@@ -6,6 +6,7 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
+import static org.springframework.util.StringUtils.hasText;
 
 @Entity
 @Getter
@@ -34,7 +35,7 @@ public class Oauth2Client extends BaseEntity {
     @Column(name = "authorized_grant_types", length = 256, nullable = false)
     private String authorizedGrantTypes;
 
-    @Column(name = "web_server_redirect_uri", length = 256, nullable = false)
+    @Column(name = "web_server_redirect_uri", length = 4096, nullable = false)
     private String webServerRedirectUri;
 
     @Column(name = "authorities", length = 256, nullable = false)
