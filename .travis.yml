@@ -31,7 +31,7 @@ jobs:
         - ./gradlew jacocoRootReport coveralls
 
     - name: "bread-auth-module deploy"
-      script: bash docker/travis-docker.sh
+      script: bash travis-docker.sh
       env: MODULE_NAME=bread-auth-module MODULE_VERSION=0.0.1 DOCKER_USERNAME=nmrhtn7898
       before_deploy:
         - cd $MODULE_NAME
@@ -67,7 +67,7 @@ jobs:
             branch: master
 
     - name: "bread-api-module deploy"
-      script: bash docker/travis-docker.sh
+      script: bash travis-docker.sh
       env: MODULE_NAME=bread-api-module MODULE_VERSION=0.0.1 DOCKER_USERNAME=nmrhtn7898
       before_deploy:
         - cd $MODULE_NAME
