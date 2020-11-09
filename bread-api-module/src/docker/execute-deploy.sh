@@ -1,2 +1,2 @@
 #!/bin/bash
-$HOME/deploy/deploy-sh/bread-api-module-deploy.sh > bread-api-module.out &
+$HOME/deploy/deploy-sh/bread-api-module-deploy.sh > /dev/null 2> /dev/null < /dev/null &
