@@ -1,5 +1,6 @@
 package com.bread.auth.config.custom;
 
+import com.bread.auth.enums.CodeChallengeMethod;
 import com.bread.auth.service.Oauth2ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,6 +1,6 @@
 package com.bread.auth.config.custom;
 
-import com.bread.auth.config.AccountAdapter;
+import com.bread.auth.model.AccountAdapter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;

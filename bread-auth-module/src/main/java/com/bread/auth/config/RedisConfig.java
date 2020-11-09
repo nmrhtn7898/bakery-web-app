@@ -11,60 +11,79 @@ import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.repository.configuration.EnableRedisRepositories;
 import redis.embedded.RedisServer;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.time.Duration.ofMinutes;
+import static java.time.Duration.ofSeconds;
 import static org.springframework.data.redis.cache.RedisCacheConfiguration.defaultCacheConfig;
 import static org.springframework.util.SocketUtils.findAvailableTcpPort;
 
-@EnableCaching
-@Profile(value = {"default", "test"})
+@EnableRedisRepositories
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.redis.port}")
-    private final int port;
+    @Configuration
+    @Profile(value = {"default", "test"})
+    public static class EmbeddedRedisConfig {
 
-    private final RedisServer redisServer;
+        private final RedisServer redisServer;
 
-    public RedisConfig(@Value("${spring.profiles.active:default}") String profiles,
-                       @Value("${spring.redis.port}") int port) {
-        this.port = profiles.equals("test") ? findAvailableTcpPort() : port;
-        redisServer = new RedisServer(this.port);
-        redisServer.start();
-    }
+        private final int port;
 
-    @PreDestroy
-    public void preDestroy() {
-        if (redisServer.isActive()) {
-            redisServer.stop();
+        public EmbeddedRedisConfig(@Value("${spring.profiles.active:default}") String profiles,
+                                   @Value("${spring.redis.port}") int port) {
+            this.port = profiles.equals("test") ? findAvailableTcpPort() : port;
+            redisServer = new RedisServer(this.port);
+            redisServer.start();
         }
+
+        @PreDestroy
+        public void preDestroy() {
+            if (redisServer.isActive()) {
+                redisServer.stop();
+            }
+        }
+
+        @Bean
+        public RedisConnectionFactory redisConnectionFactory(@Value("${spring.redis.host}") String host) {
+            return new LettuceConnectionFactory(host, port);
+        }
+
     }
 
-    @Bean
-    public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
-        redisTemplate.setConnectionFactory(redisConnectionFactory);
-        return redisTemplate;
+    @Configuration
+    @Profile(value = {"dev", "prod"})
+    public static class ExternalRedisConfig {
+
+        @Bean
+        public RedisConnectionFactory redisConnectionFactory(@Value("${spring.redis.host}") String host,
+                                                             @Value("${spring.redis.port}") int port) {
+            return new LettuceConnectionFactory(host, port);
+        }
+
+        @Bean
+        public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
+            RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
+            redisTemplate.setConnectionFactory(redisConnectionFactory);
+            return redisTemplate;
+        }
+
     }
 
     @Bean
     public RedisCacheManagerBuilderCustomizer redisCacheManagerBuilderCustomizer() {
         return builder -> {
             Map<String, RedisCacheConfiguration> configurationMap = new HashMap<>();
-            configurationMap.put("client", defaultCacheConfig().entryTtl(ofMinutes(10)));
+            configurationMap.put("client", defaultCacheConfig().entryTtl(ofSeconds(10)));
             builder.withInitialCacheConfigurations(configurationMap);
         };
-    }
-
-    @Bean
-    public RedisConnectionFactory redisConnectionFactory(@Value("${spring.redis.host}") String host) {
-        return new LettuceConnectionFactory(host, port);
     }
 
 }

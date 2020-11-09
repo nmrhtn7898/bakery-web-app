@@ -1,7 +1,7 @@
 package com.bread.auth.service;
 
 import com.bread.auth.entity.Account;
-import com.bread.auth.config.AccountAdapter;
+import com.bread.auth.model.AccountAdapter;
 import com.bread.auth.repository.AccountRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

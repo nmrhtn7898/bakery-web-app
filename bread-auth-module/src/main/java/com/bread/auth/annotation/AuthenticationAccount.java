@@ -1,4 +1,4 @@
-package com.bread.auth.config.custom;
+package com.bread.auth.annotation;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 

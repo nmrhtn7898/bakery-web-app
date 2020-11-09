@@ -1,5 +1,6 @@
 package com.bread.auth.config.custom;
 
+import com.bread.auth.enums.CodeChallengeMethod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;

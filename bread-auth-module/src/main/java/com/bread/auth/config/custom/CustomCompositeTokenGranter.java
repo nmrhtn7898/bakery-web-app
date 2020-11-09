@@ -21,7 +21,7 @@ public class CustomCompositeTokenGranter implements TokenGranter {
                                        AuthorizationServerTokenServices asts, OAuth2RequestFactory orf,
                                        AuthenticationManager am) {
         List<TokenGranter> tokenGranters = new ArrayList<>();
-//        tokenGranters.add(new AuthorizationCodeTokenGranter(asts, acs, cds, orf)); PkceAuthorizationCodeTokenGranter 에서 구현
+//        tokenGranters.add(new AuthorizationCodeTokenGranter(asts, acs, cds, orf)); PkceAuthorizationCodeTokenGranter 에서 통합 구현
         tokenGranters.add(new RefreshTokenGranter(asts, cds, orf));
         tokenGranters.add(new ImplicitTokenGranter(asts, cds, orf));
         tokenGranters.add(new ClientCredentialsTokenGranter(asts, cds, orf));

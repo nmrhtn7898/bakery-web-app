@@ -1,6 +1,6 @@
 package com.bread.auth.controller;
 
-import com.bread.auth.config.custom.AuthenticationAccount;
+import com.bread.auth.annotation.AuthenticationAccount;
 import com.bread.auth.entity.Account;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

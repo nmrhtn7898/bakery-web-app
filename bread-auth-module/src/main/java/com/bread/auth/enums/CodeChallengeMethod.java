@@ -1,12 +1,12 @@
-package com.bread.auth.config.custom;
-
-import org.bouncycastle.util.encoders.Hex;
+package com.bread.auth.enums;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
 
 import static java.nio.charset.StandardCharsets.US_ASCII;
+import static java.security.MessageDigest.getInstance;
+import static java.util.Base64.getUrlEncoder;
+import static org.bouncycastle.util.encoders.Hex.encode;
 
 public enum CodeChallengeMethod {
 
@@ -14,9 +14,9 @@ public enum CodeChallengeMethod {
         @Override
         public String transform(String codeVerifier) {
             try {
-                MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+                MessageDigest messageDigest = getInstance("SHA-256");
                 byte[] hash = messageDigest.digest(codeVerifier.getBytes(US_ASCII));
-                return Base64.getUrlEncoder().encodeToString(Hex.encode(hash));
+                return getUrlEncoder().encodeToString(encode(hash));
             } catch (NoSuchAlgorithmException e) {
                 throw new IllegalStateException(e);
             }
