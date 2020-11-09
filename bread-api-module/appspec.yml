@@ -4,6 +4,6 @@ files:
   - source:  /
     destination: /home/ec2-user/deploy/bread-api-module
 hooks:
-  AfterInstall: # 배포가 끝나면 아래 명령어를 실행
+  AfterInstall:
     - location: src/docker/execute-deploy.sh
       timeout: 180
