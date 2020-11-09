@@ -10,6 +10,6 @@ permissions:
       - file
 hooks:
   AfterInstall: # 배포가 끝나면 아래 명령어를 실행
-    - location: /home/ec2-user/deploy/bread-auth-module/src/docker/execute-deploy.sh
+    - location: execute-deploy.sh
       timeout: 180
       runas: root
