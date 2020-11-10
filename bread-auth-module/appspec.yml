@@ -5,7 +5,7 @@ files:
     destination: /home/ec2-user/deploy/bread-auth-module
 permissions:
   - object: /home/ec2-user/
-    mode: 754
+    mode: 755
     type:
       - file
 hooks:
