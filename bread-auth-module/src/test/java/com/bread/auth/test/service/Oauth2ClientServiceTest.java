@@ -2,6 +2,8 @@ package com.bread.auth.test.service;
 
 import com.bread.auth.base.AbstractServiceTest;
 import com.bread.auth.entity.Oauth2Client;
+import com.bread.auth.model.Oauth2ClientCaching;
+import com.bread.auth.repository.Oauth2ClientRedisRepository;
 import com.bread.auth.repository.Oauth2ClientRepository;
 import com.bread.auth.service.Oauth2ClientService;
 import org.junit.jupiter.api.Test;
@@ -12,11 +14,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 
+import java.util.Optional;
+
 import static java.lang.String.join;
-import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
+import static java.util.Optional.*;
 import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 
@@ -27,6 +31,9 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
 
     @Mock
     private Oauth2ClientRepository oauth2ClientRepository;
+
+    @Mock
+    private Oauth2ClientRedisRepository oauth2ClientRedisRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -42,7 +49,7 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
         String authorities = "user";
         String redirectUri = "/";
         int tokenValidity = 1800;
-        Oauth2Client expect = Oauth2Client
+        Oauth2Client oauth2Client = Oauth2Client
                 .builder()
                 .clientId(clientId)
                 .clientSecret(clientSecret)
@@ -54,7 +61,10 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
                 .accessTokenValidity(tokenValidity)
                 .refreshTokenValidity(tokenValidity)
                 .build();
-        when(oauth2ClientRepository.findByClientId(clientId)).thenReturn(ofNullable(expect));
+        Oauth2ClientCaching expect = new Oauth2ClientCaching(oauth2Client);
+        when(oauth2ClientRedisRepository.findById(clientId)).thenReturn(empty());
+        when(oauth2ClientRepository.findByClientId(clientId)).thenReturn(of(oauth2Client));
+        when(oauth2ClientRedisRepository.save(any())).thenReturn(expect);
         // when
         ClientDetails clientDetails = oauth2ClientService.loadClientByClientId(clientId);
         // then
@@ -80,6 +90,7 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
     public void loadClientByClientId_Fail() {
         // given
         String clientId = "mock";
+        when(oauth2ClientRedisRepository.findById(clientId)).thenReturn(empty());
         when(oauth2ClientRepository.findByClientId(clientId)).thenReturn(empty());
         // when & then
         assertThrows(

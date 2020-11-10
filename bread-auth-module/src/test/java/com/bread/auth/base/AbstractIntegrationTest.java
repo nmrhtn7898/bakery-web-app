@@ -2,6 +2,7 @@ package com.bread.auth.base;
 
 import com.bread.auth.config.DataConfig;
 import com.bread.auth.config.DataConfig.TestProperties;
+import com.bread.auth.config.RedisConfig;
 import com.bread.auth.config.RestDocsConfig;
 import org.junit.jupiter.api.Disabled;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ import static org.springframework.util.StringUtils.hasText;
 @SpringBootTest
 @Inheritance
 @ActiveProfiles("test")
-@Import(value = {RestDocsConfig.class, DataConfig.class})
+@Import(value = {RestDocsConfig.class, RedisConfig.class, DataConfig.class})
 @AutoConfigureRestDocs
 @AutoConfigureMockMvc
 public abstract class AbstractIntegrationTest {

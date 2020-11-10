@@ -3,6 +3,7 @@ package com.bread.auth.test.repository;
 import com.bread.auth.base.AbstractDataJpaTest;
 import com.bread.auth.entity.Oauth2Client;
 import com.bread.auth.repository.Oauth2ClientRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,20 +20,47 @@ public class Oauth2ClientRepositoryTest extends AbstractDataJpaTest {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @BeforeEach
+    public void beforeEach() {
+        oauth2ClientRepository.deleteAll();
+    }
+
     @Test
     public void findByClientId_Success() {
+        // given
+        String clientId = "generate";
+        String clientSecret = "secret";
+        String resourceIds = "auth";
+        String scopes = "read,write";
+        String grantTypes = "password,refresh_token";
+        String authorities = "user";
+        String redirectUri = "/";
+        int tokenValidity = 1800;
+        Oauth2Client oauth2Client = Oauth2Client
+                .builder()
+                .clientId(clientId)
+                .clientSecret(passwordEncoder.encode(clientSecret))
+                .resourceIds(resourceIds)
+                .scope(scopes)
+                .authorizedGrantTypes(grantTypes)
+                .authorities(authorities)
+                .webServerRedirectUri(redirectUri)
+                .accessTokenValidity(tokenValidity)
+                .refreshTokenValidity(tokenValidity)
+                .build();
+        oauth2ClientRepository.save(oauth2Client);
         // when
-        Oauth2Client client = oauth2ClientRepository
-                .findByClientId(testProperties.getClients().getMaster().getClientId())
-                .orElseThrow(() -> new NoSuchClientException(testProperties.getClients().getMaster().getClientId()));
+        Oauth2Client find = oauth2ClientRepository
+                .findByClientId(clientId)
+                .orElseThrow(() -> new NoSuchClientException(clientId));
         // then
-        assertEquals(client.getClientId(), testProperties.getClients().getMaster().getClientId());
-        assertTrue(passwordEncoder.matches(testProperties.getClients().getMaster().getClientSecret(), client.getClientSecret()));
-        assertEquals(client.getAuthorizedGrantTypes(), "authorization_code,implicit,password,refresh_token,client_credentials");
-        assertEquals(client.getScope(), testProperties.getClients().getMaster().getScopes());
-        assertEquals(client.getAuthorities(), testProperties.getClients().getMaster().getAuthorities());
-        assertEquals(client.getResourceIds(), testProperties.getClients().getMaster().getResourceIds());
-        assertEquals(client.getWebServerRedirectUri(), testProperties.getClients().getMaster().getRedirectUris());
+        assertEquals(find.getClientId(), clientId);
+        assertTrue(passwordEncoder.matches(clientSecret, find.getClientSecret()));
+        assertEquals(find.getAuthorizedGrantTypes(), grantTypes);
+        assertEquals(find.getScope(), scopes);
+        assertEquals(find.getAuthorities(), authorities);
+        assertEquals(find.getResourceIds(), resourceIds);
+        assertEquals(find.getWebServerRedirectUri(), redirectUri);
     }
 
     @Test
@@ -85,24 +113,10 @@ public class Oauth2ClientRepositoryTest extends AbstractDataJpaTest {
     }
 
     @Test
-    public void save_Fail_NotNull() {
-        // given & when & then
-        assertThrows(
-                DataIntegrityViolationException.class,
-                () -> oauth2ClientRepository.save(
-                        Oauth2Client
-                                .builder()
-                                .clientId("error")
-                                .build()
-                )
-        );
-    }
-
-    @Test
-    public void save_Fail_Unique() {
+    public void save_Fail() {
         // given
         String clientId = "generate";
-        Oauth2Client expect = Oauth2Client
+        Oauth2Client save = Oauth2Client
                 .builder()
                 .clientId(clientId)
                 .clientSecret(passwordEncoder.encode("secret"))
@@ -126,11 +140,21 @@ public class Oauth2ClientRepositoryTest extends AbstractDataJpaTest {
                 .accessTokenValidity(1800)
                 .refreshTokenValidity(1800)
                 .build();
-        // when & then
-        oauth2ClientRepository.save(expect);
+        // when
+        oauth2ClientRepository.save(save);
+        // then
         assertThrows(
                 DataIntegrityViolationException.class,
                 () -> oauth2ClientRepository.save(duplicate)
+        );
+        assertThrows(
+                DataIntegrityViolationException.class,
+                () -> oauth2ClientRepository.save(
+                        Oauth2Client
+                                .builder()
+                                .clientId("error")
+                                .build()
+                )
         );
     }
 

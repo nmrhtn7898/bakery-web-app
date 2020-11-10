@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -25,7 +26,7 @@ public class AccountAuthority extends BaseEntity {
     @ManyToOne(fetch = LAZY, optional = false)
     private Account account;
 
-    @ManyToOne(fetch = LAZY, optional = false)
+    @ManyToOne(fetch = LAZY, optional = false, cascade = PERSIST)
     private Authority authority;
 
     @Builder

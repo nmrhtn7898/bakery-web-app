@@ -3,22 +3,18 @@ package com.bread.auth.service;
 import com.bread.auth.entity.Oauth2Client;
 import com.bread.auth.model.Oauth2ClientCaching;
 import com.bread.auth.repository.Oauth2ClientRepository;
-import com.bread.auth.repository.redis.Oauth2ClientRedisRepository;
+import com.bread.auth.repository.Oauth2ClientRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
-import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
-
-import static java.util.Arrays.asList;
 
 @Slf4j
 @Service

@@ -1,4 +1,4 @@
-package com.bread.auth.repository.redis;
+package com.bread.auth.repository;
 
 import com.bread.auth.model.Oauth2ClientCaching;
 import org.springframework.data.repository.CrudRepository;

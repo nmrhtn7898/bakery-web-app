@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.persistence.CascadeType.PERSIST;
 import static javax.persistence.FetchType.LAZY;
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -30,7 +31,7 @@ public class Account extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @OneToMany(mappedBy = "account", fetch = LAZY)
+    @OneToMany(mappedBy = "account", fetch = LAZY, cascade = PERSIST)
     private List<AccountAuthority> authorities;
 
     @Builder
