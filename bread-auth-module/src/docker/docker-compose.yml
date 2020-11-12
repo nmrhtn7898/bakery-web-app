@@ -10,13 +10,13 @@ services:
       MYSQL_DATABASE: "bread"
     volumes:
       - ../../../docker/database:/var/lib/mysql
-#  redis:
-#    container_name: "redis-server"
-#    image: redis:latest
-#    ports:
-#      - "6379:6379"
-#    volumes:
-#      - ../../../docker/redis:/data
+  redis:
+    container_name: "redis-server"
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - ../../../docker/redis:/data
 #  proxy:
 #    container_name: "proxy-server"
 #    image: nginx:latest

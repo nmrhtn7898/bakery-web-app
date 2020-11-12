@@ -19,7 +19,7 @@ import javax.persistence.EntityManager;
 import java.util.List;
 
 @TestConfiguration
-public class DataConfig {
+public class TestDataConfig {
 
     @Component
     @Getter

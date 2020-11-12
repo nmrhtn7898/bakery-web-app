@@ -1,7 +1,6 @@
 package com.bread.auth.test.integration;
 
 import com.bread.auth.base.AbstractIntegrationTest;
-import com.bread.auth.config.DataConfig;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
