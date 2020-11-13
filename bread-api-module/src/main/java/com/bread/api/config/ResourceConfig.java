@@ -28,6 +28,8 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .mvcMatchers("/api/**")
                 .and()
                 .authorizeRequests()
+                .mvcMatchers("/api/**/login")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
         http

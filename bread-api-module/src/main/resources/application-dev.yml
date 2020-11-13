@@ -1,0 +1,10 @@
+server:
+  port: 8600
+
+auth:
+  domain:
+    uri: http://ec2-54-180-10-196.ap-northeast-2.compute.amazonaws.com/auth
+
+client:
+  id: test
+  secret: 1234
