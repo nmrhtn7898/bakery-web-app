@@ -51,8 +51,8 @@ test:
       scopes: read,write
       authorities: user,admin
       resourceIds: auth
-      codeChallenge: YmRmMTkyODk4YjJhYmM4MWQyOGNlZWYxMWJmODExMTYyMWZjY2ZhMGNjMGJjZTZlMjAwMGZlMzdmODc0MjcwZQ==
-      codeVerifier: 4cc9b165-1230-4607-873b-3a78afcf60c5
+      codeChallenge: kUFmP0lviWWy-fuSgsDs6vbag4coS0BzYyRHtHvsWSU
+      codeVerifier: Po24FSnZUsKMMvFAvnN-5sQco3ql.ZjkZ_k6FttPxBhOpOAomUOh2q_pF5RV9R9M2ACnhObvy_CApZkQBFTO8wsMGGJgN5aAWnTCSP7Y9AQ0GuQxZiUHV3-Nvlcldi3V
       codeChallengeMethod: S256
     noScopes:
       clientId: noScopesId

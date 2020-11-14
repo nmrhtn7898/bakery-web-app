@@ -18,7 +18,7 @@ import static lombok.AccessLevel.PROTECTED;
 
 @Getter
 @NoArgsConstructor(access = PROTECTED)
-@RedisHash(value = "client", timeToLive = 10)
+@RedisHash(value = "client", timeToLive = 60)
 public class Oauth2ClientCaching extends BaseClientDetails implements Serializable {
 
     @Id

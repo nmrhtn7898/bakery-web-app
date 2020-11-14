@@ -1,5 +1,6 @@
 package com.bread.auth.enums;
 
+import java.io.Serializable;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -15,8 +16,9 @@ public enum CodeChallengeMethod {
         public String transform(String codeVerifier) {
             try {
                 MessageDigest messageDigest = getInstance("SHA-256");
-                byte[] hash = messageDigest.digest(codeVerifier.getBytes(US_ASCII));
-                return getUrlEncoder().encodeToString(encode(hash));
+                byte[] bytes = codeVerifier.getBytes(US_ASCII);
+                byte[] digest = messageDigest.digest(bytes);
+                return getUrlEncoder().withoutPadding().encodeToString(digest);
             } catch (NoSuchAlgorithmException e) {
                 throw new IllegalStateException(e);
             }

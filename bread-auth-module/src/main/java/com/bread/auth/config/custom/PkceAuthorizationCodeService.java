@@ -44,6 +44,7 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
 
     /**
      * 기존 AuthorizationCodeTokenGranter -> 토큰 발급시 호출하던 메소드, granter 별도 구현하여 사용하지 않음
+     *
      * @param code authorization_code
      * @return
      */
@@ -69,6 +70,7 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
 
     /**
      * 토큰 발급 후, 저장한 인증 객체 제거
+     *
      * @param code authorization_code
      */
     public void removeStoredAuthentication(String code) {

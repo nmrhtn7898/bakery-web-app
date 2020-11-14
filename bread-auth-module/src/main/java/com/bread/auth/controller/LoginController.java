@@ -3,23 +3,21 @@ package com.bread.auth.controller;
 import com.bread.auth.annotation.AuthenticationAccount;
 import com.bread.auth.entity.Account;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class LoginController {
 
     @GetMapping("/login")
-    public ModelAndView login(@RequestParam("redirect_uri") String redirectUri, @AuthenticationAccount Account account) {
-        ModelAndView modelAndView = new ModelAndView();
+    public String login(@RequestParam("redirect_uri") String redirectUri, @AuthenticationAccount Account account, Model model) {
         if (account != null) {
-            modelAndView.setViewName("redirect:" + redirectUri);
+            return "redirect:" + redirectUri;
         } else {
-            modelAndView.setViewName("login");
-            modelAndView.addObject("redirect_uri", redirectUri);
+            model.addAttribute("redirect_uri", redirectUri);
+            return "login";
         }
-        return modelAndView;
     }
 
 }
