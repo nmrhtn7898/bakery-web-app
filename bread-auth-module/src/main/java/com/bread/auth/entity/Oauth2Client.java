@@ -42,10 +42,10 @@ public class Oauth2Client extends BaseEntity {
     private String authorities;
 
     @Column(name = "access_token_validity", nullable = false)
-    private Integer accessTokenValidity = 60 * 30;
+    private Integer accessTokenValidity = 60 * 15;
 
     @Column(name = "refresh_token_validity", nullable = false)
-    private Integer refreshTokenValidity = 60 * 60 * 24 * 7;
+    private Integer refreshTokenValidity = 60 * 60 * 24 * 5;
 
     @Column(name = "additional_information", length = 4096)
     private String additionalInformation;

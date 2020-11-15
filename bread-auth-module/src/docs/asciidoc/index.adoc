@@ -1,5 +1,4 @@
 = API Guide
-api;
 :doctype: book
 :icons: font
 :source-highlighter: highlightjs
@@ -10,9 +9,18 @@ api;
 :operation-http-response-title: Example response
 
 [[resources]]
-= 리소스
+= Auth API
 
-Auth Api는 인증 서비스를 제공한다.
+Auth API는 인증 서비스를 제공한다.
+
+
+[[authorization-code-with-pkce-grant]]
+=== 코드 발급 - Authorization Code With PKCE 방식
+
+'GET' 요청 및 'AUTHORIZATION CODE WITH PKCE' 방식을 사용하여 엑세스 토큰과 교환하기 위한 코드를 발급받을 수 있다.
+
+operation::authorization-code-with-pkce-grant[snippets='http-request,request-parameters']
+
 
 [[token-authorization-code-with-pkce-grant]]
 === 엑세스 토큰 발급 - Authorization Code With PKCE 방식
@@ -20,20 +28,21 @@ Auth Api는 인증 서비스를 제공한다.
 `POST` 요청 및 'AUTHORIZATION CODE WITH PKCE' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
 
 operation::token-authorization-code-with-pkce-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+//
+//[[token-authorization-code-grant]]
+//=== 엑세스 토큰 발급 - Authorization Code 방식
+//
+//`POST` 요청 및 'AUTHORIZATION CODE' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
+//
+//operation::token-authorization-code-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+//
+//[[token-password-grant]]
+//=== 엑세스 토큰 발급 - Password 방식
+//
+//`POST` 요청 및 'PASSWORD' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
+//
+//operation::token-password-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
 
-[[token-authorization-code-grant]]
-=== 엑세스 토큰 발급 - Authorization Code 방식
-
-`POST` 요청 및 'AUTHORIZATION CODE' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
-
-operation::token-authorization-code-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
-
-[[token-password-grant]]
-=== 엑세스 토큰 발급 - Password 방식
-
-`POST` 요청 및 'PASSWORD' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
-
-operation::token-password-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
 
 [[token-refresh-token-grant]]
 === 엑세스 토큰 발급 - Refresh Token 방식
@@ -41,13 +50,14 @@ operation::token-password-grant[snippets='curl-request,http-request,request-head
 `POST` 요청 및 'REFRESH TOKEN' 방식을 사용하여 엑세스 토큰을 인증 없이 발급받을 수 있다.
 
 operation::token-refresh-token-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+//
+//[[token-client-credentials-grant]]
+//=== 엑세스 토큰 발급 - Client Credentials 방식
+//
+//`POST` 요청 및 'CLIENT CREDENTIALS' 방식을 사용하여 엑세스 토큰을 인증 없이 발급받을 수 있다.
+//
+//operation::token-client-credentials-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
 
-[[token-client-credentials-grant]]
-=== 엑세스 토큰 발급 - Client Credentials 방식
-
-`POST` 요청 및 'CLIENT CREDENTIALS' 방식을 사용하여 엑세스 토큰을 인증 없이 발급받을 수 있다.
-
-operation::token-client-credentials-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
 
 [[check-token]]
 === 엑세스 토큰 확인

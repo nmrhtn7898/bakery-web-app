@@ -2,8 +2,8 @@ package com.bread.auth.service;
 
 import com.bread.auth.entity.Oauth2Client;
 import com.bread.auth.model.Oauth2ClientCaching;
-import com.bread.auth.repository.Oauth2ClientRepository;
 import com.bread.auth.repository.Oauth2ClientRedisRepository;
+import com.bread.auth.repository.Oauth2ClientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;

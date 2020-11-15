@@ -98,9 +98,9 @@ public class AuthApplication {
             Oauth2Client client = Oauth2Client
                     .builder()
                     .clientId("test")
-                    .clientSecret("{noop}")
-//                    .clientSecret(passwordEncoder.encode("1234"))
-                    .authorizedGrantTypes("authorization_code,implicit,password,refresh_token,client_credentials")
+                    .clientSecret("{noop}") // public client 경우 사용
+                    .authorizedGrantTypes("authorization_code") // Browser SPA Client 경우 사용
+//                    .authorizedGrantTypes("authorization_code,refresh_token") // Mobile Client 경우 사용
                     .scope("read,write")
                     .authorities("user")
                     .resourceIds("auth")

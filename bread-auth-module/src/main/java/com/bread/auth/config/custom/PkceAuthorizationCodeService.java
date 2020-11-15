@@ -22,6 +22,8 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
 
     private final RandomValueStringGenerator generator = new RandomValueStringGenerator();
 
+    // 인메모리 아닌, redis 캐싱하려 했으나, Oauth2Authentication 클래스 필드, 상위 클래스가 직렬화 불가능
+    // TODO code 발급하고, token 발급 안한 code 처리 필요 DB 사용하면 되는데 다른 방법있는지 고려
     private final Map<String, PkceAuthentication> authenticationMap = new ConcurrentHashMap<>();
 
     private final Oauth2ClientService clientDetailsService;
