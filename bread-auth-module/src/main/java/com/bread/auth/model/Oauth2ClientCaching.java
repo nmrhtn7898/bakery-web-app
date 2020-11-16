@@ -3,17 +3,14 @@ package com.bread.auth.model;
 import com.bread.auth.entity.Oauth2Client;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.TimeToLive;
+import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
 
 import java.io.Serializable;
-import java.util.concurrent.TimeUnit;
 
 import static java.util.Arrays.asList;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static lombok.AccessLevel.PROTECTED;
 
 @Getter

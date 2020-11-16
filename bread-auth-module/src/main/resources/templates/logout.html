@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>logout</title>
+</head>
+<body>
+    <form th:action="@{logout}" method="post">
+        <input type="submit" value="logout">
+    </form>
+</body>
+<script>
+    document.querySelector('input[type=submit]').click();
+</script>
+</html>

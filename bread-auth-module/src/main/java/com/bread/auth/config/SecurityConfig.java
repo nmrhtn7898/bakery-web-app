@@ -1,5 +1,6 @@
 package com.bread.auth.config;
 
+import com.bread.auth.config.custom.CustomRememberMeTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,8 +12,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenBasedRememberMeServices;
+import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
@@ -22,6 +26,8 @@ import static org.springframework.security.crypto.factory.PasswordEncoderFactori
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
+
+    private final PersistentTokenRepository persistentTokenRepository;
 
     @Bean
     @Override
@@ -43,13 +49,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     response.sendRedirect(redirect_uri);
                 });
         http
+                .logout()
+                .logoutSuccessUrl("/login");
+        http
                 .rememberMe()
+                .tokenValiditySeconds(60 * 60 * 24 * 7)
+                .key("rememberMeServices")
+                .tokenRepository(persistentTokenRepository)
                 .rememberMeParameter("remember-me")
                 .rememberMeCookieName("remember-me")
+//                .useSecureCookie(true)
                 .userDetailsService(userDetailsService);
         http
                 .requestMatchers()
-                .mvcMatchers("/login", "/oauth/authorize")
+                .mvcMatchers("/login", "/logout", "/oauth/authorize")
                 .and()
                 .authorizeRequests()
                 .mvcMatchers("/login").permitAll()
