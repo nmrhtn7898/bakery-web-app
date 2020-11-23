@@ -36,12 +36,15 @@ operation::token-authorization-code-with-pkce-grant[snippets='curl-request,http-
 //
 //operation::token-authorization-code-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
 //
-//[[token-password-grant]]
-//=== 엑세스 토큰 발급 - Password 방식
-//
-//`POST` 요청 및 'PASSWORD' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
-//
-//operation::token-password-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+
+
+
+[[token-password-grant]]
+=== 엑세스 토큰 발급 - Password 방식
+
+`POST` 요청 및 'PASSWORD' 방식을 사용하여 엑세스 토큰을 발급받을 수 있다.
+
+operation::token-password-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
 
 
 [[token-refresh-token-grant]]
