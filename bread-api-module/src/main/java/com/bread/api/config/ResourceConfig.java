@@ -1,5 +1,6 @@
 package com.bread.api.config;
 
+import com.bread.common.EnableEncryptProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -10,6 +11,7 @@ import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHand
 
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
+@EnableEncryptProperty
 @EnableResourceServer
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration

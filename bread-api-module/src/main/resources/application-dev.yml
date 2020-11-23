@@ -1,10 +1,19 @@
 server:
   port: 8600
 
-auth:
-  domain:
-    uri: http://ec2-54-180-10-196.ap-northeast-2.compute.amazonaws.com/auth
+jasypt:
+  encryptor:
+    bean: stringEncryptor
 
-client:
-  id: test
-  secret: 1234
+spring:
+  datasource:
+    url: ENC(8zUm3Zjwvp5648B6Q2IaaJF74pRlBe8iGTM3xVTJvhnV5JroKiXd4j6IAnp5EnRv5QZJ1mSq2XwBaD2s3QcPiVBOxtUKhcGO4NYvAN/rsZPuLFxldz0l7GhM524cjyfpcWxImJpwTzjldRe8ZfNj0t0gk3qsHMogvO3ybiLt26/7i5ChuBMgTO/lb773POA6PqkwlrilERtzKJ/28GsMzA==)
+    username: ENC(yGCjrkqEv7bGJxbFGiMdDQ==)
+    password: ENC(s0TLJNiPYXqZNADpH30mWsn32X3WqAIo)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

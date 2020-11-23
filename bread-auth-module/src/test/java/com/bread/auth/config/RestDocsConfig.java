@@ -15,7 +15,7 @@ public class RestDocsConfig {
         CustomUriModifyingOperationPreprocessor uriProcessor = new CustomUriModifyingOperationPreprocessor();
         uriProcessor.setBasePath("/auth"); // /api/v1/example -> /auth/api/v1/example 변환
         uriProcessor.setPort("-1"); // 커스텀 processor 에서 -1 포트는 노출 안함
-        uriProcessor.setHost("ec2-54-180-10-196.ap-northeast-2.compute.amazonaws.com");
+        uriProcessor.setHost("54.180.10.196");
         return config -> config
                 .operationPreprocessors()
                 .withRequestDefaults(prettyPrint(), uriProcessor)

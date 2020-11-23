@@ -25,22 +25,8 @@ spring:
 jwt:
   signKey: temp_signkey
 
-auth:
-  domain:
-    url: http://localhost:9600
-
-client:
-  id: test
-  secret: 1234
-
 logging:
   level:
     org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE
       springframework:
         security: DEBUG

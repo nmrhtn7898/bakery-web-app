@@ -1,9 +1,0 @@
-version: 0.0
-os: linux
-files:
-  - source:  /
-    destination: /home/ec2-user/deploy/bread-api-module
-hooks:
-  AfterInstall:
-    - location: src/docker/execute-deploy.sh
-      timeout: 180

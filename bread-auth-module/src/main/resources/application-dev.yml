@@ -23,7 +23,7 @@ spring:
         default_batch_fetch_size: 1000
     open-in-view: false
   redis:
-    host: ENC(QJd99Qv0QP8n64yHlA8fLvWJazH9WSB8gZRyAkkocfJaBy7RZvrMyhoF7s5FbylvD7hWCO+hiemC9GszUfsm1Q==)
+    host: ENC(yvzYtS9fvw7+HktolHkAhuqCLF+paIx8sUC5jmnL1RXI6VXIaoz2AiiTXwsER714mPr7wiamGyJeK4P60AoDiw==)
     port: 6379
 
 logging:
@@ -35,3 +35,5 @@ logging:
           descriptor:
             sql:
               BasicBinder: TRACE
+      springframework:
+        security: DEBUG
