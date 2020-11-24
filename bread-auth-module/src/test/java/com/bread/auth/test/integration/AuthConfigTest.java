@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import javax.servlet.http.HttpSession;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
@@ -22,7 +20,8 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthConfigTest extends AbstractIntegrationTest {
 
@@ -59,7 +58,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                         document(
                                 "check-token",
                                 requestHeaders(
-                                        headerWithName(AUTHORIZATION).description("클라이언트 ID/SECRET 인코딩 값")
+                                        headerWithName(AUTHORIZATION).description("클라이언트 정보 Basic BASE64(client_id:client_secret)")
                                 ),
                                 requestParameters(
                                         parameterWithName("token").description("인증 토큰")
@@ -153,7 +152,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                                 parameterWithName("response_type").description("응답 방식"),
                                 parameterWithName("redirect_uri").description("리다이렉트 경로"),
                                 parameterWithName("scope").description("토큰의 접근 범위"),
-                                parameterWithName("code_challenge").description("코드 비교 값"),
+                                parameterWithName("code_challenge").description("코드 비교 값 BASE64(SHA256(code_verifier))"),
                                 parameterWithName("code_challenge_method").description("코드 비교 값 암호화 방식")
                         )
                 ))
@@ -201,7 +200,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                                         .andDo(document(
                                                 "token-authorization-code-with-pkce-grant",
                                                 requestHeaders(
-                                                        headerWithName(AUTHORIZATION).description("클라이언트 ID/SECRET 인코딩 값")
+                                                        headerWithName(AUTHORIZATION).description("클라이언트 정보 Basic BASE64(client_id:client_secret)")
                                                 ),
                                                 requestParameters(
                                                         parameterWithName("code").description("토큰을 발급받을 수 있는 코드 값"),
@@ -260,7 +259,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                             .andDo(document(
                                     "token-authorization-code-grant",
                                     requestHeaders(
-                                            headerWithName(AUTHORIZATION).description("클라이언트 ID/SECRET 인코딩 값")
+                                            headerWithName(AUTHORIZATION).description("클라이언트 정보 Basic BASE64(client_id:client_secret)")
                                     ),
                                     requestParameters(
                                             parameterWithName("code").description("토큰을 발급받을 수 있는 코드 값"),
@@ -466,7 +465,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                         document(
                                 "token-password-grant",
                                 requestHeaders(
-                                        headerWithName(AUTHORIZATION).description("클라이언트 ID/SECRET 인코딩 값")
+                                        headerWithName(AUTHORIZATION).description("클라이언트 정보 Basic BASE64(client_id:client_secret)")
                                 ),
                                 requestParameters(
                                         parameterWithName("username").description("사용자 아이디"),
@@ -555,7 +554,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                         document(
                                 "token-refresh-token-grant",
                                 requestHeaders(
-                                        headerWithName(AUTHORIZATION).description("클라이언트 ID/SECRET 인코딩 값")
+                                        headerWithName(AUTHORIZATION).description("클라이언트 정보 Basic BASE64(client_id:client_secret)")
                                 ),
                                 requestParameters(
                                         parameterWithName("refresh_token").description("재발급 토큰"),
@@ -639,7 +638,7 @@ public class AuthConfigTest extends AbstractIntegrationTest {
                         document(
                                 "token-client-credentials-grant",
                                 requestHeaders(
-                                        headerWithName(AUTHORIZATION).description("클라이언트 ID/SECRET 인코딩 값")
+                                        headerWithName(AUTHORIZATION).description("클라이언트 정보 Basic BASE64(client_id:client_secret)")
                                 ),
                                 requestParameters(
                                         parameterWithName("grant_type").description("인증 토큰 발급 방식"),

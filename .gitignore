@@ -2,12 +2,14 @@
 HELP.md
 .gradle
 build/
+
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
 /docker/database
 /docker/redis
-
+generated/
+generated_tests/
 ### IntelliJ IDEA ###
 .idea
 *.iws

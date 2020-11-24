@@ -21,7 +21,6 @@ import javax.persistence.EntityManager;
 
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
-@EnableCaching
 @SpringBootApplication
 public class AuthApplication {
 

@@ -11,12 +11,17 @@ buildscript {
     }
 }
 
+plugins {
+    id 'org.asciidoctor.convert' version '1.5.9.2'
+}
+
 allprojects {
     apply plugin: 'com.github.kt3k.coveralls'
     apply plugin: 'jacoco'
     apply plugin: 'java'
     group = 'com.bread'
     sourceCompatibility = 1.8
+    targetCompatibility = 1.8
     repositories {
         jcenter()
     }
@@ -36,30 +41,62 @@ subprojects {
     }
     dependencies {
         annotationProcessor 'org.projectlombok:lombok'
-        testAnnotationProcessor 'org.projectlombok:lombok'
         compileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+        testImplementation 'org.mockito:mockito-junit-jupiter:3.6.0'
         testCompileOnly 'org.projectlombok:lombok'
-        implementation 'org.springframework.boot:spring-boot-starter-validation'
-        implementation 'org.springframework.boot:spring-boot-starter-web'
-        testCompile 'org.mockito:mockito-junit-jupiter:3.6.0'
-        testImplementation('org.springframework.boot:spring-boot-starter-test') {
-            exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-        }
     }
 }
 
 [':bread-auth-module', ':bread-api-module'].each { moduleName ->
     project(moduleName) {
+        apply plugin: "org.asciidoctor.convert"
+        def snippetsDir = file("${buildDir}/generated-snippets")
+        test {
+            outputs.dir snippetsDir
+            useJUnitPlatform()
+        }
+        asciidoctor {
+            dependsOn(test)
+            inputs.dir snippetsDir
+        }
+        bootJar {
+            dependsOn(asciidoctor)
+            from("${asciidoctor.outputDir}/html5") {
+                into 'static/docs'
+            }
+        }
+        task copyFile {
+            doLast {
+                copy {
+                    from 'src/docker/run.sh'
+                    into "${buildDir}/libs"
+                }
+                copy {
+                    from 'src/docker/Dockerfile'
+                    into "${buildDir}/libs"
+                }
+            }
+        }
+        tasks.build.finalizedBy(copyFile)
         dependencies {
             implementation project(':bread-common-module')
+            implementation 'org.springframework.boot:spring-boot-starter-web'
+            implementation 'org.springframework.boot:spring-boot-starter-validation'
+            implementation 'org.springframework.boot:spring-boot-starter-data-redis'
             implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.2.6.RELEASE'
-            implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-            implementation 'com.querydsl:querydsl-jpa'
             implementation 'org.springframework.boot:spring-boot-starter-hateoas'
             implementation 'org.springframework.boot:spring-boot-configuration-processor'
             testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
             testImplementation 'com.h2database:h2'
+            testImplementation('org.springframework.boot:spring-boot-starter-test') {
+                exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+            }
+            testImplementation('it.ozimov:embedded-redis:0.7.3') {
+                exclude group: 'org.slf4j', module: 'slf4j-simple'
+            }
             runtimeOnly 'mysql:mysql-connector-java'
+            asciidoctor 'org.springframework.restdocs:spring-restdocs-asciidoctor'
         }
     }
 }

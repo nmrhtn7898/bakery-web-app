@@ -4,12 +4,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.json.JacksonJsonParser;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.Errors;
-
-import java.util.List;
-import java.util.Map;
 
 import static com.jayway.jsonpath.matchers.JsonPathMatchers.hasJsonPath;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -17,8 +13,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class ErrorsSerializerTest {
 
     public static final ObjectMapper objectMapper;
-
-    private final JacksonJsonParser jacksonJsonParser = new JacksonJsonParser();
 
     static {
         ObjectMapper mapper = new ObjectMapper();
