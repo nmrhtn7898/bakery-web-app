@@ -1,14 +1,27 @@
 def modules = ['bread-api-module', 'bread-auth-module']
 
 void createAndPushDockerImage(name) {
-    sh "docker build -t ${name}:${TAG} --build-arg NAME=${name} ${name}/build/libs"
-    sh "docker tag ${name}:${TAG} nmrhtn7898/${name}:${TAG}"
-    sh "docker push nmrhtn7898/${name}:${TAG}"
-    if (TAG != "latest") {
-        sh "docker tag ${name}:${TAG} nmrhtn7898/${name}"
-        sh "docker push nmrhtn7898/${name}"
+    if (TAG == "latest") {
+        sh "docker build -t nmrhtn7898/${name}:latest --build-arg NAME=${name} ${name}/build/libs"
+        sh "docker push nmrhtn7898/${name}:latest"
+        jacocoReport()
+    } else {
+        try {
+            sh "curl --silent -f https://hub.docker.com/v2/repositories/nmrhtn7898/${name}/tags/${TAG}"
+            print 'docker image is already exists in docker image repository'
+        } catch (e) {
+            sh "docker build -t nmrhtn7898/${name}:${TAG} --build-arg NAME=${name} ${name}/build/libs"
+            sh "docker push nmrhtn7898/${name}:${TAG}"
+            jacocoReport()
+        }
     }
     sh "echo 'y' | docker image prune"
+}
+
+void jacocoReport() {
+    if (MODULE_NAME == "all") {
+        sh "./gradlew jacocoRootReport coveralls"
+    }
 }
 
 node {
@@ -16,10 +29,12 @@ node {
     // 소스 체크아웃
     stage('Checkout') {
         cleanWs()
-        if (TAG == "latest") {
-            sh "git clone -b ${BRANCH} --single-branch https://github.com/nmrhtn7898/bread-project.git ."
-        } else {
-            sh "git clone -b ${TAG} https://github.com/nmrhtn7898/bread-project.git ."
+        sshagent(['7d91e9db-2264-4f14-bdb7-cc443e273bd5']) {
+            if (TAG == "latest") {
+                sh "git clone -b ${BRANCH} --single-branch git@github.com:nmrhtn7898/bread-project.git ."
+            } else {
+                sh "git clone -b ${TAG} git@github.com:nmrhtn7898/bread-project.git ."
+            }
         }
     }
 
@@ -28,7 +43,6 @@ node {
         sh 'chmod +x gradlew'
         if (MODULE_NAME == "all") {
             sh './gradlew clean build'
-            sh './gradlew jacocoRootReport coveralls'
         } else {
             sh "./gradlew :${MODULE_NAME}:clean :${MODULE_NAME}:build"
         }
