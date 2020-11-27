@@ -16,7 +16,7 @@ Auth API는 인증 서비스를 제공합니다.
 
 - `GET` 요청 및 `AUTHORIZATION CODE WITH PKCE` 방식을 사용하여 엑세스 토큰과 교환하기 위한 코드를 발급받을 수 있습니다.
 
-operation::authorization-code-with-pkce-grant[snippets='http-request,request-parameters']
+operation::authorization-code-with-pkce-grant[snippets='http-request,request-parameters,http-response,response-headers']
 
 
 [[token-authorization-code-with-pkce-grant]]
@@ -25,14 +25,14 @@ operation::authorization-code-with-pkce-grant[snippets='http-request,request-par
 - `POST` 요청 및 `AUTHORIZATION CODE WITH PKCE` 방식을 사용하여 엑세스 토큰을 발급받을 수 있습니다. +
 - `client_secret` 을 사용하지 않는 `public client` 인 경우 `client(browser, mobile 등)` 에 따라 `refresh_token` 을 제공하지 않을 수 있습니다.
 
-operation::token-authorization-code-with-pkce-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+operation::token-authorization-code-with-pkce-grant[snippets='curl-request,http-request,request-parameters,http-response,response-headers,response-body,response-fields']
 //
 //[[token-authorization-code-grant]]
 //=== 엑세스 토큰 발급 - Authorization Code 방식
 //
 //`POST` 요청 및 `AUTHORIZATION CODE` 방식을 사용하여 엑세스 토큰을 발급받을 수 있습니다.
 //
-//operation::token-authorization-code-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+//operation::token-authorization-code-grant[snippets='curl-request,http-request,request-parameters,http-response,response-headers,response-body,response-fields']
 //
 
 
@@ -43,7 +43,7 @@ operation::token-authorization-code-with-pkce-grant[snippets='curl-request,http-
 - `POST` 요청 및 `PASSWORD` 방식을 사용하여 엑세스 토큰을 발급받을 수 있습니다. +
 - `client_secret` 을 사용하지 않는 `public client` 인 경우 `client(browser, mobile 등)` 에 따라 `refresh_token` 을 제공하지 않을 수 있습니다.
 
-operation::token-password-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+operation::token-password-grant[snippets='curl-request,http-request,request-parameters,http-response,response-headers,response-body,response-fields']
 
 
 
@@ -52,14 +52,14 @@ operation::token-password-grant[snippets='curl-request,http-request,request-head
 
 - `POST` 요청 및 `REFRESH TOKEN` 방식을 사용하여 엑세스 토큰을 인증 없이 발급받을 수 있습니다.
 
-operation::token-refresh-token-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+operation::token-refresh-token-grant[snippets='curl-request,http-request,request-parameters,http-response,response-headers,response-body,response-fields']
 //
 //[[token-client-credentials-grant]]
 //=== 엑세스 토큰 발급 - Client Credentials 방식
 //
 //`POST` 요청 및 'CLIENT CREDENTIALS' 방식을 사용하여 엑세스 토큰을 인증 없이 발급받을 수 있다.
 //
-//operation::token-client-credentials-grant[snippets='curl-request,http-request,request-headers,request-parameters,http-response,response-headers,response-body,response-fields']
+//operation::token-client-credentials-grant[snippets='curl-request,http-request,request-parameters,http-response,response-headers,response-body,response-fields']
 
 
 [[check-token]]

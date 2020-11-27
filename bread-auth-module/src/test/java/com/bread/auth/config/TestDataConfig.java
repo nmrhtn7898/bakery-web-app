@@ -50,11 +50,8 @@ public class TestDataConfig {
         @Setter
         public static class Clients {
             private Client master;
-            private Client noSecret;
             private Client noScopes;
             private Client noGrantTypes;
-            private Client noAuthorities;
-            private Client noResourceIds;
         }
 
         @Getter
@@ -130,16 +127,6 @@ public class TestDataConfig {
                     .resourceIds(testProperties.getClients().getMaster().getResourceIds())
                     .webServerRedirectUri(testProperties.getClients().getMaster().getRedirectUris())
                     .build();
-            Oauth2Client noAuthoritiesClient = Oauth2Client
-                    .builder()
-                    .clientId(testProperties.getClients().getNoAuthorities().getClientId())
-                    .clientSecret(passwordEncoder.encode(testProperties.getClients().getNoAuthorities().getClientSecret()))
-                    .authorizedGrantTypes(testProperties.getClients().getNoAuthorities().getGrantTypes())
-                    .scope(testProperties.getClients().getNoAuthorities().getScopes())
-                    .authorities(testProperties.getClients().getNoAuthorities().getAuthorities())
-                    .resourceIds(testProperties.getClients().getNoAuthorities().getResourceIds())
-                    .webServerRedirectUri(testProperties.getClients().getNoAuthorities().getRedirectUris())
-                    .build();
             Oauth2Client noGrantTypesClient = Oauth2Client
                     .builder()
                     .clientId(testProperties.getClients().getNoGrantTypes().getClientId())
@@ -149,16 +136,6 @@ public class TestDataConfig {
                     .authorities(testProperties.getClients().getNoGrantTypes().getAuthorities())
                     .resourceIds(testProperties.getClients().getNoGrantTypes().getResourceIds())
                     .webServerRedirectUri(testProperties.getClients().getNoGrantTypes().getRedirectUris())
-                    .build();
-            Oauth2Client noResourceIdsClient = Oauth2Client
-                    .builder()
-                    .clientId(testProperties.getClients().getNoResourceIds().getClientId())
-                    .clientSecret(passwordEncoder.encode(testProperties.getClients().getNoResourceIds().getClientSecret()))
-                    .authorizedGrantTypes(testProperties.getClients().getNoResourceIds().getGrantTypes())
-                    .scope(testProperties.getClients().getNoResourceIds().getScopes())
-                    .authorities(testProperties.getClients().getNoResourceIds().getAuthorities())
-                    .resourceIds(testProperties.getClients().getNoResourceIds().getResourceIds())
-                    .webServerRedirectUri(testProperties.getClients().getNoResourceIds().getRedirectUris())
                     .build();
             Oauth2Client noScopesClient = Oauth2Client
                     .builder()
@@ -170,22 +147,9 @@ public class TestDataConfig {
                     .resourceIds(testProperties.getClients().getNoScopes().getResourceIds())
                     .webServerRedirectUri(testProperties.getClients().getNoScopes().getRedirectUris())
                     .build();
-            Oauth2Client noSecretClient = Oauth2Client
-                    .builder()
-                    .clientId(testProperties.getClients().getNoSecret().getClientId())
-                    .clientSecret(passwordEncoder.encode(testProperties.getClients().getNoSecret().getClientSecret()))
-                    .authorizedGrantTypes(testProperties.getClients().getNoSecret().getGrantTypes())
-                    .scope(testProperties.getClients().getNoSecret().getScopes())
-                    .authorities(testProperties.getClients().getNoSecret().getAuthorities())
-                    .resourceIds(testProperties.getClients().getNoSecret().getResourceIds())
-                    .webServerRedirectUri(testProperties.getClients().getNoSecret().getRedirectUris())
-                    .build();
             entityManager.persist(masterClient);
-            entityManager.persist(noAuthoritiesClient);
             entityManager.persist(noGrantTypesClient);
             entityManager.persist(noScopesClient);
-            entityManager.persist(noResourceIdsClient);
-            entityManager.persist(noSecretClient);
         }
     }
 

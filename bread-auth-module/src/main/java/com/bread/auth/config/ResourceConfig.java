@@ -17,8 +17,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        resources
-                .resourceId("auth");
+        resources.resourceId("auth");
     }
 
     @Override

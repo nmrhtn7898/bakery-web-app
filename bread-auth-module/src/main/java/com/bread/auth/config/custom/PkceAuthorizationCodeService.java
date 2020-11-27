@@ -22,7 +22,7 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
 
     private final RandomValueStringGenerator generator = new RandomValueStringGenerator();
 
-    // 인메모리 아닌, redis 캐싱하려 했으나, Oauth2Authentication 클래스 필드, 상위 클래스가 직렬화 불가능
+    // TODO 인메모리 아닌, redis 캐싱하려 했으나, Oauth2Authentication 클래스 필드, 상위 클래스가 직렬화 불가능
     // TODO code 발급하고, token 발급 안한 code 처리 필요 DB 사용하면 되는데 다른 방법있는지 고려
     private final Map<String, PkceAuthentication> authenticationMap = new ConcurrentHashMap<>();
 
@@ -65,7 +65,7 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
     public OAuth2Authentication consumeAuthorizationCodeAndCodeVerifier(String code, String verifier) {
         PkceAuthentication authentication = authenticationMap.get(code);
         if (authentication == null) {
-            throw new InvalidGrantException("Invalid authorization code");
+            throw new InvalidGrantException("invalid authorization code");
         }
         return authentication.getAuth2Authentication(verifier);
     }
@@ -87,26 +87,23 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
         Map<String, String> requestParameters = oAuth2Authentication
                 .getOAuth2Request()
                 .getRequestParameters();
-        // 해당 클라이언트 정보가 시크릿 값이 없는 경우, code_challenge 파라미터가 없으면 예외 발생
-        if (isPublicClient(requestParameters.get("client_id")) && !requestParameters.containsKey("code_challenge")) {
-            throw new InvalidRequestException("Code challenge required.");
+        if (!requestParameters.containsKey("code_challenge")) {
+            throw new InvalidRequestException("code challenge required.");
         }
-        if (requestParameters.containsKey("code_challenge")) {
-            String codeChallenge = requestParameters.get("code_challenge");
-            CodeChallengeMethod codeChallengeMethod = getCodeChallengeMethod(requestParameters);
-            return new PkceAuthentication(codeChallenge, codeChallengeMethod, oAuth2Authentication);
-        }
-        return new PkceAuthentication(oAuth2Authentication);
+        String codeChallenge = requestParameters.get("code_challenge");
+        CodeChallengeMethod codeChallengeMethod = getCodeChallengeMethod(requestParameters);
+        return new PkceAuthentication(codeChallenge, codeChallengeMethod, oAuth2Authentication);
     }
+
 
     private CodeChallengeMethod getCodeChallengeMethod(Map<String, String> requestParameters) {
         try {
             return ofNullable(requestParameters.get("code_challenge_method"))
                     .map(String::toUpperCase)
                     .map(CodeChallengeMethod::valueOf)
-                    .orElse(CodeChallengeMethod.PLAIN);
+                    .orElse(CodeChallengeMethod.S256);
         } catch (IllegalArgumentException e) {
-            throw new InvalidRequestException("Transform algorithm not supported");
+            throw new InvalidRequestException("transform algorithm not supported");
         }
     }
 

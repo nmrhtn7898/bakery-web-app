@@ -43,10 +43,32 @@ test:
         - user
         - admin
   clients:
-    noSecret:
-      clientId: noSecretId
-      clientSecret:
-      redirectUris: http://auth.bread.com
+    noScopes:
+      clientId: noScopesId
+      clientSecret: noScopesSecret
+      redirectUris: http://www.example.com
+      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
+      scopes: noScopes
+      authorities: user,admin
+      resourceIds: auth
+      codeChallenge: kUFmP0lviWWy-fuSgsDs6vbag4coS0BzYyRHtHvsWSU
+      codeVerifier: Po24FSnZUsKMMvFAvnN-5sQco3ql.ZjkZ_k6FttPxBhOpOAomUOh2q_pF5RV9R9M2ACnhObvy_CApZkQBFTO8wsMGGJgN5aAWnTCSP7Y9AQ0GuQxZiUHV3-Nvlcldi3V
+      codeChallengeMethod: S256
+    noGrantTypes:
+      clientId: noGrantTypesId
+      clientSecret: noGrantTypesSecret
+      redirectUris: http://www.example.com
+      grantTypes: nograntTypes
+      scopes: read,write
+      authorities: user,admin
+      resourceIds: auth
+      codeChallenge: kUFmP0lviWWy-fuSgsDs6vbag4coS0BzYyRHtHvsWSU
+      codeVerifier: Po24FSnZUsKMMvFAvnN-5sQco3ql.ZjkZ_k6FttPxBhOpOAomUOh2q_pF5RV9R9M2ACnhObvy_CApZkQBFTO8wsMGGJgN5aAWnTCSP7Y9AQ0GuQxZiUHV3-Nvlcldi3V
+      codeChallengeMethod: S256
+    master:
+      clientId: adminId
+      clientSecret: adminSecret
+      redirectUris: http://www.example.com
       grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
       scopes: read,write
       authorities: user,admin
@@ -54,43 +76,3 @@ test:
       codeChallenge: kUFmP0lviWWy-fuSgsDs6vbag4coS0BzYyRHtHvsWSU
       codeVerifier: Po24FSnZUsKMMvFAvnN-5sQco3ql.ZjkZ_k6FttPxBhOpOAomUOh2q_pF5RV9R9M2ACnhObvy_CApZkQBFTO8wsMGGJgN5aAWnTCSP7Y9AQ0GuQxZiUHV3-Nvlcldi3V
       codeChallengeMethod: S256
-    noScopes:
-      clientId: noScopesId
-      clientSecret: noScopesSecret
-      redirectUris: http://auth.bread.com
-      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
-      scopes: noScopes
-      authorities: user,admin
-      resourceIds: auth
-    noGrantTypes:
-      clientId: noGrantTypesId
-      clientSecret: noGrantTypesSecret
-      redirectUris: http://auth.bread.com
-      grantTypes: nograntTypes
-      scopes: read,write
-      authorities: user,admin
-      resourceIds: auth
-    noAuthorities:
-      clientId: noAuthoritiesId
-      clientSecret: noAuthoritiesSecret
-      redirectUris: http://auth.bread.com
-      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
-      scopes: read,write
-      authorities:
-      resourceIds: auth
-    noResourceIds:
-      clientId: noResourceIdsId
-      clientSecret: noResourceIdsSecret
-      redirectUris: http://auth.bread.com
-      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
-      scopes: read,write
-      authorities: user,admin
-      resourceIds:
-    master:
-      clientId: adminId
-      clientSecret: adminSecret
-      redirectUris: http://auth.bread.com
-      grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
-      scopes: read,write
-      authorities: user,admin
-      resourceIds: auth

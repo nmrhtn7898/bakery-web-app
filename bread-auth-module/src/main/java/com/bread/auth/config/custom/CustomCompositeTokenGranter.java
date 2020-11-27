@@ -5,7 +5,6 @@ import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.*;
 import org.springframework.security.oauth2.provider.client.ClientCredentialsTokenGranter;
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
-import org.springframework.security.oauth2.provider.implicit.ImplicitTokenGranter;
 import org.springframework.security.oauth2.provider.password.ResourceOwnerPasswordTokenGranter;
 import org.springframework.security.oauth2.provider.refresh.RefreshTokenGranter;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
@@ -21,9 +20,9 @@ public class CustomCompositeTokenGranter implements TokenGranter {
                                        AuthorizationServerTokenServices asts, OAuth2RequestFactory orf,
                                        AuthenticationManager am) {
         List<TokenGranter> tokenGranters = new ArrayList<>();
-//        tokenGranters.add(new AuthorizationCodeTokenGranter(asts, acs, cds, orf)); PkceAuthorizationCodeTokenGranter 에서 통합 구현
+//        tokenGranters.add(new AuthorizationCodeTokenGranter(asts, acs, cds, orf)); PkceAuthorizationCodeTokenGranter 에서 구현
+//        tokenGranters.add(new ImplicitTokenGranter(asts, cds, orf));
         tokenGranters.add(new RefreshTokenGranter(asts, cds, orf));
-        tokenGranters.add(new ImplicitTokenGranter(asts, cds, orf));
         tokenGranters.add(new ClientCredentialsTokenGranter(asts, cds, orf));
         if (am != null) {
             tokenGranters.add(new ResourceOwnerPasswordTokenGranter(am, asts, cds, orf));

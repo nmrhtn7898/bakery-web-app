@@ -51,27 +51,19 @@ public abstract class AbstractIntegrationTest {
 
     protected ResultActions getAuthorizeResponse(String responseType, String username,
                                                  String clientId, String redirectUri,
-                                                 String scopes) throws Exception {
-        return getAuthorizeResponse(responseType, username, clientId, redirectUri, scopes, null, null);
-    }
-
-    protected ResultActions getAuthorizeResponse(String responseType, String username,
-                                                 String clientId, String redirectUri,
                                                  String scopes, String codeChallenge,
                                                  String codeChallengeMethod) throws Exception {
-        MockHttpServletRequestBuilder authorizeRequestBuilder = get("/oauth/authorize")
-                .with(user(userDetailsService.loadUserByUsername(username)))
-                .param("client_id", clientId)
-                .param("response_type", responseType)
-                .param("redirect_uri", redirectUri)
-                .param("scope", scopes);
-        if (hasText(codeChallenge)) {
-            authorizeRequestBuilder.param("code_challenge", codeChallenge);
-        }
-        if (hasText(codeChallengeMethod)) {
-            authorizeRequestBuilder.param("code_challenge_method", codeChallengeMethod);
-        }
-        ResultActions resultActions = mockMvc.perform(authorizeRequestBuilder);
+        ResultActions resultActions = mockMvc
+                .perform(
+                        get("/oauth/authorize")
+                                .with(user(userDetailsService.loadUserByUsername(username)))
+                                .param("client_id", clientId)
+                                .param("response_type", responseType)
+                                .param("redirect_uri", redirectUri)
+                                .param("scope", scopes)
+                                .param("code_challenge", codeChallenge)
+                                .param("code_challenge_method", codeChallengeMethod)
+                );
         MvcResult mvcResult = resultActions.andReturn();
         if (mvcResult.getResponse().getStatus() != OK.value()) {
             return resultActions;
@@ -100,11 +92,12 @@ public abstract class AbstractIntegrationTest {
                 .perform(
                         post("/oauth/token")
                                 .accept(APPLICATION_JSON)
+                                .queryParam("client_id", clientId)
+                                .queryParam("client_secret", clientSecret)
                                 .queryParam("username", username)
                                 .queryParam("password", password)
                                 .queryParam("grant_type", "password")
                                 .queryParam("scope", scopes)
-                                .with(httpBasic(clientId, clientSecret))
                 );
     }
 
@@ -114,10 +107,11 @@ public abstract class AbstractIntegrationTest {
                 .perform(
                         post("/oauth/token")
                                 .accept(APPLICATION_JSON)
+                                .queryParam("client_id", clientId)
+                                .queryParam("client_secret", clientSecret)
                                 .queryParam("refresh_token", refreshToken)
                                 .queryParam("grant_type", "refresh_token")
                                 .queryParam("scope", scopes)
-                                .with(httpBasic(clientId, clientSecret))
                 );
     }
 
@@ -126,7 +120,8 @@ public abstract class AbstractIntegrationTest {
         return mockMvc
                 .perform(
                         post("/oauth/token")
-                                .with(httpBasic(clientId, clientSecret))
+                                .queryParam("client_id", clientId)
+                                .queryParam("client_secret", clientSecret)
                                 .accept(APPLICATION_JSON)
                                 .param("grant_type", "client_credentials")
                                 .param("scope", scopes)

@@ -46,6 +46,7 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
     @Override
     public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
         security
+                .allowFormAuthenticationForClients()
                 .checkTokenAccess("isAuthenticated()")
                 .passwordEncoder(passwordEncoder);
     }
