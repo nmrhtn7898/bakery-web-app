@@ -1,7 +1,7 @@
 package com.bread.auth.service;
 
 import com.bread.auth.entity.Oauth2Client;
-import com.bread.auth.model.Oauth2ClientCaching;
+import com.bread.auth.model.Oauth2ClientDetails;
 import com.bread.auth.repository.Oauth2ClientRedisRepository;
 import com.bread.auth.repository.Oauth2ClientRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +31,7 @@ public class Oauth2ClientService implements ClientDetailsService {
     @Transactional(readOnly = true)
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
-        Optional<Oauth2ClientCaching> byId = oauth2ClientRedisRepository.findById(clientId);
+        Optional<Oauth2ClientDetails> byId = oauth2ClientRedisRepository.findById(clientId);
         if (byId.isPresent()) {
             log.info("client id : {} is caching", clientId);
             return byId.get();
@@ -39,9 +39,9 @@ public class Oauth2ClientService implements ClientDetailsService {
         Oauth2Client client = oauth2ClientRepository
                 .findByClientId(clientId)
                 .orElseThrow(() -> new NoSuchClientException(clientId));
-        Oauth2ClientCaching oauth2ClientCaching = new Oauth2ClientCaching(client);
+        Oauth2ClientDetails oauth2ClientDetails = new Oauth2ClientDetails(client);
         log.info("client id : {} has been cached", clientId);
-        return oauth2ClientRedisRepository.save(oauth2ClientCaching);
+        return oauth2ClientRedisRepository.save(oauth2ClientDetails);
     }
 
     public Oauth2Client generateClient(Oauth2Client oauth2Client) {

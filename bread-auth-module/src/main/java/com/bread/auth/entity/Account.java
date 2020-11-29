@@ -21,6 +21,8 @@ import static lombok.AccessLevel.PROTECTED;
 @NoArgsConstructor(access = PROTECTED)
 public class Account extends BaseEntity {
 
+    private static final long serialVersionUID = -4810014971663995779L;
+
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private Long id;

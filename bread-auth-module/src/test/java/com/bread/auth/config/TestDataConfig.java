@@ -67,6 +67,7 @@ public class TestDataConfig {
             private String codeChallenge;
             private String codeChallengeMethod;
             private String codeVerifier;
+            private String state;
         }
 
     }

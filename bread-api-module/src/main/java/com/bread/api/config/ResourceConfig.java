@@ -2,6 +2,7 @@ package com.bread.api.config;
 
 import com.bread.common.EnableEncryptProperty;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
@@ -9,6 +10,7 @@ import org.springframework.security.oauth2.config.annotation.web.configuration.R
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
 import org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler;
 
+import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.security.config.http.SessionCreationPolicy.STATELESS;
 
 @EnableEncryptProperty
@@ -19,8 +21,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
 
     @Override
     public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
-        resources
-                .resourceId("");
+        resources.resourceId("api");
     }
 
     @Override
@@ -30,7 +31,7 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .mvcMatchers("/api/**")
                 .and()
                 .authorizeRequests()
-                .mvcMatchers("/api/**/login")
+                .antMatchers(OPTIONS)
                 .permitAll()
                 .anyRequest()
                 .authenticated();

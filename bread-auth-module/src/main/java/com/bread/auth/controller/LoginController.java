@@ -1,7 +1,7 @@
 package com.bread.auth.controller;
 
-import com.bread.auth.annotation.AuthenticationAccount;
-import com.bread.auth.entity.Account;
+import com.bread.auth.model.AccountDetails;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,7 +21,7 @@ public class LoginController {
      * @return
      */
     @GetMapping("/login")
-    public String login(@RequestParam("continue") String redirectUri, @AuthenticationAccount Account account, Model model) {
+    public String login(@RequestParam("continue") String redirectUri, @AuthenticationPrincipal AccountDetails account, Model model) {
         if (!matches("^[a-zA-Z]{2,20}://.*$", redirectUri)) { // TODO 정규식 아닌 화이트 리스트 방식으로 변경 필요
             throw new IllegalArgumentException();
         }

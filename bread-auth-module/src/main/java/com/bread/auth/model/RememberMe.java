@@ -15,7 +15,9 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @RedisHash(value = "rememberMe", timeToLive = 60 * 60 * 24 * 7)
 @NoArgsConstructor(access = PROTECTED)
-public class RememberMeCaching implements Serializable {
+public class RememberMe implements Serializable {
+
+    private static final long serialVersionUID = 270039320612909217L;
 
     @Id
     private String series;
@@ -27,7 +29,7 @@ public class RememberMeCaching implements Serializable {
 
     private Date lastUsed;
 
-    public RememberMeCaching(PersistentRememberMeToken token) {
+    public RememberMe(PersistentRememberMeToken token) {
         this.series = token.getSeries();
         this.email = token.getUsername();
         this.token = token.getTokenValue();

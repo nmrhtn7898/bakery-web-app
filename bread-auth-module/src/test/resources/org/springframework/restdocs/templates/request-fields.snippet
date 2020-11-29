@@ -1,0 +1,13 @@
+// Custom Request Fields
+[cols="^20%,^5%,^5%,^70%"]
+|===
+|Field|Type|Description|Required|Description
+
+{{#fields}}
+<|{{#tableCellContent}}`+{{path}}+`{{/tableCellContent}}
+^|{{#tableCellContent}}`+{{type}}+`{{/tableCellContent}}
+^|{{#tableCellContent}}{{^optional}}true{{/optional}}{{/tableCellContent}}
+<|{{#tableCellContent}}{{description}}{{/tableCellContent}}
+{{/fields}}
+
+|===

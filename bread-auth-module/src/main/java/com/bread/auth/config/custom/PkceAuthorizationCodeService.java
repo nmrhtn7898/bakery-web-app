@@ -1,8 +1,13 @@
 package com.bread.auth.config.custom;
 
 import com.bread.auth.enums.CodeChallengeMethod;
+import com.bread.auth.model.AccountDetails;
+import com.bread.auth.model.Oauth2CodeRequest;
+import com.bread.auth.repository.Oauth2CodeRequestRedisRepository;
 import com.bread.auth.service.Oauth2ClientService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.common.exceptions.InvalidGrantException;
 import org.springframework.security.oauth2.common.exceptions.InvalidRequestException;
@@ -12,7 +17,6 @@ import org.springframework.security.oauth2.provider.code.AuthorizationCodeServic
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Optional.ofNullable;
 
@@ -22,9 +26,7 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
 
     private final RandomValueStringGenerator generator = new RandomValueStringGenerator();
 
-    // TODO 인메모리 아닌, redis 캐싱하려 했으나, Oauth2Authentication 클래스 필드, 상위 클래스가 직렬화 불가능
-    // TODO code 발급하고, token 발급 안한 code 처리 필요 DB 사용하면 되는데 다른 방법있는지 고려
-    private final Map<String, PkceAuthentication> authenticationMap = new ConcurrentHashMap<>();
+    private final Oauth2CodeRequestRedisRepository oauth2CodeRequestRedisRepository;
 
     private final Oauth2ClientService clientDetailsService;
 
@@ -36,12 +38,12 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
      * @param authentication 클라이언트 정보 및 Oauth2 인증 파라미터 정보
      * @return
      */
+    @SneakyThrows
     @Override
     public String createAuthorizationCode(OAuth2Authentication authentication) {
-        PkceAuthentication PKCEAuthentication = getProtectedAuthentication(authentication);
-        String code = generator.generate();
-        authenticationMap.put(code, PKCEAuthentication);
-        return code;
+        Oauth2CodeRequest oauth2CodeRequest = getProtectedAuthentication(authentication);
+        oauth2CodeRequestRedisRepository.save(oauth2CodeRequest);
+        return oauth2CodeRequest.getCode();
     }
 
     /**
@@ -62,12 +64,12 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
      * @param verifier code_verifier
      * @return
      */
+    @SneakyThrows
     public OAuth2Authentication consumeAuthorizationCodeAndCodeVerifier(String code, String verifier) {
-        PkceAuthentication authentication = authenticationMap.get(code);
-        if (authentication == null) {
-            throw new InvalidGrantException("invalid authorization code");
-        }
-        return authentication.getAuth2Authentication(verifier);
+        return oauth2CodeRequestRedisRepository
+                .findById(code)
+                .orElseThrow(() -> new InvalidGrantException("invalid authorization code"))
+                .getAuth2Authentication(verifier);
     }
 
     /**
@@ -76,14 +78,14 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
      * @param code authorization_code
      */
     public void removeStoredAuthentication(String code) {
-        authenticationMap.remove(code);
+        oauth2CodeRequestRedisRepository.deleteById(code);
     }
 
     /**
      * @param oAuth2Authentication 클라이언트 정보 및 Oauth2 인증 파라미터 정보
      * @return
      */
-    private PkceAuthentication getProtectedAuthentication(OAuth2Authentication oAuth2Authentication) {
+    private Oauth2CodeRequest getProtectedAuthentication(OAuth2Authentication oAuth2Authentication) {
         Map<String, String> requestParameters = oAuth2Authentication
                 .getOAuth2Request()
                 .getRequestParameters();
@@ -92,7 +94,15 @@ public class PkceAuthorizationCodeService implements AuthorizationCodeServices {
         }
         String codeChallenge = requestParameters.get("code_challenge");
         CodeChallengeMethod codeChallengeMethod = getCodeChallengeMethod(requestParameters);
-        return new PkceAuthentication(codeChallenge, codeChallengeMethod, oAuth2Authentication);
+        return new Oauth2CodeRequest(
+                generator.generate(),
+                codeChallenge,
+                codeChallengeMethod,
+                oAuth2Authentication.getOAuth2Request(),
+                (AccountDetails) oAuth2Authentication
+                        .getUserAuthentication()
+                        .getPrincipal()
+        );
     }
 
 

@@ -6,7 +6,6 @@ import com.bread.auth.config.custom.PkceAuthorizationCodeService;
 import com.bread.auth.config.custom.PkceAuthorizationCodeTokenGranter;
 import com.bread.auth.service.Oauth2ClientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

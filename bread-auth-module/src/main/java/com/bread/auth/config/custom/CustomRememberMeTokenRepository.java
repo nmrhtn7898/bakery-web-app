@@ -1,6 +1,6 @@
 package com.bread.auth.config.custom;
 
-import com.bread.auth.model.RememberMeCaching;
+import com.bread.auth.model.RememberMe;
 import com.bread.auth.repository.RememberMeRedisRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,14 +24,14 @@ public class CustomRememberMeTokenRepository implements PersistentTokenRepositor
 
     @Override
     public void createNewToken(PersistentRememberMeToken token) {
-        RememberMeCaching rememberMeCaching = new RememberMeCaching(token);
-        rememberMeRedisRepository.save(rememberMeCaching);
+        RememberMe rememberMe = new RememberMe(token);
+        rememberMeRedisRepository.save(rememberMe);
     }
 
     @Override
     public void updateToken(String series, String tokenValue, Date lastUsed) {
         log.info("series id : {} remember-me token is updated", series);
-        PartialUpdate<RememberMeCaching> update = new PartialUpdate<>(series, RememberMeCaching.class)
+        PartialUpdate<RememberMe> update = new PartialUpdate<>(series, RememberMe.class)
                 .set("token", tokenValue)
                 .set("lastUsed", lastUsed);
         redisKeyValueTemplate.update(update);
@@ -39,15 +39,15 @@ public class CustomRememberMeTokenRepository implements PersistentTokenRepositor
 
     @Override
     public PersistentRememberMeToken getTokenForSeries(String seriesId) {
-        Optional<RememberMeCaching> byId = rememberMeRedisRepository.findById(seriesId);
+        Optional<RememberMe> byId = rememberMeRedisRepository.findById(seriesId);
         if (byId.isPresent()) {
             log.info("series id : {} remember-me token has been cached", seriesId);
-            RememberMeCaching rememberMeCaching = byId.get();
+            RememberMe rememberMe = byId.get();
             return new PersistentRememberMeToken(
-                    rememberMeCaching.getEmail(),
-                    rememberMeCaching.getSeries(),
-                    rememberMeCaching.getToken(),
-                    rememberMeCaching.getLastUsed()
+                    rememberMe.getEmail(),
+                    rememberMe.getSeries(),
+                    rememberMe.getToken(),
+                    rememberMe.getLastUsed()
             );
         } else {
             return null;
@@ -58,9 +58,9 @@ public class CustomRememberMeTokenRepository implements PersistentTokenRepositor
     public void removeUserTokens(String username) {
         rememberMeRedisRepository
                 .findByEmail(username)
-                .ifPresent(rememberMeCaching -> {
+                .ifPresent(rememberMe -> {
                     log.info("username : {} remember-me token is deleted", username);
-                    rememberMeRedisRepository.delete(rememberMeCaching);
+                    rememberMeRedisRepository.delete(rememberMe);
                 });
     }
 

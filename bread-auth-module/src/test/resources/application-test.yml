@@ -1,7 +1,6 @@
-server:
-  port: 9600
-
 spring:
+  session:
+    store-type: none
   datasource:
     url: jdbc:h2:mem:testdb
     username: root
@@ -50,10 +49,11 @@ test:
       grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
       scopes: noScopes
       authorities: user,admin
-      resourceIds: auth
+      resourceIds: api
       codeChallenge: kUFmP0lviWWy-fuSgsDs6vbag4coS0BzYyRHtHvsWSU
       codeVerifier: Po24FSnZUsKMMvFAvnN-5sQco3ql.ZjkZ_k6FttPxBhOpOAomUOh2q_pF5RV9R9M2ACnhObvy_CApZkQBFTO8wsMGGJgN5aAWnTCSP7Y9AQ0GuQxZiUHV3-Nvlcldi3V
       codeChallengeMethod: S256
+      state: 31990a86-314a-11eb-adc1-0242ac120002
     noGrantTypes:
       clientId: noGrantTypesId
       clientSecret: noGrantTypesSecret
@@ -61,10 +61,11 @@ test:
       grantTypes: nograntTypes
       scopes: read,write
       authorities: user,admin
-      resourceIds: auth
+      resourceIds: api
       codeChallenge: kUFmP0lviWWy-fuSgsDs6vbag4coS0BzYyRHtHvsWSU
       codeVerifier: Po24FSnZUsKMMvFAvnN-5sQco3ql.ZjkZ_k6FttPxBhOpOAomUOh2q_pF5RV9R9M2ACnhObvy_CApZkQBFTO8wsMGGJgN5aAWnTCSP7Y9AQ0GuQxZiUHV3-Nvlcldi3V
       codeChallengeMethod: S256
+      state: 31990a86-314a-11eb-adc1-0242ac120002
     master:
       clientId: adminId
       clientSecret: adminSecret
@@ -72,7 +73,8 @@ test:
       grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
       scopes: read,write
       authorities: user,admin
-      resourceIds: auth
+      resourceIds: api
       codeChallenge: kUFmP0lviWWy-fuSgsDs6vbag4coS0BzYyRHtHvsWSU
       codeVerifier: Po24FSnZUsKMMvFAvnN-5sQco3ql.ZjkZ_k6FttPxBhOpOAomUOh2q_pF5RV9R9M2ACnhObvy_CApZkQBFTO8wsMGGJgN5aAWnTCSP7Y9AQ0GuQxZiUHV3-Nvlcldi3V
       codeChallengeMethod: S256
+      state: 31990a86-314a-11eb-adc1-0242ac120002

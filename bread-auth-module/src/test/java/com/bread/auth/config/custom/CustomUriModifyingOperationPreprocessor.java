@@ -1,4 +1,4 @@
-package com.bread.auth.config;
+package com.bread.auth.config.custom;
 
 import lombok.Setter;
 import org.springframework.http.HttpHeaders;
@@ -14,7 +14,10 @@ import org.springframework.restdocs.operation.preprocess.UriModifyingOperationPr
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

@@ -6,7 +6,6 @@ import javax.persistence.*;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
-import static org.springframework.util.StringUtils.hasText;
 
 @Entity
 @Getter
@@ -15,6 +14,8 @@ import static org.springframework.util.StringUtils.hasText;
 @NoArgsConstructor(access = PROTECTED)
 @Table(name = "oauth_client_details")
 public class Oauth2Client extends BaseEntity {
+
+    private static final long serialVersionUID = 1501999278274720377L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

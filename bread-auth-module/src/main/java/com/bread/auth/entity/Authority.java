@@ -2,7 +2,10 @@ package com.bread.auth.entity;
 
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 
 import static javax.persistence.GenerationType.IDENTITY;
 import static lombok.AccessLevel.PROTECTED;
@@ -16,6 +19,8 @@ import static lombok.AccessLevel.PROTECTED;
 @EqualsAndHashCode(of = "id", callSuper = false)
 @NoArgsConstructor(access = PROTECTED)
 public class Authority extends BaseEntity {
+
+    private static final long serialVersionUID = 7389699195077406025L;
 
     @Id
     @GeneratedValue(strategy = IDENTITY)

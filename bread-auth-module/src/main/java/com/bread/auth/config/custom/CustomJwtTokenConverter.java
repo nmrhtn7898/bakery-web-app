@@ -1,6 +1,6 @@
 package com.bread.auth.config.custom;
 
-import com.bread.auth.model.AccountAdapter;
+import com.bread.auth.model.AccountDetails;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -22,9 +22,9 @@ public class CustomJwtTokenConverter extends JwtAccessTokenConverter {
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
         String grantType = authentication.getOAuth2Request().getGrantType();
         if (!"client_credentials".equals(grantType)) {
-            AccountAdapter account = (AccountAdapter) authentication.getPrincipal();
+            AccountDetails account = (AccountDetails) authentication.getPrincipal();
             Map<String, Object> info = new HashMap<>();
-            info.put("user_id", account.getAccount().getId());
+            info.put("user_id", account.getId());
             ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(info);
             accessToken = super.enhance(accessToken, authentication);
             accessToken

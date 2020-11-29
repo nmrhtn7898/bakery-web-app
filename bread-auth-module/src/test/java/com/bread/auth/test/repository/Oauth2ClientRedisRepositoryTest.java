@@ -2,10 +2,9 @@ package com.bread.auth.test.repository;
 
 import com.bread.auth.base.AbstractDataRedisTest;
 import com.bread.auth.entity.Oauth2Client;
-import com.bread.auth.model.Oauth2ClientCaching;
+import com.bread.auth.model.Oauth2ClientDetails;
 import com.bread.auth.repository.Oauth2ClientRedisRepository;
 import javassist.NotFoundException;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,10 +49,10 @@ public class Oauth2ClientRedisRepositoryTest extends AbstractDataRedisTest {
                 .accessTokenValidity(tokenValidity)
                 .refreshTokenValidity(tokenValidity)
                 .build();
-        Oauth2ClientCaching expect = new Oauth2ClientCaching(oauth2Client);
+        Oauth2ClientDetails expect = new Oauth2ClientDetails(oauth2Client);
         // when
-        Oauth2ClientCaching save = oauth2ClientRedisRepository.save(expect);
-        Oauth2ClientCaching find = oauth2ClientRedisRepository
+        Oauth2ClientDetails save = oauth2ClientRedisRepository.save(expect);
+        Oauth2ClientDetails find = oauth2ClientRedisRepository
                 .findById(clientId)
                 .orElseThrow(() -> new NotFoundException(clientId));
         // then

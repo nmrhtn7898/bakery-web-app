@@ -1,5 +1,6 @@
 package com.bread.auth.config;
 
+import com.bread.auth.config.custom.CustomUriModifyingOperationPreprocessor;
 import org.springframework.boot.test.autoconfigure.restdocs.RestDocsMockMvcConfigurationCustomizer;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -13,9 +14,10 @@ public class RestDocsConfig {
     @Bean
     public RestDocsMockMvcConfigurationCustomizer restDocsMockMvcConfigurationCustomizer() {
         CustomUriModifyingOperationPreprocessor uriProcessor = new CustomUriModifyingOperationPreprocessor();
+        uriProcessor.setScheme("http");
         uriProcessor.setBasePath("/auth"); // /api/v1/example -> /auth/api/v1/example 변환
-        uriProcessor.setPort("-1"); // 커스텀 processor 에서 -1 포트는 노출 안함
         uriProcessor.setHost("54.180.10.196");
+        uriProcessor.setPort("-1"); // port 노출 제거
         return config -> config
                 .operationPreprocessors()
                 .withRequestDefaults(prettyPrint(), uriProcessor)

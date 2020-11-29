@@ -1,12 +1,12 @@
 package com.bread.auth.repository;
 
-import com.bread.auth.model.RememberMeCaching;
+import com.bread.auth.model.RememberMe;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;
 
-public interface RememberMeRedisRepository extends CrudRepository<RememberMeCaching, String> {
+public interface RememberMeRedisRepository extends CrudRepository<RememberMe, String> {
 
-    Optional<RememberMeCaching> findByEmail(String email);
+    Optional<RememberMe> findByEmail(String email);
 
 }

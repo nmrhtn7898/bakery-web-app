@@ -10,7 +10,6 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import static com.bread.auth.enums.Oauth2GrantType.*;
+import static java.lang.String.format;
 import static org.springframework.security.crypto.factory.PasswordEncoderFactories.createDelegatingPasswordEncoder;
 
 @SpringBootApplication
@@ -64,12 +65,26 @@ public class AuthApplication {
                     .builder()
                     .clientId("test")
                     .clientSecret("{noop}") // public client 경우 사용
-                    .authorizedGrantTypes("authorization_code") // Browser SPA Client 경우 사용
-//                    .authorizedGrantTypes("authorization_code,refresh_token") // Mobile Client 경우 사용
+//                    .authorizedGrantTypes(AUTHORIZATION_CODE.toString()) // Browser SPA Client SSO 경우 사용
+//                    .authorizedGrantTypes(  // Mobile Client SSO 경우 사용
+//                            format(
+//                                    "%s,%s",
+//                                    AUTHORIZATION_CODE.toString(),
+//                                    REFRESH_TOKEN.toString()
+//                            )
+//                    )
+                    .authorizedGrantTypes(
+                            format(
+                                    "%s,%s,%s",
+                                    AUTHORIZATION_CODE.toString(),
+                                    PASSWORD.toString(),
+                                    REFRESH_TOKEN.toString()
+                            )
+                    )
                     .scope("read,write")
                     .authorities("user")
                     .resourceIds("auth")
-                    .webServerRedirectUri("http://localhost:9600")
+                    .webServerRedirectUri("http://localhost:9600/auth")
                     .autoApprove("true")
                     .build();
             entityManager.persist(client);

@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
-import org.springframework.data.redis.core.index.Indexed;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
-
-import java.io.Serializable;
 
 import static java.util.Arrays.asList;
 import static lombok.AccessLevel.PROTECTED;
@@ -16,12 +13,14 @@ import static lombok.AccessLevel.PROTECTED;
 @Getter
 @NoArgsConstructor(access = PROTECTED)
 @RedisHash(value = "client", timeToLive = 60)
-public class Oauth2ClientCaching extends BaseClientDetails implements Serializable {
+public class Oauth2ClientDetails extends BaseClientDetails {
+
+    private static final long serialVersionUID = -92629051351938067L;
 
     @Id
     private String id;
 
-    public Oauth2ClientCaching(Oauth2Client client) {
+    public Oauth2ClientDetails(Oauth2Client client) {
         super(
                 client.getClientId(),
                 client.getResourceIds(),
