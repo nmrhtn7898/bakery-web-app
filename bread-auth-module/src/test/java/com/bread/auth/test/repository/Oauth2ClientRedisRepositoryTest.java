@@ -5,66 +5,75 @@ import com.bread.auth.entity.Oauth2Client;
 import com.bread.auth.model.Oauth2ClientDetails;
 import com.bread.auth.repository.Oauth2ClientRedisRepository;
 import javassist.NotFoundException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static java.util.UUID.randomUUID;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class Oauth2ClientRedisRepositoryTest extends AbstractDataRedisTest {
 
     @Autowired
     private Oauth2ClientRedisRepository oauth2ClientRedisRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @BeforeEach
-    public void beforeEach() {
-        oauth2ClientRedisRepository.deleteAll();
-    }
-
     @Test
-    public void save_Success() throws NotFoundException {
+    public void findById_Success() throws NotFoundException {
         // given
-        String clientId = "generate";
-        String clientSecret = "secret";
-        String resourceIds = "auth";
-        String scopes = "read,write";
-        String grantTypes = "password,refresh_token";
-        String authorities = "user";
-        String redirectUri = "/";
-        int tokenValidity = 1800;
-        Oauth2Client oauth2Client = Oauth2Client
-                .builder()
-                .clientId(clientId)
-                .clientSecret(passwordEncoder.encode(clientSecret))
-                .resourceIds(resourceIds)
-                .scope(scopes)
-                .authorizedGrantTypes(grantTypes)
-                .authorities(authorities)
-                .webServerRedirectUri(redirectUri)
-                .accessTokenValidity(tokenValidity)
-                .refreshTokenValidity(tokenValidity)
-                .build();
-        Oauth2ClientDetails expect = new Oauth2ClientDetails(oauth2Client);
+        String clientId = randomUUID().toString();
+        Oauth2ClientDetails expect = generate(clientId);
+        oauth2ClientRedisRepository.save(expect);
         // when
-        Oauth2ClientDetails save = oauth2ClientRedisRepository.save(expect);
-        Oauth2ClientDetails find = oauth2ClientRedisRepository
+        Oauth2ClientDetails actual = oauth2ClientRedisRepository
                 .findById(clientId)
                 .orElseThrow(() -> new NotFoundException(clientId));
         // then
-        assertEquals(save.getClientId(), find.getClientId());
-        assertEquals(save.getClientSecret(), find.getClientSecret());
-        assertEquals(save.getResourceIds(), find.getResourceIds());
-        assertEquals(save.getScope(), find.getScope());
-        assertEquals(save.getAuthorizedGrantTypes(), find.getAuthorizedGrantTypes());
-        assertEquals(save.getAuthorities(), find.getAuthorities());
-        assertIterableEquals(save.getRegisteredRedirectUri(), find.getRegisteredRedirectUri());
-        assertEquals(save.getAccessTokenValiditySeconds(), find.getAccessTokenValiditySeconds());
-        assertEquals(save.getRefreshTokenValiditySeconds(), find.getRefreshTokenValiditySeconds());
+        assertEquals(expect.getId(), actual.getId());
+        assertEquals(expect.getClientId(), actual.getClientId());
+        assertEquals(expect.getClientSecret(), actual.getClientSecret());
+        assertEquals(expect.getResourceIds(), actual.getResourceIds());
+        assertEquals(expect.getScope(), actual.getScope());
+        assertEquals(expect.getAuthorizedGrantTypes(), actual.getAuthorizedGrantTypes());
+        assertEquals(expect.getAuthorities(), actual.getAuthorities());
+        assertIterableEquals(expect.getRegisteredRedirectUri(), actual.getRegisteredRedirectUri());
+        assertEquals(expect.getAccessTokenValiditySeconds(), actual.getAccessTokenValiditySeconds());
+        assertEquals(expect.getRefreshTokenValiditySeconds(), actual.getRefreshTokenValiditySeconds());
+        assertEquals(expect.getAdditionalInformation(), actual.getAdditionalInformation());
+        assertEquals(expect.getAutoApproveScopes(), actual.getAutoApproveScopes());
+    }
+
+    @Test
+    public void findById_Fail() {
+        // given
+        String clientId = "not exists client id";
+        // when & then
+        assertFalse(oauth2ClientRedisRepository.findById(clientId).isPresent());
+    }
+
+    @Test
+    public void deleteById_Success() {
+        // given
+        String clientId = randomUUID().toString();
+        Oauth2ClientDetails oauth2ClientDetails = generate(clientId);
+        oauth2ClientRedisRepository.save(oauth2ClientDetails);
+        // when
+        oauth2ClientRedisRepository.deleteById(clientId);
+        // then
+        assertFalse(oauth2ClientRedisRepository.findById(clientId).isPresent());
+    }
+
+    private Oauth2ClientDetails generate(String clientId) {
+        Oauth2Client oauth2Client = Oauth2Client
+                .builder()
+                .id(1L)
+                .clientId(clientId)
+                .clientSecret("clientSecret")
+                .resourceIds("resource")
+                .scope("read,write")
+                .authorizedGrantTypes("password,refresh_token")
+                .authorities("user,admin")
+                .webServerRedirectUri("/")
+                .build();
+        return new Oauth2ClientDetails(oauth2Client);
     }
 
 }

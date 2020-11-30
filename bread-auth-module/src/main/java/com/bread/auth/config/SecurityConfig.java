@@ -1,5 +1,7 @@
 package com.bread.auth.config;
 
+import com.bread.auth.config.custom.CustomRememberMeService;
+import com.bread.auth.config.custom.CustomRememberMeTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +11,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -18,7 +19,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userDetailsService;
 
-    private final PersistentTokenRepository persistentTokenRepository;
+    private final CustomRememberMeTokenRepository persistentTokenRepository;
 
     @Bean
     @Override
@@ -44,12 +45,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .logoutSuccessUrl("/login");
         http
                 .rememberMe()
+                .rememberMeServices(
+                        new CustomRememberMeService(
+                                "rememberMeServices",
+                                userDetailsService,
+                                persistentTokenRepository
+                        )
+                )
                 .tokenValiditySeconds(60 * 60 * 24 * 7)
-                .key("rememberMeServices")
                 .tokenRepository(persistentTokenRepository)
                 .rememberMeParameter("remember-me")
                 .rememberMeCookieName("remember-me")
-//                .useSecureCookie(true)
                 .userDetailsService(userDetailsService);
         http
                 .requestMatchers()
@@ -62,7 +68,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web
                 .ignoring()
                 .mvcMatchers("/docs/**");

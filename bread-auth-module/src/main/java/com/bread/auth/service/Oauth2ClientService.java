@@ -6,7 +6,6 @@ import com.bread.auth.repository.Oauth2ClientRedisRepository;
 import com.bread.auth.repository.Oauth2ClientRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.ClientRegistrationException;
@@ -26,27 +25,20 @@ public class Oauth2ClientService implements ClientDetailsService {
 
     private final Oauth2ClientRedisRepository oauth2ClientRedisRepository;
 
-    private final PasswordEncoder passwordEncoder;
-
     @Transactional(readOnly = true)
     @Override
     public ClientDetails loadClientByClientId(String clientId) throws ClientRegistrationException {
         Optional<Oauth2ClientDetails> byId = oauth2ClientRedisRepository.findById(clientId);
         if (byId.isPresent()) {
-            log.info("client id : {} is caching", clientId);
+            log.debug("client id : {} is caching", clientId);
             return byId.get();
         }
         Oauth2Client client = oauth2ClientRepository
                 .findByClientId(clientId)
                 .orElseThrow(() -> new NoSuchClientException(clientId));
         Oauth2ClientDetails oauth2ClientDetails = new Oauth2ClientDetails(client);
-        log.info("client id : {} has been cached", clientId);
+        log.debug("client id : {} has been cached", clientId);
         return oauth2ClientRedisRepository.save(oauth2ClientDetails);
-    }
-
-    public Oauth2Client generateClient(Oauth2Client oauth2Client) {
-        oauth2Client.setClientSecret(passwordEncoder.encode(oauth2Client.getClientSecret()));
-        return oauth2ClientRepository.save(oauth2Client);
     }
 
 }

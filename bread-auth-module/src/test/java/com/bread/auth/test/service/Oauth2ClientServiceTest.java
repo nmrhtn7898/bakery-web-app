@@ -9,15 +9,10 @@ import com.bread.auth.service.Oauth2ClientService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
 
-import static java.lang.String.join;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.stream.Collectors.joining;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -34,55 +29,52 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
     @Mock
     private Oauth2ClientRedisRepository oauth2ClientRedisRepository;
 
-    @Mock
-    private PasswordEncoder passwordEncoder;
-
     @Test
     public void loadClientByClientId_Success() {
         // given
-        String clientId = "mock";
-        String clientSecret = "secret";
-        String resourceIds = "auth";
-        String scopes = "read,write";
-        String grantTypes = "password,refresh_token";
-        String authorities = "user";
-        String redirectUri = "/";
-        int tokenValidity = 1800;
-        Oauth2Client oauth2Client = Oauth2Client
-                .builder()
-                .clientId(clientId)
-                .clientSecret(clientSecret)
-                .resourceIds(resourceIds)
-                .scope(scopes)
-                .authorizedGrantTypes(grantTypes)
-                .authorities(authorities)
-                .webServerRedirectUri(redirectUri)
-                .accessTokenValidity(tokenValidity)
-                .refreshTokenValidity(tokenValidity)
-                .build();
+        String clientId = "clientId";
+        Oauth2Client oauth2Client = generate(clientId);
         Oauth2ClientDetails expect = new Oauth2ClientDetails(oauth2Client);
         when(oauth2ClientRedisRepository.findById(clientId)).thenReturn(empty());
         when(oauth2ClientRepository.findByClientId(clientId)).thenReturn(of(oauth2Client));
         when(oauth2ClientRedisRepository.save(any())).thenReturn(expect);
         // when
-        ClientDetails clientDetails = oauth2ClientService.loadClientByClientId(clientId);
+        Oauth2ClientDetails actual = (Oauth2ClientDetails) oauth2ClientService.loadClientByClientId(clientId);
         // then
-        assertEquals(clientId, clientDetails.getClientId());
-        assertEquals(clientSecret, clientDetails.getClientSecret());
-        assertEquals(resourceIds, join(",", clientDetails.getResourceIds()));
-        assertEquals(scopes, join(",", clientDetails.getScope()));
-        assertEquals(grantTypes, join(",", clientDetails.getAuthorizedGrantTypes()));
-        assertEquals(
-                authorities,
-                clientDetails
-                        .getAuthorities()
-                        .stream()
-                        .map(GrantedAuthority::getAuthority)
-                        .collect(joining(","))
-        );
-        assertEquals(redirectUri, join(",", clientDetails.getRegisteredRedirectUri()));
-        assertEquals(tokenValidity, clientDetails.getAccessTokenValiditySeconds());
-        assertEquals(tokenValidity, clientDetails.getRefreshTokenValiditySeconds());
+        assertEquals(expect.getClientId(), actual.getClientId());
+        assertEquals(expect.getClientSecret(), actual.getClientSecret());
+        assertEquals(expect.getAccessTokenValiditySeconds(), actual.getAccessTokenValiditySeconds());
+        assertEquals(expect.getRefreshTokenValiditySeconds(), actual.getRefreshTokenValiditySeconds());
+        assertEquals(expect.getAdditionalInformation(), actual.getAdditionalInformation());
+        assertIterableEquals(expect.getResourceIds(), actual.getResourceIds());
+        assertIterableEquals(expect.getScope(), actual.getScope());
+        assertIterableEquals(expect.getAuthorizedGrantTypes(), actual.getAuthorizedGrantTypes());
+        assertIterableEquals(expect.getAuthorities(), actual.getAuthorities());
+        assertIterableEquals(expect.getRegisteredRedirectUri(), actual.getRegisteredRedirectUri());
+        assertIterableEquals(expect.getAutoApproveScopes(), actual.getAutoApproveScopes());
+    }
+
+    @Test
+    public void loadClientByClientIdCache_Success() {
+        // given
+        String clientId = "clientId";
+        Oauth2Client oauth2Client = generate(clientId);
+        Oauth2ClientDetails expect = new Oauth2ClientDetails(oauth2Client);
+        when(oauth2ClientRedisRepository.findById(clientId)).thenReturn(of(expect));
+        // when
+        Oauth2ClientDetails actual = (Oauth2ClientDetails) oauth2ClientService.loadClientByClientId(clientId);
+        // then
+        assertEquals(expect.getClientId(), actual.getClientId());
+        assertEquals(expect.getClientSecret(), actual.getClientSecret());
+        assertEquals(expect.getAccessTokenValiditySeconds(), actual.getAccessTokenValiditySeconds());
+        assertEquals(expect.getRefreshTokenValiditySeconds(), actual.getRefreshTokenValiditySeconds());
+        assertEquals(expect.getAdditionalInformation(), actual.getAdditionalInformation());
+        assertIterableEquals(expect.getResourceIds(), actual.getResourceIds());
+        assertIterableEquals(expect.getScope(), actual.getScope());
+        assertIterableEquals(expect.getAuthorizedGrantTypes(), actual.getAuthorizedGrantTypes());
+        assertIterableEquals(expect.getAuthorities(), actual.getAuthorities());
+        assertIterableEquals(expect.getRegisteredRedirectUri(), actual.getRegisteredRedirectUri());
+        assertIterableEquals(expect.getAutoApproveScopes(), actual.getAutoApproveScopes());
     }
 
     @Test
@@ -98,10 +90,7 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
         );
     }
 
-    @Test
-    public void generateClient_Success() {
-        // given
-        String clientId = "mock";
+    private Oauth2Client generate(String clientId) {
         String clientSecret = "secret";
         String resourceIds = "auth";
         String scopes = "read,write";
@@ -109,7 +98,7 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
         String authorities = "user";
         String redirectUri = "/";
         int tokenValidity = 1800;
-        Oauth2Client expect = Oauth2Client
+        return Oauth2Client
                 .builder()
                 .clientId(clientId)
                 .clientSecret(clientSecret)
@@ -121,21 +110,6 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
                 .accessTokenValidity(tokenValidity)
                 .refreshTokenValidity(tokenValidity)
                 .build();
-        when(passwordEncoder.encode(clientSecret)).thenReturn(clientSecret);
-        when(passwordEncoder.matches(clientSecret, clientSecret)).thenReturn(true);
-        when(oauth2ClientRepository.save(expect)).thenReturn(expect);
-        // when
-        Oauth2Client then = oauth2ClientService.generateClient(expect);
-        // then
-        assertEquals(clientId, then.getClientId());
-        assertTrue(passwordEncoder.matches(clientSecret, then.getClientSecret()));
-        assertEquals(resourceIds, then.getResourceIds());
-        assertEquals(scopes, then.getScope());
-        assertEquals(grantTypes, then.getAuthorizedGrantTypes());
-        assertEquals(authorities, then.getAuthorities());
-        assertEquals(redirectUri, then.getWebServerRedirectUri());
-        assertEquals(tokenValidity, then.getAccessTokenValidity());
-        assertEquals(tokenValidity, then.getRefreshTokenValidity());
     }
 
 }

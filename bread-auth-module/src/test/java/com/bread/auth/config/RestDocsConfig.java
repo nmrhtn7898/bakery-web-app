@@ -9,7 +9,7 @@ import org.springframework.security.oauth2.common.util.Jackson2JsonParser;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 
 @TestConfiguration
-public class RestDocsConfig {
+public class    RestDocsConfig {
 
     @Bean
     public RestDocsMockMvcConfigurationCustomizer restDocsMockMvcConfigurationCustomizer() {

@@ -8,21 +8,15 @@ import com.bread.auth.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class AccountRepositoryTest extends AbstractDataJpaTest {
 
     @Autowired
     private AccountRepository accountRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     public void beforeEach() {
@@ -33,118 +27,53 @@ public class AccountRepositoryTest extends AbstractDataJpaTest {
     public void findByEmail_Success() {
         // given
         String email = "test";
-        String password = "1234";
-        Authority authority = Authority
-                .builder()
-                .name("user")
-                .build();
-        Account account = Account
-                .builder()
-                .password(passwordEncoder.encode(password))
-                .email(email)
-                .build();
-        AccountAuthority accountAuthority = AccountAuthority
-                .builder()
-                .authority(authority)
-                .account(account)
-                .build();
-        accountRepository.save(account);
+        Account expect = generate(email);
+        expect = accountRepository.save(expect);
         // when
-        Account find = accountRepository
+        Account actual = accountRepository
                 .findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException(email));
         // then
-        assertEquals(email, find.getEmail());
-        assertTrue(passwordEncoder.matches(password, find.getPassword()));
-        assertIterableEquals(singletonList(accountAuthority), find.getAuthorities());
-        assertIterableEquals(
-                singletonList(authority),
-                find
-                        .getAuthorities()
-                        .stream()
-                        .map(AccountAuthority::getAuthority)
-                        .collect(toList())
-        );
+        assertEquals(expect.getId(), actual.getId());
+        assertEquals(expect.getEmail(), actual.getEmail());
+        assertEquals(expect.getPassword(), actual.getPassword());
+        assertEquals(expect.getCreated(), actual.getCreated());
+        assertEquals(expect.getModified(), actual.getModified());
+        for (int i = 0; i < expect.getAuthorities().size(); i++) {
+            assertEquals(expect.getAuthorities().get(i).getId(), actual.getAuthorities().get(i).getId());
+            assertEquals(expect.getAuthorities().get(i).getCreated(), actual.getAuthorities().get(i).getCreated());
+            assertEquals(expect.getAuthorities().get(i).getModified(), actual.getAuthorities().get(i).getModified());
+            assertEquals(expect.getAuthorities().get(i).getAuthority().getId(), actual.getAuthorities().get(i).getAuthority().getId());
+            assertEquals(expect.getAuthorities().get(i).getAuthority().getName(), actual.getAuthorities().get(i).getAuthority().getName());
+            assertEquals(expect.getAuthorities().get(i).getAuthority().getCreated(), actual.getAuthorities().get(i).getAuthority().getModified());
+            assertEquals(expect.getAuthorities().get(i).getAuthority().getCreated(), actual.getAuthorities().get(i).getAuthority().getModified());
+        }
     }
 
     @Test
     public void findByEmail_Fail() {
         // given
-        String email = "invalid email";
+        String email = "not exists email";
         // when & then
-        assertThrows(
-                UsernameNotFoundException.class,
-                () ->
-                        accountRepository
-                                .findByEmail(email)
-                                .orElseThrow(() -> new UsernameNotFoundException(email))
-        );
+        assertFalse(accountRepository.findByEmail(email).isPresent());
     }
 
-    @Test
-    public void save_Success() {
-        // given
-        String email = "test";
-        String password = "1234";
+    private Account generate(String email) {
         Authority authority = Authority
                 .builder()
                 .name("user")
                 .build();
         Account account = Account
                 .builder()
-                .password(passwordEncoder.encode(password))
+                .password("1234")
                 .email(email)
                 .build();
-        AccountAuthority accountAuthority = AccountAuthority
+        AccountAuthority
                 .builder()
                 .authority(authority)
                 .account(account)
                 .build();
-        Account save = accountRepository.save(account);
-        // then
-        assertEquals(email, save.getEmail());
-        assertTrue(passwordEncoder.matches(password, save.getPassword()));
-        assertIterableEquals(singletonList(accountAuthority), save.getAuthorities());
-        assertIterableEquals(
-                singletonList(authority),
-                save
-                        .getAuthorities()
-                        .stream()
-                        .map(AccountAuthority::getAuthority)
-                        .collect(toList())
-        );
-    }
-
-    @Test
-    public void save_Fail() {
-        // given
-        accountRepository.save(
-                Account
-                        .builder()
-                        .password(passwordEncoder.encode("1234"))
-                        .email("duplicate")
-                        .build()
-        );
-        // when & then
-        assertThrows(
-                DataIntegrityViolationException.class,
-                () -> accountRepository.save(
-                        Account
-                                .builder()
-                                .password(passwordEncoder.encode("1234"))
-                                .email("duplicate")
-                                .build()
-                )
-        );
-        assertThrows(
-                DataIntegrityViolationException.class,
-                () -> accountRepository.save(
-                        Account
-                                .builder()
-                                .email("notnull")
-                                .build()
-                )
-        );
+        return account;
     }
 
 }

@@ -6,8 +6,7 @@ public enum Oauth2GrantType {
     IMPLICIT,
     PASSWORD,
     REFRESH_TOKEN,
-    CLIENT_CREDENTIALS,
-    ;
+    CLIENT_CREDENTIALS;
 
 
     @Override
