@@ -9,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.persistence.Inheritance;
 
 @Disabled
-@Inheritance
 @DataRedisTest
 @Import(EmbeddedRedisConfig.class)
 @ActiveProfiles("test")

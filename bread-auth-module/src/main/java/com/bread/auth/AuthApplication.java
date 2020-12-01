@@ -83,7 +83,7 @@ public class AuthApplication {
                     )
                     .scope("read,write")
                     .authorities("user")
-                    .resourceIds("auth")
+                    .resourceIds("api")
                     .webServerRedirectUri("http://localhost:9600/auth")
                     .autoApprove("true")
                     .build();

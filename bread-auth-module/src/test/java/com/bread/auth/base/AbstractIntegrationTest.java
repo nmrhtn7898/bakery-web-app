@@ -18,8 +18,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import javax.persistence.Inheritance;
-
 import static com.bread.auth.enums.Oauth2GrantType.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
@@ -29,7 +27,6 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 
 @Disabled
 @SpringBootTest
-@Inheritance
 @ActiveProfiles("test")
 @Import(value = {RestDocsConfig.class, EmbeddedRedisConfig.class, TestDataConfig.class})
 @AutoConfigureRestDocs

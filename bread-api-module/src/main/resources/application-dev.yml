@@ -1,9 +1,9 @@
-server:
-  port: 8600
-
 jasypt:
   encryptor:
     bean: stringEncryptor
+
+server:
+  port: 8600
 
 spring:
   datasource:
@@ -11,6 +11,13 @@ spring:
     username: ENC(yGCjrkqEv7bGJxbFGiMdDQ==)
     password: ENC(s0TLJNiPYXqZNADpH30mWsn32X3WqAIo)
     driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: ENC(fzl+X/qnBYq7tAkdI15VpE0xXQAoebXxFD6UIym0jiqU75JyPki1EqJ3aGu4gT7J+bv2mB/zpHGx/VQpk6vMSQ==)
+    port: 6379
+
+jwt:
+  publicKey:
+    location: classpath:/publicKey-dev.txt
 
 logging:
   level:

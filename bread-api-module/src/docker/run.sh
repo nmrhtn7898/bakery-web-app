@@ -9,4 +9,8 @@
 echo "*******************************************"
 echo "run bread auth server(profiles:$ACTIVE_PROFILE)"
 echo "*******************************************"
-java -jar -Dencrypt.key=$ENCRYPT_KEY -Dencrypt.alg=$ENCRYPT_ALG -Dspring.profiles.active=$ACTIVE_PROFILE app.jar
+java -jar -Dencrypt.key=$ENCRYPT_KEY \
+-Dencrypt.alg=$ENCRYPT_ALG \
+-Djwt.keyPair.storePass=$JWT_KEYPAIR_STOREPASS \
+-Djwt.keyPair.alias=$JWT_KEYPAIR_ALIAS \
+-Dspring.profiles.active=$ACTIVE_PROFILE app.jar

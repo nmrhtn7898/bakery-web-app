@@ -30,7 +30,10 @@ spring:
     port: 6379
 
 jwt:
-  signKey: temp_signkey
+  keyPair:
+    location: classpath:/jwtKeyPair.jks
+    storePass: localpass
+    alias: jwtKeyPair
 
 logging:
   level:

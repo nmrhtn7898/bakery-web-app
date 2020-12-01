@@ -1,3 +1,7 @@
+jasypt:
+  encryptor:
+    bean: stringEncryptor
+
 server:
   port: 9600
   servlet:
@@ -7,10 +11,6 @@ server:
 #        domain: .domain.com
         name: sid
         path: /
-
-jasypt:
-  encryptor:
-    bean: stringEncryptor
 
 spring:
   datasource:
@@ -30,8 +30,14 @@ spring:
         default_batch_fetch_size: 1000
     open-in-view: false
   redis:
-    host: ENC(yvzYtS9fvw7+HktolHkAhuqCLF+paIx8sUC5jmnL1RXI6VXIaoz2AiiTXwsER714mPr7wiamGyJeK4P60AoDiw==)
+    host: ENC(fzl+X/qnBYq7tAkdI15VpE0xXQAoebXxFD6UIym0jiqU75JyPki1EqJ3aGu4gT7J+bv2mB/zpHGx/VQpk6vMSQ==)
     port: 6379
+
+jwt:
+  keyPair:
+    location: classpath:/jwtKeyPair-dev.jks
+    storePass: ENC(h3wbRGJ/ksSyDh8DUXG59A==)
+    alias: ENC(XH3gNs0UlSfD5mPzXEYkNfs6cMFEwa30)
 
 logging:
   level:

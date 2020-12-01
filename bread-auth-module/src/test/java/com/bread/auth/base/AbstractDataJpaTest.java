@@ -9,7 +9,6 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.persistence.Inheritance;
 
 @Disabled
-@Inheritance
 @DataJpaTest
 @Import(JpaConfig.class)
 @ActiveProfiles("test")

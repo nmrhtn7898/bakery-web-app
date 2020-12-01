@@ -8,7 +8,6 @@ import org.springframework.test.context.ActiveProfiles;
 import javax.persistence.Inheritance;
 
 @Disabled
-@Inheritance
 @ActiveProfiles("test")
 @ExtendWith(MockitoExtension.class)
 public abstract class AbstractServiceTest {
