@@ -8,8 +8,10 @@ services:
       - bread-api-module
     ports:
       - "80:80"
+      - "443:443"
     volumes:
-        - $HOME/conf/nginx.conf:/etc/nginx/nginx.conf
+      - $HOME/conf/nginx.conf:/etc/nginx/nginx.conf
+      - $HOME/conf/www/dev.bread-project.tk:/var/www/dev.bread-project.tk
   bread-auth-module:
     container_name: "bread-auth-module"
     image: nmrhtn7898/bread-auth-module:${TAG}
@@ -19,15 +21,6 @@ services:
       - $HOME/conf/docker.env
     environment:
       ACTIVE_PROFILE: "dev"
-#  auth2:
-#    container_name: "bread-auth-module2"
-#    image: nmrhtn7898/bread-auth-module:${TAG}
-#    expose:
-#      - "10600"
-#    env_file:
-#      - $HOME/conf/docker.env
-#    environment:
-#      ACTIVE_PROFILE: "dev"
   bread-api-module:
     container_name: "bread-api-module"
     image: nmrhtn7898/bread-api-module:${TAG}
@@ -37,12 +30,3 @@ services:
       - $HOME/conf/docker.env
     environment:
       ACTIVE_PROFILE: "dev"
-#  api2:
-#    container_name: "bread-api-module2"
-#    image: nmrhtn7898/bread-api-module:${TAG}
-#    expose:
-#      - "7600"
-#    env_file:
-#      - $HOME/conf/docker.env
-#    environment:
-#      ACTIVE_PROFILE: "dev"

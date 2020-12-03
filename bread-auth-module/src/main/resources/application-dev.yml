@@ -8,9 +8,7 @@ server:
     contextPath: /auth
     session:
       cookie:
-#        domain: .domain.com
         name: sid
-        path: /
 
 spring:
   datasource:

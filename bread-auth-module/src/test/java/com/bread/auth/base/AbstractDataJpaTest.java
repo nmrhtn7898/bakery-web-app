@@ -6,8 +6,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 
-import javax.persistence.Inheritance;
-
 @Disabled
 @DataJpaTest
 @Import(JpaConfig.class)

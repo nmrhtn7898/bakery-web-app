@@ -4,12 +4,9 @@
     <meta charset="UTF-8">
     <title>logout process...</title>
 </head>
+<script th:src=@{/js/logout.js} defer></script>
 <body>
-    <form th:action="@{/logout}" method="post">
-        <input type="submit" value="logout">
-    </form>
+    로그아웃...
+    <form th:action="@{/logout}" method="post" id="logout-form"></form>
 </body>
-<script>
-    document.querySelector('input[type=submit]').click();
-</script>
 </html>

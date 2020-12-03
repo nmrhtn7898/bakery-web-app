@@ -74,10 +74,6 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
                 .sessionManagement()
                 .sessionCreationPolicy(STATELESS);
         http
-                .headers()
-                .frameOptions()
-                .deny();
-        http
                 .csrf()
                 .disable();
         http
