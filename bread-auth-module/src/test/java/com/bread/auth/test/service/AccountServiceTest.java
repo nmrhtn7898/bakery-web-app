@@ -7,6 +7,7 @@ import com.bread.auth.entity.Authority;
 import com.bread.auth.model.AccountDetails;
 import com.bread.auth.repository.AccountRepository;
 import com.bread.auth.service.AccountService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import static java.util.Optional.of;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
+@DisplayName("AccountService 단위 테스트")
 public class AccountServiceTest extends AbstractServiceTest {
 
     @InjectMocks
@@ -25,6 +27,7 @@ public class AccountServiceTest extends AbstractServiceTest {
     private AccountRepository accountRepository;
 
     @Test
+    @DisplayName("email 기준으로 조회 성공하는 경우")
     public void loadUserByUsername_Success() {
         // given
         String email = "test";
@@ -45,6 +48,7 @@ public class AccountServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    @DisplayName("email 기준으로 조회 실패하는 경우")
     public void loadUserByUsername_Fail() {
         // given
         String email = "not exists email";

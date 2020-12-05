@@ -55,16 +55,13 @@ public class ResourceConfig extends ResourceServerConfigurerAdapter {
     }
 
     @Override
-    public void configure(ResourceServerSecurityConfigurer resources) throws Exception {
+    public void configure(ResourceServerSecurityConfigurer resources) {
         resources.resourceId("api");
     }
 
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .requestMatchers()
-                .mvcMatchers("/api/**")
-                .and()
                 .authorizeRequests()
                 .antMatchers(OPTIONS)
                 .permitAll()

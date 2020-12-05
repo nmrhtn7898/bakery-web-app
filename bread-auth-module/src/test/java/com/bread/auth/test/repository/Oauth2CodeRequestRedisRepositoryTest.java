@@ -8,6 +8,7 @@ import com.bread.auth.model.AccountDetails;
 import com.bread.auth.model.Oauth2CodeRequest;
 import com.bread.auth.repository.Oauth2CodeRequestRedisRepository;
 import javassist.NotFoundException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,12 +22,14 @@ import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.security.core.authority.AuthorityUtils.createAuthorityList;
 
+@DisplayName("Oauth2CodeRequestRedisRepository 캐싱 단위 테스트")
 public class Oauth2CodeRequestRedisRepositoryTest extends AbstractDataRedisTest {
 
     @Autowired
     private Oauth2CodeRequestRedisRepository oauth2CodeRequestRedisRepository;
 
     @Test
+    @DisplayName("code 기준으로 조회 성공하는 경우")
     public void findById_Success() throws NotFoundException {
         // given
         String code = randomUUID().toString();
@@ -59,6 +62,7 @@ public class Oauth2CodeRequestRedisRepositoryTest extends AbstractDataRedisTest 
     }
 
     @Test
+    @DisplayName("code 기준으로 조회 실패하는 경우")
     public void findById_Fail() {
         // given
         String code = "not exists code";
@@ -67,6 +71,7 @@ public class Oauth2CodeRequestRedisRepositoryTest extends AbstractDataRedisTest 
     }
 
     @Test
+    @DisplayName("code 기준으로 삭제 성공하는 경우")
     public void deleteById_Success() {
         // given
         String code = randomUUID().toString();

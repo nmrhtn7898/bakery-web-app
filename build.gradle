@@ -52,6 +52,8 @@ subprojects {
     project(moduleName) {
         apply plugin: "org.asciidoctor.convert"
         def snippetsDir = file("${buildDir}/generated-snippets")
+        def index = moduleName.indexOf('-') + 1
+        def path = moduleName.substring(index, moduleName.indexOf('-', index))
         test {
             outputs.dir snippetsDir
             useJUnitPlatform()
@@ -63,7 +65,7 @@ subprojects {
         bootJar {
             dependsOn(asciidoctor)
             from("${asciidoctor.outputDir}/html5") {
-                into 'static/docs'
+                into "static/${path}/docs"
             }
         }
         task copyFile {

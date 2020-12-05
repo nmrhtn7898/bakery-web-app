@@ -73,6 +73,9 @@ public class AuthConfig extends AuthorizationServerConfigurerAdapter {
         );
         compositeTokenGranter.addGranter(tokenGranter);
         endpoints
+                .pathMapping("/oauth/token", "/auth/oauth/token")
+                .pathMapping("/oauth/check_token", "/auth/oauth/check_token")
+                .pathMapping("/oauth/authorize", "/auth/oauth/authorize")
                 .authorizationCodeServices(pkceAuthorizationCodeService)
                 .tokenGranter(compositeTokenGranter)
                 .userDetailsService(userDetailsService)

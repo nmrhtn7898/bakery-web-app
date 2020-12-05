@@ -32,12 +32,12 @@ logging:
 test:
   users:
     noAuthorities:
-      username: userId
-      password: userPassword
+      username: user@example.com
+      password:
       authorities:
     master:
-      username: adminId
-      password: adminPassword
+      username: bakery@example.com
+      password: 1234qwer!@
       authorities:
         - user
         - admin
@@ -59,7 +59,7 @@ test:
       clientSecret: noGrantTypesSecret
       redirectUris: http://www.example.com
       grantTypes: nograntTypes
-      scopes: read,write
+      scopes: profile,review
       authorities: user,admin
       resourceIds: api
       codeChallenge: kUFmP0lviWWy-fuSgsDs6vbag4coS0BzYyRHtHvsWSU
@@ -67,11 +67,11 @@ test:
       codeChallengeMethod: S256
       state: 31990a86-314a-11eb-adc1-0242ac120002
     master:
-      clientId: adminId
-      clientSecret: adminSecret
+      clientId: eea04aee-36b4-11eb-adc1-0242ac120002
+      clientSecret: f388eebc-36b4-11eb-adc1-0242ac120002
       redirectUris: http://www.example.com
       grantTypes: authorization_code,implicit,password,refresh_token,client_credentials
-      scopes: read,write
+      scopes: profile,review
       authorities: user,admin
       resourceIds: api
       codeChallenge: kUFmP0lviWWy-fuSgsDs6vbag4coS0BzYyRHtHvsWSU

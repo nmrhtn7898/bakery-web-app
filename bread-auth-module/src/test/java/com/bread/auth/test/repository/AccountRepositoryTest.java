@@ -6,6 +6,7 @@ import com.bread.auth.entity.AccountAuthority;
 import com.bread.auth.entity.Authority;
 import com.bread.auth.repository.AccountRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+@DisplayName("AccountRepository 단위 테스트")
 public class AccountRepositoryTest extends AbstractDataJpaTest {
 
     @Autowired
@@ -24,6 +26,7 @@ public class AccountRepositoryTest extends AbstractDataJpaTest {
     }
 
     @Test
+    @DisplayName("email 조건으로 조회 성공하는 경우")
     public void findByEmail_Success() {
         // given
         String email = "test";
@@ -51,6 +54,7 @@ public class AccountRepositoryTest extends AbstractDataJpaTest {
     }
 
     @Test
+    @DisplayName("email 조건으로 조회 실패하는 경우")
     public void findByEmail_Fail() {
         // given
         String email = "not exists email";

@@ -48,7 +48,7 @@ public abstract class AbstractIntegrationTest {
     protected ResultActions getCheckTokenResponse(String clientId, String clientSecret, String token) throws Exception {
         return mockMvc
                 .perform(
-                        post("/oauth/check_token")
+                        post("/auth/oauth/check_token")
                                 .contentType(APPLICATION_FORM_URLENCODED)
                                 .accept(APPLICATION_JSON)
                                 .with(httpBasic(clientId, clientSecret))
@@ -60,7 +60,7 @@ public abstract class AbstractIntegrationTest {
                                                  String codeChallenge, String codeChallengeMethod, String state) throws Exception {
         return mockMvc
                 .perform(
-                        get("/oauth/authorize")
+                        get("/auth/oauth/authorize")
                                 .with(user(userDetailsService.loadUserByUsername(username)))
                                 .queryParam("client_id", clientId)
                                 .queryParam("response_type", "code")
@@ -74,7 +74,7 @@ public abstract class AbstractIntegrationTest {
 
     protected ResultActions getAuthorizeConfirmResponse(MockHttpSession session, String clientId,
                                                         String redirectUri, String scopes) throws Exception {
-        MockHttpServletRequestBuilder requestBuilder = post("/oauth/authorize")
+        MockHttpServletRequestBuilder requestBuilder = post("/auth/oauth/authorize")
                 .session(session)
                 .with(csrf())
                 .param("response_type", "code")
@@ -93,7 +93,7 @@ public abstract class AbstractIntegrationTest {
                                                                       String codeVerifier) throws Exception {
         return mockMvc
                 .perform(
-                        post("/oauth/token")
+                        post("/auth/oauth/token")
                                 .contentType(APPLICATION_FORM_URLENCODED)
                                 .accept(APPLICATION_JSON)
                                 .param("client_id", clientId)
@@ -110,7 +110,7 @@ public abstract class AbstractIntegrationTest {
                                                           String scopes) throws Exception {
         return mockMvc
                 .perform(
-                        post("/oauth/token")
+                        post("/auth/oauth/token")
                                 .contentType(APPLICATION_FORM_URLENCODED)
                                 .accept(APPLICATION_JSON)
                                 .param("client_id", clientId)
@@ -126,7 +126,7 @@ public abstract class AbstractIntegrationTest {
                                                               String clientId, String clientSecret) throws Exception {
         return mockMvc
                 .perform(
-                        post("/oauth/token")
+                        post("/auth/oauth/token")
                                 .contentType(APPLICATION_FORM_URLENCODED)
                                 .accept(APPLICATION_JSON)
                                 .param("client_id", clientId)
@@ -141,7 +141,7 @@ public abstract class AbstractIntegrationTest {
                                                               String scopes) throws Exception {
         return mockMvc
                 .perform(
-                        post("/oauth/token")
+                        post("/auth/oauth/token")
                                 .contentType(APPLICATION_FORM_URLENCODED)
                                 .accept(APPLICATION_JSON)
                                 .param("client_id", clientId)

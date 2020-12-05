@@ -6,6 +6,7 @@ import com.bread.auth.model.Oauth2ClientDetails;
 import com.bread.auth.repository.Oauth2ClientRedisRepository;
 import com.bread.auth.repository.Oauth2ClientRepository;
 import com.bread.auth.service.Oauth2ClientService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -17,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
-
+@DisplayName("Oauth2ClientService 단위 테스트")
 public class Oauth2ClientServiceTest extends AbstractServiceTest {
 
     @InjectMocks
@@ -30,6 +31,7 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
     private Oauth2ClientRedisRepository oauth2ClientRedisRepository;
 
     @Test
+    @DisplayName("clientId 기준으로 조회 성공하는 경우")
     public void loadClientByClientId_Success() {
         // given
         String clientId = "clientId";
@@ -55,6 +57,7 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    @DisplayName("clientId 기준으로 캐시 조회 성공 하는 경우")
     public void loadClientByClientIdCache_Success() {
         // given
         String clientId = "clientId";
@@ -78,6 +81,7 @@ public class Oauth2ClientServiceTest extends AbstractServiceTest {
     }
 
     @Test
+    @DisplayName("clientId 기준으로 조회 실패하는 경우")
     public void loadClientByClientId_Fail() {
         // given
         String clientId = "mock";

@@ -35,14 +35,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sameOrigin();
         http
                 .formLogin()
-                .loginPage("/login")
+                .loginPage("/auth/login")
                 .successHandler((request, response, authentication) -> {
                     String redirectUri = request.getParameter("redirect_uri");
                     response.sendRedirect(redirectUri);
                 });
         http
                 .logout()
-                .logoutSuccessUrl("/login");
+                .logoutUrl("/auth/logout")
+                .logoutSuccessUrl("/auth/login");
         http
                 .rememberMe()
                 .rememberMeServices(
@@ -58,11 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .rememberMeCookieName("remember-me")
                 .userDetailsService(userDetailsService);
         http
-                .requestMatchers()
-                .mvcMatchers("/login", "/logout", "/oauth/authorize")
-                .and()
                 .authorizeRequests()
-                .mvcMatchers("/login").permitAll()
+                .mvcMatchers("/auth/login").permitAll()
                 .anyRequest()
                 .authenticated();
     }
@@ -71,7 +69,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) {
         web
                 .ignoring()
-                .mvcMatchers("/docs/**");
+                .mvcMatchers("/**/docs/**");
     }
 
 }

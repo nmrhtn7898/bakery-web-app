@@ -5,7 +5,6 @@ jasypt:
 server:
   port: 9600
   servlet:
-    contextPath: /auth
     session:
       cookie:
         name: sid

@@ -4,7 +4,6 @@ void createAndPushDockerImage(name) {
     if (TAG == "latest") {
         sh "docker build -t nmrhtn7898/${name}:latest --build-arg NAME=${name} ${name}/build/libs"
         sh "docker push nmrhtn7898/${name}:latest"
-        jacocoReport()
     } else {
         try {
             sh "curl --silent -f https://hub.docker.com/v2/repositories/nmrhtn7898/${name}/tags/${TAG}"
@@ -12,16 +11,9 @@ void createAndPushDockerImage(name) {
         } catch (e) {
             sh "docker build -t nmrhtn7898/${name}:${TAG} --build-arg NAME=${name} ${name}/build/libs"
             sh "docker push nmrhtn7898/${name}:${TAG}"
-            jacocoReport()
         }
     }
     sh "echo 'y' | docker image prune"
-}
-
-void jacocoReport() {
-    if (MODULE_NAME == "all") {
-        sh "./gradlew jacocoRootReport coveralls"
-    }
 }
 
 node {
@@ -45,6 +37,9 @@ node {
             sh './gradlew clean build'
         } else {
             sh "./gradlew :${MODULE_NAME}:clean :${MODULE_NAME}:build"
+        }
+        if (TAG == "latest") {
+                sh "./gradlew jacocoRootReport coveralls"
         }
     }
 

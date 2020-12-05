@@ -15,8 +15,8 @@ public class RestDocsConfig {
     public RestDocsMockMvcConfigurationCustomizer restDocsMockMvcConfigurationCustomizer() {
         UriModifyingOperationPreprocessor preprocessor = new UriModifyingOperationPreprocessor();
         preprocessor
-                .scheme("http")
-                .host("54.180.10.196")
+                .scheme("https")
+                .host("dev.bread-project.tk")
                 .removePort();
         return config -> config
                 .operationPreprocessors()

@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
 <h1>로그인</h1>
-<form th:action="@{/login}" method="post">
+<form th:action="@{/auth/login}" method="post">
     <div>아이디 : <input type="text" name="username"/></div>
     <div>패스워드 : <input type="password" name="password"/></div>
     <div>자동로그인 <input type="checkbox" name="remember-me"/></div>

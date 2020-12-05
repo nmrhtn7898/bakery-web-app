@@ -3,6 +3,7 @@ package com.bread.auth.test.repository;
 import com.bread.auth.base.AbstractDataJpaTest;
 import com.bread.auth.entity.Oauth2Client;
 import com.bread.auth.repository.Oauth2ClientRepository;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.provider.NoSuchClientException;
@@ -10,12 +11,14 @@ import org.springframework.security.oauth2.provider.NoSuchClientException;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
+@DisplayName("Oauth2ClientRepository 단위 테스트")
 public class Oauth2ClientRepositoryTest extends AbstractDataJpaTest {
 
     @Autowired
     private Oauth2ClientRepository oauth2ClientRepository;
 
     @Test
+    @DisplayName("clientId 기준으로 조회 성공하는 경우")
     public void findByClientId_Success() {
         // given
         String clientId = "clientId";
@@ -41,6 +44,7 @@ public class Oauth2ClientRepositoryTest extends AbstractDataJpaTest {
     }
 
     @Test
+    @DisplayName("clientId 기준으로 조회 실패하는 경우")
     public void findByClientId_Fail() {
         // given
         String clientId = "not exists client id";

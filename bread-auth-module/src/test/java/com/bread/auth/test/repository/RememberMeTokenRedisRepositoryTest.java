@@ -4,6 +4,7 @@ import com.bread.auth.base.AbstractDataRedisTest;
 import com.bread.auth.model.RememberMeToken;
 import com.bread.auth.repository.RememberMeTokenRedisRepository;
 import javassist.NotFoundException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.web.authentication.rememberme.PersistentRememberMeToken;
@@ -13,12 +14,14 @@ import java.util.Date;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("RememberMeTokenRedisRepository 캐싱 단위 테스트")
 public class RememberMeTokenRedisRepositoryTest extends AbstractDataRedisTest {
 
     @Autowired
     private RememberMeTokenRedisRepository rememberMeTokenRedisRepository;
 
     @Test
+    @DisplayName("series 기준으로 조회 성공하는 경우")
     public void findBySeries_Success() throws NotFoundException {
         // given
         String series = randomUUID().toString();
@@ -36,6 +39,7 @@ public class RememberMeTokenRedisRepositoryTest extends AbstractDataRedisTest {
     }
 
     @Test
+    @DisplayName("series 기준으로 조회 실패하는 경우")
     public void findBySeries_Fail() {
         // given
         String series = "not exists series";
@@ -44,6 +48,7 @@ public class RememberMeTokenRedisRepositoryTest extends AbstractDataRedisTest {
     }
 
     @Test
+    @DisplayName("series 기준으로 삭제 성공하는 경우")
     public void deleteById_Success() {
         // given
         String series = randomUUID().toString();
@@ -56,6 +61,7 @@ public class RememberMeTokenRedisRepositoryTest extends AbstractDataRedisTest {
     }
 
     @Test
+    @DisplayName("email 기준으로 전체 삭제 성공하는 경우")
     public void deleteAllByEmail_Success() {
         // given
         String series = randomUUID().toString();
@@ -83,6 +89,7 @@ public class RememberMeTokenRedisRepositoryTest extends AbstractDataRedisTest {
     }
 
     @Test
+    @DisplayName("series 기준으로 수정 성공하는 경우")
     public void updateTokenAndLastUsed() throws NotFoundException {
         // given
         String series = randomUUID().toString();

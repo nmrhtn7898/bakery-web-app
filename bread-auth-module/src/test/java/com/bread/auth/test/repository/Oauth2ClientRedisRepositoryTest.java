@@ -5,18 +5,21 @@ import com.bread.auth.entity.Oauth2Client;
 import com.bread.auth.model.Oauth2ClientDetails;
 import com.bread.auth.repository.Oauth2ClientRedisRepository;
 import javassist.NotFoundException;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.*;
 
+@DisplayName("Oauth2ClientRedisRepository 캐싱 단위 테스트")
 public class Oauth2ClientRedisRepositoryTest extends AbstractDataRedisTest {
 
     @Autowired
     private Oauth2ClientRedisRepository oauth2ClientRedisRepository;
 
     @Test
+    @DisplayName("clientId 기준으로 조회 성공하는 경우")
     public void findById_Success() throws NotFoundException {
         // given
         String clientId = randomUUID().toString();
@@ -42,6 +45,7 @@ public class Oauth2ClientRedisRepositoryTest extends AbstractDataRedisTest {
     }
 
     @Test
+    @DisplayName("clientId 기준으로 조회 실패하는 경우")
     public void findById_Fail() {
         // given
         String clientId = "not exists client id";
@@ -50,6 +54,7 @@ public class Oauth2ClientRedisRepositoryTest extends AbstractDataRedisTest {
     }
 
     @Test
+    @DisplayName("clientId 기준으로 삭제 성공하는 경우")
     public void deleteById_Success() {
         // given
         String clientId = randomUUID().toString();
