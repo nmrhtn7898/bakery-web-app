@@ -1,0 +1,49 @@
+jasypt:
+  encryptor:
+    bean: stringEncryptor
+
+server:
+  port: 9600
+  servlet:
+    session:
+      cookie:
+        name: sid
+
+spring:
+  datasource:
+    url: ENC(DMOvM07qjX2P9VoA9VmiFHm7gQWth0MmLPHcyobmMcs2Z9fFOCi4Xb1SILeISmJSPJfWuc0BlOCkWCEBatfKpLpmTCRUhavNhjK7KIOwxOXJz65TO6bGbRmOh2VbqYr3Ark4Sxas0M6A2QaBK+uZo2111PcUgikF9t5dH2FSjeo2iIgGzrlrUAFD6CaY5Ngwo7nnON30Ln2NfVN2QH0ZDA==)
+    username: ENC(yGCjrkqEv7bGJxbFGiMdDQ==)
+    password: ENC(s0TLJNiPYXqZNADpH30mWsn32X3WqAIo)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create
+      use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        format_sql: true
+        default_batch_fetch_size: 1000
+    open-in-view: false
+  redis:
+    host: ENC(fzl+X/qnBYq7tAkdI15VpE0xXQAoebXxFD6UIym0jiqU75JyPki1EqJ3aGu4gT7J+bv2mB/zpHGx/VQpk6vMSQ==)
+    port: 6379
+
+jwt:
+  keyPair:
+    location: classpath:/jwtKeyPair-dev.jks
+    storePass: ENC(h3wbRGJ/ksSyDh8DUXG59A==)
+    alias: ENC(XH3gNs0UlSfD5mPzXEYkNfs6cMFEwa30)
+
+logging:
+  level:
+    org:
+      hibernate:
+        SQL: DEBUG
+        type:
+          descriptor:
+            sql:
+              BasicBinder: TRACE
+      springframework:
+        security: DEBUG

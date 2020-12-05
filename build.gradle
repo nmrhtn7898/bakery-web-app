@@ -19,7 +19,7 @@ allprojects {
     apply plugin: 'com.github.kt3k.coveralls'
     apply plugin: 'jacoco'
     apply plugin: 'java'
-    group = 'com.bread'
+    group = 'com.bakery'
     sourceCompatibility = 1.8
     targetCompatibility = 1.8
     repositories {
@@ -48,12 +48,12 @@ subprojects {
     }
 }
 
-[':bread-auth-module', ':bread-api-module'].each { moduleName ->
+[':bakery-auth', ':bakery-api'].each { moduleName ->
     project(moduleName) {
         apply plugin: "org.asciidoctor.convert"
         def snippetsDir = file("${buildDir}/generated-snippets")
         def index = moduleName.indexOf('-') + 1
-        def path = moduleName.substring(index, moduleName.indexOf('-', index))
+        def path = moduleName.substring(index)
         test {
             outputs.dir snippetsDir
             useJUnitPlatform()
@@ -82,7 +82,7 @@ subprojects {
         }
         tasks.build.finalizedBy(copyFile)
         dependencies {
-            implementation project(':bread-common-module')
+            implementation project(':bakery-common')
             implementation 'org.springframework.boot:spring-boot-starter-web'
             implementation 'org.springframework.boot:spring-boot-starter-validation'
             implementation 'org.springframework.boot:spring-boot-starter-aop'

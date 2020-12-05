@@ -1,12 +1,12 @@
 ### Build
-[![Build Status](http://211.104.121.100:8080/buildStatus/icon?job=bread-web-api)](http://211.104.121.100:8080/job/bread-web-api/)
+[![Build Status](http://211.104.121.100:8080/buildStatus/icon?job=bakery-web-api)](http://211.104.121.100:8080/job/bakery-web-api/)
 ### Coverage
-[![Coverage Status](https://coveralls.io/repos/github/nmrhtn7898/bread-project/badge.svg?branch=develop)](https://coveralls.io/github/nmrhtn7898/bread-project?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/nmrhtn7898/bakery-app/badge.svg?branch=develop)](https://coveralls.io/github/nmrhtn7898/bakery-app?branch=develop)
 ### Docker Image 
-[![bread-api-module](https://images.microbadger.com/badges/version/nmrhtn7898/bread-api-module.svg)](https://hub.docker.com/repository/docker/nmrhtn7898/bread-api-module)
-[![bread-auth-module](https://images.microbadger.com/badges/version/nmrhtn7898/bread-auth-module.svg)](https://hub.docker.com/repository/docker/nmrhtn7898/bread-auth-module)
+[![bakery-api](https://images.microbadger.com/badges/version/nmrhtn7898/bakery-api.svg)](https://hub.docker.com/repository/docker/nmrhtn7898/bakery-api)
+[![bakery-auth](https://images.microbadger.com/badges/version/nmrhtn7898/bakery-web.svg)](https://hub.docker.com/repository/docker/nmrhtn7898/bakery-web)
 
-# Bread Project
+# Bakery App
 ### 1. 프로젝트 구성
 - 해당 프로젝트는 `Gradle` 기반 멀티 모듈 프로젝트입니다.
 - 프로젝트는 현재 3개의 모듈로 구성되어 있습니다.
@@ -15,9 +15,9 @@
 
 |이름|내용|설명|
 |---|---|---|
-|bread-common-module|공통 모듈|모든 모듈에서 공통으로 사용하는 코드, 유틸, 의존성 제공|
-|bread-api-module|API 모듈|토큰 기반의 REST API 서비스 제공|
-|bread-auth-module|인증 모듈|토큰 발급, 재발급, 유효성 검사 및 sso 서비스 제공|
+|bakery-common|공통 모듈|모든 모듈에서 공통으로 사용하는 코드, 유틸, 의존성 제공|
+|bakery-api|API 모듈|토큰 기반의 REST API 서비스 제공|
+|bakery-auth|인증 모듈|토큰 발급, 재발급, 유효성 검사 및 sso 서비스 제공|
 
 ### 2. 애플리케이션 실행(로컬 개발 환경)
 - 로컬 환경은 도커 컨테이너에서 데이터베이스(`Mysql`) 및 캐시(`Redis`) 사용 또는 설치하여 사용합니다.

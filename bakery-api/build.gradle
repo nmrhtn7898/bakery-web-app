@@ -1,0 +1,5 @@
+dependencies {
+    implementation 'com.amazonaws:aws-java-sdk-s3:1.11.912'
+    implementation 'io.findify:s3mock_2.13:0.2.6'
+    // TODO Mybatis
+}

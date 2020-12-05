@@ -1,0 +1,38 @@
+jasypt:
+  encryptor:
+    bean: stringEncryptor
+
+server:
+  port: 8600
+
+spring:
+  datasource:
+    url: ENC(DMOvM07qjX2P9VoA9VmiFHm7gQWth0MmLPHcyobmMcs2Z9fFOCi4Xb1SILeISmJSPJfWuc0BlOCkWCEBatfKpLpmTCRUhavNhjK7KIOwxOXJz65TO6bGbRmOh2VbqYr3Ark4Sxas0M6A2QaBK+uZo2111PcUgikF9t5dH2FSjeo2iIgGzrlrUAFD6CaY5Ngwo7nnON30Ln2NfVN2QH0ZDA==)
+    username: ENC(yGCjrkqEv7bGJxbFGiMdDQ==)
+    password: ENC(s0TLJNiPYXqZNADpH30mWsn32X3WqAIo)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  redis:
+    host: ENC(fzl+X/qnBYq7tAkdI15VpE0xXQAoebXxFD6UIym0jiqU75JyPki1EqJ3aGu4gT7J+bv2mB/zpHGx/VQpk6vMSQ==)
+    port: 6379
+
+aws:
+  s3:
+    accessKey: ENC(EQ1gLjUVEycxKbppudrl/wU1yGurLie+VuHCZMMrhrU=)
+    secretKey: ENC(glWZkGBwKMUT7obpUlxl0gzoln5KS9vHmUY6osYV/wa7D36QjMgFvAAxViZ1bBUSJS+afMU1IT0=)
+    bucket: ENC(soTDS6O73IGjULky8oTKEXOOtW4th7LmqE9sZc98noc=)
+    region: ENC(5fH/wBNWnGpgZrKUwBbOv+E6EjRlBzDs)
+    path: files
+
+jwt:
+  publicKey:
+    location: classpath:/publicKey-dev.txt
+
+file:
+  key:
+    path: /files
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG

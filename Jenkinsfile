@@ -1,16 +1,16 @@
-def modules = ['bread-api-module', 'bread-auth-module']
+def modules = ['bakery-api', 'bakery-auth']
 
 void createAndPushDockerImage(name) {
     if (TAG == "latest") {
-        sh "docker build -t nmrhtn7898/${name}:latest --build-arg NAME=${name} ${name}/build/libs"
-        sh "docker push nmrhtn7898/${name}:latest"
+        sh "docker build -t nmrhtn7898/${name}-server:latest --build-arg NAME=${name} ${name}/build/libs"
+        sh "docker push nmrhtn7898/${name}-server:latest"
     } else {
         try {
-            sh "curl --silent -f https://hub.docker.com/v2/repositories/nmrhtn7898/${name}/tags/${TAG}"
+            sh "curl --silent -f https://hub.docker.com/v2/repositories/nmrhtn7898/${name}-server/tags/${TAG}"
             print 'docker image is already exists in docker image repository'
         } catch (e) {
-            sh "docker build -t nmrhtn7898/${name}:${TAG} --build-arg NAME=${name} ${name}/build/libs"
-            sh "docker push nmrhtn7898/${name}:${TAG}"
+            sh "docker build -t nmrhtn7898/${name}-server:${TAG} --build-arg NAME=${name} ${name}/build/libs"
+            sh "docker push nmrhtn7898/${name}-server:${TAG}"
         }
     }
     sh "echo 'y' | docker image prune"
@@ -23,9 +23,9 @@ node {
         cleanWs()
         sshagent(['7d91e9db-2264-4f14-bdb7-cc443e273bd5']) {
             if (TAG == "latest") {
-                sh "git clone -b ${BRANCH} --single-branch git@github.com:nmrhtn7898/bread-project.git ."
+                sh "git clone -b ${BRANCH} --single-branch git@github.com:nmrhtn7898/bakery-web-app.git ."
             } else {
-                sh "git clone -b ${TAG} git@github.com:nmrhtn7898/bread-project.git ."
+                sh "git clone -b ${TAG} git@github.com:nmrhtn7898/bakery-web-app.git ."
             }
         }
     }
@@ -68,7 +68,7 @@ node {
                         sshTransfer(
                             sourceFiles: "deploy.zip",
                             remoteDirectory: "/sources",
-                            execCommand: "/home/ec2-user/deploy/deploy.sh ${MODULE_NAME} ${TAG}"
+                            execCommand: "/home/ec2-user/deploy/deploy.sh ${MODULE_NAME}-server ${TAG}"
                         )
                     ]
                 )

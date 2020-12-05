@@ -7,7 +7,7 @@ services:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "1234"
-      MYSQL_DATABASE: "bread"
+      MYSQL_DATABASE: "bakery"
     volumes:
       - ./database:/var/lib/mysql
   redis:
@@ -17,10 +17,3 @@ services:
       - "6379:6379"
     volumes:
       - ./redis:/data
-#  proxy:
-#    container_name: "proxy-server"
-#    image: nginx:latest
-#    ports:
-#      - "80:80"
-#    volumes:
-#      - ../../../docker/proxy/nginx.conf:/etc/nginx/nginx.conf
