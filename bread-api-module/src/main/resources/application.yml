@@ -2,6 +2,18 @@ server:
   port: 8600
 
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.cloud.aws.autoconfigure.context.ContextInstanceDataAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.context.ContextCredentialsAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.context.ContextRegionProviderAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.context.ContextResourceLoaderAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.context.ContextStackAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.mail.MailSenderAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.cache.ElastiCacheAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.messaging.MessagingAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.jdbc.AmazonRdsDatabaseAutoConfiguration
+      - org.springframework.cloud.aws.autoconfigure.metrics.CloudWatchExportAutoConfiguration
   datasource:
     url: jdbc:mysql://localhost:3306/bread?serverTimezone=UTC&useSSL=false&allowPublicKeyRetrieval=true
     username: root
@@ -26,8 +38,15 @@ jwt:
   publicKey:
     location: classpath:/publicKey.txt
 
+file:
+  key:
+    path: /temp/files
+
 logging:
   level:
+    com:
+      bread:
+        api: TRACE
     org:
       springframework:
         security: DEBUG

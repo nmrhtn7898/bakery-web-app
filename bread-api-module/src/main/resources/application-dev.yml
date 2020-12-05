@@ -15,9 +15,26 @@ spring:
     host: ENC(fzl+X/qnBYq7tAkdI15VpE0xXQAoebXxFD6UIym0jiqU75JyPki1EqJ3aGu4gT7J+bv2mB/zpHGx/VQpk6vMSQ==)
     port: 6379
 
+cloud:
+  aws:
+    credentials:
+      accessKey: ENC(EQ1gLjUVEycxKbppudrl/wU1yGurLie+VuHCZMMrhrU=)
+      secretKey: ENC(glWZkGBwKMUT7obpUlxl0gzoln5KS9vHmUY6osYV/wa7D36QjMgFvAAxViZ1bBUSJS+afMU1IT0=)
+    s3:
+      bucket: ENC(4XUmZjID5Kl+Fp3e+X1e51j9c9sMITF8)
+    region:
+      static: ENC(5fH/wBNWnGpgZrKUwBbOv+E6EjRlBzDs)
+    stack:
+      auto: false
+
+
 jwt:
   publicKey:
     location: classpath:/publicKey-dev.txt
+
+file:
+  key:
+    path: /files
 
 logging:
   level:
