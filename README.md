@@ -1,10 +1,10 @@
 ### Build
 [![Build Status](http://211.104.121.100:8080/buildStatus/icon?job=bakery-web-api)](http://211.104.121.100:8080/job/bakery-web-api/)
 ### Coverage
-[![Coverage Status](https://coveralls.io/repos/github/nmrhtn7898/bakery-app/badge.svg?branch=develop)](https://coveralls.io/github/nmrhtn7898/bakery-app?branch=develop)
+[![Coverage Status](https://coveralls.io/repos/github/nmrhtn7898/bakery-web-app/badge.svg?branch=develop)](https://coveralls.io/github/nmrhtn7898/bakery-web-app?branch=develop)
 ### Docker Image 
-[![bakery-api](https://images.microbadger.com/badges/version/nmrhtn7898/bakery-api.svg)](https://hub.docker.com/repository/docker/nmrhtn7898/bakery-api)
-[![bakery-auth](https://images.microbadger.com/badges/version/nmrhtn7898/bakery-web.svg)](https://hub.docker.com/repository/docker/nmrhtn7898/bakery-web)
+[![bakery-api](https://images.microbadger.com/badges/version/nmrhtn7898/bakery-api-server.svg)](https://hub.docker.com/repository/docker/nmrhtn7898/bakery-api-server)
+[![bakery-auth](https://images.microbadger.com/badges/version/nmrhtn7898/bakery-auth-server.svg)](https://hub.docker.com/repository/docker/nmrhtn7898/bakery-auth-server)
 
 # Bakery App
 ### 1. 프로젝트 구성

@@ -2,10 +2,7 @@ version: '3'
 services:
   proxy-server:
     container_name: "proxy-server"
-    image: nginx:latest
-    depends_on:
-      - bakery-auth-server
-      - bakery-api-server
+    image: nmrhtn7898/bakery-proxy-server
     ports:
       - "80:80"
       - "443:443"
@@ -15,9 +12,6 @@ services:
     environment:
       AUTH_SERVER_PORT: "9600"
       API_SERVER_PORT: "8600"
-    build:
-      context: .
-      dockerfile: $HOME/conf/Dockerfile
   bakery-auth-server:
     container_name: "bakery-auth-server"
     image: nmrhtn7898/bakery-auth-server:${TAG}
