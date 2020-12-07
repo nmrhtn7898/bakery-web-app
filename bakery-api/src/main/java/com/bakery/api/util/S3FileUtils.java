@@ -1,5 +1,6 @@
 package com.bakery.api.util;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,10 +13,10 @@ import java.io.IOException;
 import java.util.Optional;
 
 import static java.lang.String.format;
-import static java.lang.System.currentTimeMillis;
 import static java.util.Objects.requireNonNull;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.UUID.randomUUID;
 
 @Slf4j
 @Component
@@ -37,10 +38,14 @@ public class S3FileUtils {
     public String upload(MultipartFile multipartFile, String dirPath) {
         String key = path + dirPath + "/" + generateRandomFileName(multipartFile);
         File file = convert(multipartFile).orElseThrow(() -> new IllegalArgumentException(format("file(%s) upload failed", key)));
-        amazonS3.putObject(bucket, key, file);
-        String url = amazonS3.getUrl(bucket, key).toString();
-        log.debug("file({}) upload success", key);
-        return url;
+        try {
+            amazonS3.putObject(bucket, key, file);
+            String url = amazonS3.getUrl(bucket, key).toString();
+            log.debug("file({}) upload success", key);
+            return url;
+        } finally {
+            file.delete();
+        }
     }
 
     public void delete(String key) {
@@ -50,7 +55,7 @@ public class S3FileUtils {
 
     public Optional<File> convert(MultipartFile multipartFile) {
         String filename = requireNonNull(multipartFile.getOriginalFilename());
-        File file = new File(filename);
+        File file = new File("temp-" + randomUUID().toString());
         try {
             if (file.createNewFile()) {
                 try (FileOutputStream fileOutputStream = new FileOutputStream(file)) {
@@ -68,7 +73,7 @@ public class S3FileUtils {
     public String generateRandomFileName(MultipartFile multipartFile) {
         String originalFilename = requireNonNull(multipartFile.getOriginalFilename());
         String extension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
-        return currentTimeMillis() + "." + extension;
+        return randomUUID().toString() + "." + extension;
     }
 
 }
